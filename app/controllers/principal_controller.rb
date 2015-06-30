@@ -1,5 +1,5 @@
 class PrincipalController < ApplicationController
   def index
-    @saludo = "Hola mundo";
+    @inicial='Iniciar Secion'
   end
 end

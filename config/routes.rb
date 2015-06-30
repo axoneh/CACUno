@@ -1,15 +1,9 @@
 Rails.application.routes.draw do
+
   get 'iniciar_sesion/iniciar'
 
-  get 'paciente/agregar'
-
-  get 'paciente/actualizar'
-
-  get 'usuario/agregar'
-
-  get 'usuario/actualizar'
-
   get 'principal/index'
+  
   root :to => 'principal#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
