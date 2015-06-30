@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'paciente/agregar'
+
+  get 'paciente/actualizar'
+
   get 'usuario/agregar'
 
   get 'usuario/actualizar'
