@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150630010931) do
+ActiveRecord::Schema.define(version: 20150629182552) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 30
@@ -62,18 +62,19 @@ ActiveRecord::Schema.define(version: 20150630010931) do
     t.integer "tipo_documentos_id"
     t.string  "nombre",             limit: 30
     t.string  "apellido",           limit: 30
+    t.string  "correo_electronico"
+    t.string  "password"
     t.boolean "genero",                        null: false
     t.string  "direccion",          limit: 50
     t.integer "estado_civils_id"
-    t.integer "roles_id"
+    t.integer "rols_id"
     t.integer "estado",                        null: false
-    t.string  "correo_electronico"
   end
 
   add_index "cuenta_usuarios", ["correo_electronico"], name: "index_correo_usuarios", unique: true
   add_index "cuenta_usuarios", ["estado_civils_id"], name: "index_cuenta_usuarios_on_estado_civils_id"
   add_index "cuenta_usuarios", ["identificacion", "tipo_documentos_id"], name: "index_identificacion_tipo_documento_usuario", unique: true
-  add_index "cuenta_usuarios", ["roles_id"], name: "index_cuenta_usuarios_on_roles_id"
+  add_index "cuenta_usuarios", ["rols_id"], name: "index_cuenta_usuarios_on_rols_id"
   add_index "cuenta_usuarios", ["tipo_documentos_id"], name: "index_cuenta_usuarios_on_tipo_documentos_id"
 
   create_table "dia_asociados", force: :cascade do |t|
@@ -137,12 +138,12 @@ ActiveRecord::Schema.define(version: 20150630010931) do
     t.integer "tipo_documentos_id"
     t.string  "nombre",             limit: 30
     t.string  "apellido",           limit: 30
+    t.string  "correo_electronico"
     t.boolean "genero",                        null: false
     t.string  "direccion",          limit: 50
     t.integer "estado_civils_id"
     t.integer "patologias_id"
     t.integer "estado",                        null: false
-    t.string  "correo_electronico"
   end
 
   add_index "pacientes", ["estado_civils_id"], name: "index_pacientes_on_estado_civils_id"

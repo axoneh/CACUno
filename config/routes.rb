@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'iniciar_sesion/iniciar'
+
   get 'paciente/agregar'
 
   get 'paciente/actualizar'

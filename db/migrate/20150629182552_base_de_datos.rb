@@ -79,10 +79,11 @@ class BaseDeDatos < ActiveRecord::Migration
       t.string :nombre, limit: 30
       t.string :apellido, limit: 30
       t.string :correo_electronico
+      t.string :password
       t.boolean :genero, null: false
       t.string :direccion, limit: 50
       t.references :estado_civils, index: true, foreign_key: true
-      t.references :roles, index: true, foreign_key: true
+      t.references :rols, index: true, foreign_key: true
       t.integer :estado, null: false
     end
     
