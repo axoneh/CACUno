@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'usuario/agregar'
+
+  get 'usuario/actualizar'
+
   get 'principal/index'
   root :to => 'principal#index'
   # The priority is based upon order of creation: first created -> highest priority.
