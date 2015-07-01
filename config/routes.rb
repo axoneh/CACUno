@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
-  get 'iniciar_sesion/iniciar'
+  get'iniciar_sesion/iniciar'
+  post 'iniciar_sesion/iniciar'
 
   get 'principal/index'
   

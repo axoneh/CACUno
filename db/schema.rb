@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701043245) do
+ActiveRecord::Schema.define(version: 20150701152328) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 30
@@ -45,6 +45,18 @@ ActiveRecord::Schema.define(version: 20150701043245) do
 
   add_index "anticoagulantes", ["nombre"], name: "index_nombre_anticoagulantes", unique: true
 
+  create_table "autorizados", force: :cascade do |t|
+    t.integer  "rols_id"
+    t.string   "correo",     limit: 45
+    t.string   "password",   limit: 30
+    t.boolean  "estado"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "autorizados", ["correo"], name: "index_correo_autorizado", unique: true
+  add_index "autorizados", ["rols_id"], name: "index_autorizados_on_rols_id"
+
   create_table "cita_medicas", force: :cascade do |t|
     t.integer  "pacientes_id"
     t.integer  "cuenta_usuarios_id"
@@ -68,17 +80,16 @@ ActiveRecord::Schema.define(version: 20150701043245) do
     t.string   "password",           limit: 30
     t.boolean  "genero"
     t.string   "direccion",          limit: 50
-    t.integer  "rols_id"
     t.integer  "estado_civils_id"
-    t.integer  "estado"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.integer  "autorizados_id"
   end
 
+  add_index "cuenta_usuarios", ["autorizados_id"], name: "index_cuenta_usuarios_on_autorizados_id", unique: true
   add_index "cuenta_usuarios", ["correo"], name: "index_correo_usuarios", unique: true
   add_index "cuenta_usuarios", ["estado_civils_id"], name: "index_cuenta_usuarios_on_estado_civils_id"
   add_index "cuenta_usuarios", ["identificacion", "tipo_documentos_id"], name: "index_identificacion_documento_usuario", unique: true
-  add_index "cuenta_usuarios", ["rols_id"], name: "index_cuenta_usuarios_on_rols_id"
   add_index "cuenta_usuarios", ["tipo_documentos_id"], name: "index_cuenta_usuarios_on_tipo_documentos_id"
 
   create_table "dia_asociados", force: :cascade do |t|
