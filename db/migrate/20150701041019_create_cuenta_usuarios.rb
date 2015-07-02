@@ -10,6 +10,7 @@ class CreateCuentaUsuarios < ActiveRecord::Migration
       t.boolean :genero
       t.string :direccion, limit: 50
       t.references :estado_civils, index: true, foreign_key: true
+      t.boolean :estado
 
       t.timestamps null: false
     end

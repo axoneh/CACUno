@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20150701152328) do
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 30
     t.text     "descripcion"
+    t.boolean  "tipo"
     t.integer  "estado"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
@@ -81,6 +82,7 @@ ActiveRecord::Schema.define(version: 20150701152328) do
     t.boolean  "genero"
     t.string   "direccion",          limit: 50
     t.integer  "estado_civils_id"
+    t.boolean  "estado"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.integer  "autorizados_id"
@@ -183,6 +185,7 @@ ActiveRecord::Schema.define(version: 20150701152328) do
     t.string   "pregunta",    limit: 50
     t.text     "descripcion"
     t.integer  "estado"
+    t.boolean  "tipo"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end

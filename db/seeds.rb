@@ -41,7 +41,7 @@ Autorizado.delete_all
 Autorizado.create( rols_id: 1, correo: 'alejandro@axoneh.com', password: 'hk3nol',estado: true)
 #-----------------------------------------------------------------------
 CuentaUsuario.delete_all
-CuentaUsuario.create(identificacion: 1032485940, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , correo: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: true, autorizados_id: 1)
+CuentaUsuario.create(identificacion: 1032485940, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , correo: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: true, autorizados_id: 1, estado: true)
 
 Paciente.delete_all
 #-----------------------------------------------------------------------

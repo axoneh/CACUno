@@ -1,0 +1,9 @@
+<div><%= @nombreSesion%></div>
+<h1>Agregar autorizacion</h1>
+<%= form_tag({:controller=>"autorizado", :action}, :method=>"post") do%>
+	<%= email_field_tag "correo", "",:id=>"correo", :name=>"correo", :size => 30, :maxlenght => 45, :placeholder=>"Correo electronico del autorizado", :required=>"required" %>
+	<%= select_tag "cargos", options_from_collection_for_select(@roles, nombre, nombre)%>
+	<%= submit_tag "guardar", :id => "guardar", :name => "guardar", :disabled => false, :disable_with => "Por favor espere..."%>
+	<p><%= @cargo%></p>
+	<p><%= @respuesta%></p>
+<%end%>

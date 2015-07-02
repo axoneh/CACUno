@@ -1,19 +1,31 @@
 Rails.application.routes.draw do
 
-  get 'ventana_administracion/inicial'
+  get 'usuario/visualizar'
 
-  get 'ventana_administracion/vista'
+  get 'usuario/actualizar'
 
-  get 'ventana_administracion/actualizar'
+  get 'usuario/agregar'
 
-  get 'ventana_administracion/inicial'
+  get 'medico_internista/menu'
 
-  get 'ventana_administracion/vista'
+  get 'autorizado/agregar'
+  post 'autorizado/agregar'
 
-  get 'ventana_administracion/inicial'
+  get 'autorizado/actualizar'
 
-  get 'iniciar_sesion/iniciar'
-  post 'iniciar_sesion/iniciar'
+  get 'autorizado/desactivar'
+
+  get 'administracion/menu'
+
+  get 'usuario/visualizar'
+
+  get 'usuario/actualizar'
+  post 'usuario/actualizar'
+
+  get 'sesion/iniciar'
+  post 'sesion/iniciar'
+
+  get 'sesion/cerrar'
 
   get 'principal/index'
   
