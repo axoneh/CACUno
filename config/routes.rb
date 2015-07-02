@@ -1,6 +1,18 @@
 Rails.application.routes.draw do
 
-  get'iniciar_sesion/iniciar'
+  get 'ventana_administracion/inicial'
+
+  get 'ventana_administracion/vista'
+
+  get 'ventana_administracion/actualizar'
+
+  get 'ventana_administracion/inicial'
+
+  get 'ventana_administracion/vista'
+
+  get 'ventana_administracion/inicial'
+
+  get 'iniciar_sesion/iniciar'
   post 'iniciar_sesion/iniciar'
 
   get 'principal/index'

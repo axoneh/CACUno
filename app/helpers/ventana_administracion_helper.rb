@@ -1,0 +1,2 @@
+module VentanaAdministracionHelper
+end

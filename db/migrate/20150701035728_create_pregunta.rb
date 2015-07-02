@@ -4,6 +4,7 @@ class CreatePregunta < ActiveRecord::Migration
       t.string :pregunta, limit: 50
       t.text :descripcion
       t.integer :estado
+      t.boolean :tipo
 
       t.timestamps null: false
     end
