@@ -37,11 +37,9 @@ Rol.create(nombre: 'Medico Internista', descripcion: '(Sin descripcion)')
 TipoDocumento.delete_all
 TipoDocumento.create(nombre: 'Cedula de ciudadania', estado: 1)
 
-Autorizado.delete_all
-Autorizado.create( rols_id: 1, correo: 'alejandro@axoneh.com', password: 'hk3nol',estado: true)
 #-----------------------------------------------------------------------
 CuentaUsuario.delete_all
-CuentaUsuario.create(identificacion: 1032485940, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , correo: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: true, autorizados_id: 1, estado: true)
+CuentaUsuario.create(identificacion: 1032485940, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , email: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: true, estado: 2, rols_id: 1)
 
 Paciente.delete_all
 #-----------------------------------------------------------------------

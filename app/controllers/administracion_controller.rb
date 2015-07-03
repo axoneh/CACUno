@@ -1,12 +1,10 @@
 class AdministracionController < ApplicationController
   
   def menu
-    sesion=Sesion.getLogin();
-    if sesion and sesion[:rol]=="Administracion"
-      datosSesion=CuentaUsuario.find(sesion[:id]);
-      @nombreSesion=datosSesion.nombre+" "+datosSesion.apellido;
+    if cuenta_usuario_signed_in?
+      
     else
-      redirect_to :controller=>"sesion", :action=>"iniciar"
+      redirect_to :controller=>"principal", :action=>"index"
     end
   end
   

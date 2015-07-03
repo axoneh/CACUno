@@ -1,6 +1,6 @@
 class CuentaUsuario < ActiveRecord::Base
-  
-  belongs_to :tipo_documentos
-  belongs_to :estado_civils 
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable
   
 end

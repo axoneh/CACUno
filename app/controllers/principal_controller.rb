@@ -1,6 +1,9 @@
 class PrincipalController < ApplicationController
+  
   def index
-    reset_session();
-    
+    if cuenta_usuario_signed_in?
+      
+    end 
   end
+  
 end

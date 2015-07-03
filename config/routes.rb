@@ -1,39 +1,27 @@
 Rails.application.routes.draw do
 
-  get 'usuario/visualizar'
+  get 'usuario/agregar'
 
   get 'usuario/actualizar'
 
-  get 'usuario/agregar'
-
   get 'usuario/visualizar'
 
-  get 'usuario/actualizar'
+  get 'usuario/autorizar'
 
-  get 'usuario/agregar'
+  get 'usuario/desautorizar'
+
+  get 'usuario/desactivar'
+
+  devise_for :cuenta_usuarios
 
   get 'medico_internista/menu'
 
-  get 'autorizado/agregar'
-  post 'autorizado/agregar'
-
-  get 'autorizado/actualizar'
-
-  get 'autorizado/desactivar'
-
   get 'administracion/menu'
-
-  get 'usuario/actualizar'
-  post 'usuario/actualizar'
-
-  get 'sesion/iniciar'
-  post 'sesion/iniciar'
-
-  get 'sesion/cerrar'
 
   get 'principal/index'
   
   root :to => 'principal#index'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

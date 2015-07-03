@@ -1,5 +1,9 @@
 <div>
-	<h2>Elija un tipo de usario</h2>	
-	<li><%= link_to "Usuario" , :action => "iniciar", :controller => "sesion"%></li>	
-	<li><%= link_to "Paciente", :action => "index"%></li>
+	<h2>Elija un tipo de usario</h2>
+	<% if cuenta_usuario_signed_in?%>
+		<li><%= link_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)%></li>
+	<% else %>
+		<li><%= link_to('Usuario', new_cuenta_usuario_session_path)  %>  </li>	
+		<li><%= link_to "Paciente", action: "index"%></li>
+	<% end %>
 </div>
