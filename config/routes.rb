@@ -6,6 +6,12 @@ Rails.application.routes.draw do
 
   get 'usuario/agregar'
 
+  get 'usuario/visualizar'
+
+  get 'usuario/actualizar'
+
+  get 'usuario/agregar'
+
   get 'medico_internista/menu'
 
   get 'autorizado/agregar'
@@ -16,8 +22,6 @@ Rails.application.routes.draw do
   get 'autorizado/desactivar'
 
   get 'administracion/menu'
-
-  get 'usuario/visualizar'
 
   get 'usuario/actualizar'
   post 'usuario/actualizar'
@@ -84,4 +88,19 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
+  # :confirmable => enviar correo de verificacion de usuario
+  # :recoverable => restablece la contraseña y envia correo con instrucciones
+  # :database_authenticatable => cifra y almacena una contraseña en la base de datos para validar la autenticidad de un usuario mientras que la firma. La autenticación se puede realizar tanto a través de las peticiones POST o autenticación básica HTTP.
+  # :registerable => maneja la firma usuarios a través de un proceso de registro, también lo que les permite editar y destruir su cuenta.
+  # :rememberable => gestiona la generación y la limpieza de una ficha para recordar al usuario de una cookie guardada.
+  # :trackable => pistas ingresar recuento, marcas de tiempo y dirección IP.
+  # :timeoutable => expira sesiones que no han estado activos en un período de tiempo especificado.
+  # :validatable => proporciona validaciones de correo electrónico y contraseña. Es opcional y puede ser personalizado, por lo que usted es capaz de definir sus propias validaciones.
+  # :lockable => bloquea una cuenta después de un número determinado de intentos de inicio de sesión fallidos. Se puede desbloquear a través de correo electrónico o después de un período de tiempo especificado.
+  
+  #
+  # t.string :email,              null: false, default: ""
+  # t.string :encrypted_password, null: false, default: ""
+  #
 end
