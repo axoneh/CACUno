@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get 'medico_internista/menu'
 
   get 'administracion/menu'
+  post 'administracion/menu'
 
   get 'principal/index'
   

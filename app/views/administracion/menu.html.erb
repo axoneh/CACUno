@@ -1,6 +1,7 @@
-<h1><%= @nombreSesion%></h1>
+<h1>Menu de administracion</h1>
+<h4>Usuario actual: <%= @nombre%></h4>
 <div>
 	<li>
-		<%= link_to "Agregar autorizacion", :action=> "autorizar", :controller => "usuario"%>
+		<%= link_to "Agregar autorizacion", action: "autorizar", controller: "usuario"%>
 	</li>
 </div>
