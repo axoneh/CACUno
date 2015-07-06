@@ -1,0 +1,14 @@
+<h1>Horario de usuario</h1>
+<% if @admin%>
+	<h2>Usuario actual: <%= @nombre%></h2>
+<% end%>
+<% @lista.each do |t|%>
+	<br />
+	<%= t%>
+<% end%>
+<br />
+<% if @admin%>
+	<%= link_to "Modificar horario", action: "modificar", controller: "horario", correo: @correo%>
+<% end%>
+<br />
+<%= @mensaje%>

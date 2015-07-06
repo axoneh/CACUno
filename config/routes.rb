@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
 
+  get 'horario/cargar'
+
+  get 'horario/modificar'
+
+  get 'horario/cargar'
+
   get 'usuario/agregar'
   post 'usuario/agregar'
 

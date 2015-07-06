@@ -1,2 +1,44 @@
-<h1>Usuario#visualizar</h1>
-<p>Find me in app/views/usuario/visualizar.html.erb</p>
+<h1>Usuarios en el sistema</h1>
+<% if cuenta_usuario_signed_in?%>
+	<h2>Usuario actual: <%= @nombre%></h2>
+<%end%>
+<%if @especifico%>
+	<h3>Usuario especificado</h3>
+	<br />
+	Nombre: <%= @nombre%>
+	<br />
+	Apellido: <%= @apellido%>
+	<br />
+	Numero de identificacion: <%= @identificacion%>
+	<br />
+	Documento: <%= @documento%>
+	<br />
+	Direccion: <%= @direccion%>
+	<br />
+	Correo: <%= @correo%>
+	<br />
+	Estado Civil: <%= @estadoC%>
+	<br />
+	Genero: <%= @genero%>
+	<br />
+	Cargo: <%= @cargo%>
+	<br />
+	<% if @modificar%>
+		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario"%>
+	<% end%> | 
+	<%= link_to "Horario", action: "cargar", controller: "horario", correo: @correo%>
+	<% if @desactivar%>
+		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", correo: @correo%>
+	<% end%> | 
+	<br />
+	<%= link_to "Ir a la lista", action: "visualizar", controller: "usuario"%>
+<% else%>
+	<% @usuarios.each do |d|%>
+	<div>
+		<br />
+		<%= link_to d.email, action: "visualizar", controller: "usuario", correo: d.email %>
+	</div>
+	<%end%>
+<%end%>
+<br />
+<%=link_to "Ir al menu", action:"index", controller: "principal"%>
