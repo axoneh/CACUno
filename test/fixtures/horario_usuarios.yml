@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cuenta_usuarios_id: 
+  dia_asignados_id: 
+  sucursals_id: 
+  hora_inicial: 2015-07-05 14:52:22
+  hora_final: 2015-07-05 14:52:22
+
+two:
+  cuenta_usuarios_id: 
+  dia_asignados_id: 
+  sucursals_id: 
+  hora_inicial: 2015-07-05 14:52:22
+  hora_final: 2015-07-05 14:52:22

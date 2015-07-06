@@ -1,15 +1,15 @@
 Rails.application.routes.draw do
 
   get 'usuario/agregar'
+  post 'usuario/agregar'
 
   get 'usuario/actualizar'
 
   get 'usuario/visualizar'
 
   get 'usuario/autorizar'
-
-  get 'usuario/desautorizar'
-
+  post 'usuario/autorizar'
+  
   get 'usuario/desactivar'
 
   devise_for :cuenta_usuarios
@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   get 'medico_internista/menu'
 
   get 'administracion/menu'
-  post 'administracion/menu'
 
   get 'principal/index'
   

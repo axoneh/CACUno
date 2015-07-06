@@ -1,15 +1,10 @@
 <h1>Autorizar nuevo usuario</h1>
-<h2>Uusario actual: <%= @nombre%></h2>
+<h2>Usuario actual: <%= @nombre%></h2>
 <%= form_tag({controller: "usuario", action: "autorizar"} , method: "post") do %>
 	<%= email_field_tag "correo", "",id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo electronico", required:"required" %>
-	<%= select_tag "rol", options_from_collection_for_select(@roles ,id, nombre)%>
+	<p>Recuerde que si asigna como cargo "Administrador", no podra desactivar la cuenta en un futuro</p>
+	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
 	<%= submit_tag "enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
-<%= if @ingresado %>
-	<div>
-		<p>
-			La autorizacion se realizo correctamente, para volver al menu principal oprima 
-			<%= link_to "aqui", action: "index", controller: "principal"%>
-		</p>
-	</div>
-<% end %>
+<%= @mensaje%>
+<%= link_to "ir al menu", action: "index", controller: "principal"%>

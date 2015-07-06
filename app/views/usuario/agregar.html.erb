@@ -1,2 +1,17 @@
-<h1>Usuario#agregar</h1>
-<p>Find me in app/views/usuario/agregar.html.erb</p>
+<h1>Agregar datos de cuenta</h1>
+<h2>Usuario actual: <%= @correo%></h2>
+<h2>Cargo: <%= @cargo%></h2>
+<%= form_tag({controller: "usuario", action: "agregar"} , method: "post") do %>
+	<%= text_field_tag "ident", "" , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
+	<%= text_field_tag "nombre", "", size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
+	<%= text_field_tag "apellido", "", size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
+	<select id="genero" name="genero">
+		<option value=0>Femenino</option>
+		<option value=1>Masculino</option>
+	</select>
+	<%= text_field_tag "direccion", "", size: 30, maxlenght: 45, placeholder: "Direccion", required:"required"%>
+	<%= select_tag "ecivil", options_from_collection_for_select(@estadosC,:id,:nombre)%>
+	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
+<%end%>
+<%= @mensaje %>

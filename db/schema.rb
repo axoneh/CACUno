@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701043245) do
+ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 30
@@ -54,26 +54,32 @@ ActiveRecord::Schema.define(version: 20150701043245) do
     t.integer  "estado"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "hora_cita_id"
+    t.integer  "sucursals_id"
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id"], name: "index_cita_medicas_on_cuenta_usuarios_id"
-  add_index "cita_medicas", ["pacientes_id", "cuenta_usuarios_id", "fecha"], name: "index_paciente_usuario_fecha_cita", unique: true
+  add_index "cita_medicas", ["hora_cita_id", "pacientes_id", "fecha"], name: "index_", unique: true
+  add_index "cita_medicas", ["hora_cita_id"], name: "index_cita_medicas_on_hora_cita_id"
   add_index "cita_medicas", ["pacientes_id"], name: "index_cita_medicas_on_pacientes_id"
+  add_index "cita_medicas", ["sucursals_id"], name: "index_cita_medicas_on_sucursals_id"
 
   create_table "cuenta_usuarios", force: :cascade do |t|
     t.integer  "identificacion"
     t.integer  "tipo_documentos_id"
-    t.string   "nombre",             limit: 30
-    t.string   "apellido",           limit: 30
-    t.string   "email",                         default: "", null: false
-    t.string   "encrypted_password",            default: "", null: false
+    t.string   "nombre",                 limit: 30
+    t.string   "apellido",               limit: 30
+    t.string   "email",                             default: "", null: false
+    t.string   "encrypted_password",                default: "", null: false
     t.boolean  "genero"
-    t.string   "direccion",          limit: 50
+    t.string   "direccion",              limit: 50
     t.integer  "estado_civils_id"
     t.integer  "estado"
     t.integer  "rols_id"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true
@@ -101,6 +107,30 @@ ActiveRecord::Schema.define(version: 20150701043245) do
   end
 
   add_index "estado_civils", ["nombre"], name: "index_nombre_estado_civil", unique: true
+
+  create_table "hora_cita", force: :cascade do |t|
+    t.time     "hora_inicial"
+    t.time     "hora_final"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "hora_cita", ["hora_inicial", "hora_inicial"], name: "index_hora_inicial_final", unique: true
+
+  create_table "horario_usuarios", force: :cascade do |t|
+    t.integer  "cuenta_usuarios_id"
+    t.integer  "dia_asignados_id"
+    t.integer  "sucursals_id"
+    t.time     "hora_inicial"
+    t.time     "hora_final"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "horario_usuarios", ["cuenta_usuarios_id", "dia_asignados_id"], name: "index_horario_usuario_dia", unique: true
+  add_index "horario_usuarios", ["cuenta_usuarios_id"], name: "index_horario_usuarios_on_cuenta_usuarios_id"
+  add_index "horario_usuarios", ["dia_asignados_id"], name: "index_horario_usuarios_on_dia_asignados_id"
+  add_index "horario_usuarios", ["sucursals_id"], name: "index_horario_usuarios_on_sucursals_id"
 
   create_table "inr_pacientes", force: :cascade do |t|
     t.integer  "cita_medicas_id"
@@ -235,6 +265,16 @@ ActiveRecord::Schema.define(version: 20150701043245) do
   end
 
   add_index "rols", ["nombre"], name: "index_nombre_roles", unique: true
+
+  create_table "sucursals", force: :cascade do |t|
+    t.string   "nombre",     limit: 45
+    t.string   "direccion",  limit: 50
+    t.integer  "estado"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "sucursals", ["nombre"], name: "index_sucursals_on_nombre", unique: true
 
   create_table "tipo_documentos", force: :cascade do |t|
     t.string   "nombre",     limit: 30

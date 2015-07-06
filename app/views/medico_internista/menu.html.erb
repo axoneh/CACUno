@@ -1,2 +1,4 @@
-<h1>MedicoInternista#menu</h1>
-<p>Find me in app/views/medico_internista/menu.html.erb</p>
+<h1>Menu de medico internista</h1>
+<h4>Usuario actual: <%= @nombre%></h4>
+<%= link_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)%>
+

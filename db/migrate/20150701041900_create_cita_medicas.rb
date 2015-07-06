@@ -8,7 +8,6 @@ class CreateCitaMedicas < ActiveRecord::Migration
       t.integer :estado
 
       t.timestamps null: false
-    end
-    add_index(:cita_medicas,[:pacientes_id, :cuenta_usuarios_id, :fecha], unique: true, name: 'index_paciente_usuario_fecha_cita')
+    end    
   end
 end
