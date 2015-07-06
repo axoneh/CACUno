@@ -1,2 +1,13 @@
-<h1>Horario#modificar</h1>
-<p>Find me in app/views/horario/modificar.html.erb</p>
+<h1>Generar horario</h1>
+<h4>Usuario actual: <%= @nombre%></h4>
+<%= form_tag({controller: "horario", action: "modificar", correo: @correo} , method: "post") do%>
+	<% @dias.each do |t|%>
+		<br />
+		<%= check_box_tag t.nombre, t.nombre%> <%= t.nombre%> - Inicio de jornada: 
+		<%= time_field_tag t.nombre+"_ini", t.nombre+"_ini"%> - Fin de jornada: 
+		<%= time_field_tag t.nombre+"_fin", t.nombre+"_fin"%> - Sucursal
+		<%= select_tag t.nombre+"_sucursal", options_from_collection_for_select(@sucursales ,:id, :nombre)%>
+	<% end%>
+	<br />
+	<%= submit_tag "enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
+<% end%>

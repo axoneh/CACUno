@@ -151,6 +151,8 @@ class UsuarioController < ApplicationController
           ident=params[:identificacion]
           tipoDoc=params[:documento]
           rol=params[:rol]
+          #if CuentaUsuario.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc])
+            
           if CuentaUsuario.exists?(["email = ?", correo])
             autorizado=CuentaUsuario.find_by(email: correo);
             cargo=autorizado.rols_id

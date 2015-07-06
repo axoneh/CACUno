@@ -1,4 +1,5 @@
 class HorarioController < ApplicationController
+  
   def cargar
     @mensaje=""
     @lista=Hash.new
@@ -30,13 +31,40 @@ class HorarioController < ApplicationController
 
   def modificar
     if validacionAdmin()
+      usuarioSesion=current_cuenta_usuario
+      @nombre=usuarioSesion.nombre+" "+usuarioSesion.apellido
+      @sucursales=Sucursal.where(["estado = ?", 1])
+      @dias=DiaAsociado.where(["estado = ?",1])
       if params[:correo].present?
         usuario=CuentaUsuario.find_by(params[:correo])
-        cargo=Rol.find(usuario.rols_id)
-        if cargo.nombre=="Administrador"
+        if usuario
+          cargo=Rol.find(usuario.rols_id)
+          @correo=usuario.email
+          if cargo.nombre=="Administrador"
+            redirect_to controller: "principal", action: "index"
+          end
+          if request.post?
+            HorarioUsuario.delete_all(["cuenta_usuarios_id = ?", usuario.id])
+            @dias.each do |t|
+              if params[t.nombre].present?
+                horarioN=HorarioUsuario.new
+                
+                horarioN.hora_inicial=params[t.nombre+"_ini"]
+                horarioN.hora_final=params[t.nombre+"_fin"]
+                horarioN.dia_asignados_id=@dias.id
+                horarioN.cuenta_usuarios_id=usuario.id
+                horarioN.sucursals_id=params[t.nombre_"sucursal"]
+                
+                horarioN.save
+                
+              end
+            end
+          end
+        else
           redirect_to controller: "principal", action: "index"
         end
-        
+      else
+        redirect_to controller: "principal", action: "index"
       end
     else
       redirect_to controller: "principal", action: "index"

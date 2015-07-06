@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  get 'paciente/agregar'
+
+  get 'paciente/actualizar'
+
   get 'horario/cargar'
 
   get 'horario/modificar'
