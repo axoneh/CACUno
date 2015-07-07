@@ -8,7 +8,7 @@ class PrincipalController < ApplicationController
         if rol
           if rol.nombre=="Administrador"
             redirect_to controller: "administracion", action: "menu"
-          elsif rol.nombre=="Medico Internista"
+          elsif rol.nombre=="Medico Especialista"
             redirect_to controller: "medico_internista", action: "menu"
           else
             redirect_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)

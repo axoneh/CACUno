@@ -6,6 +6,10 @@ class MedicoInternistaController < ApplicationController
         rol=Rol.find(usuario.rols_id);
         if rol and rol.nombre="Medico Internista"
           @nombre=usuario.nombre+" "+usuario.apellido
+          @busqueda=params[:nombreP].present?
+          if @busqueda
+            @pacientesAcorde=Paciente.where(["nombre||' '||apellido like '%?%'", params[:nombreP]])
+          end
         else
           redirect_to controller: "principal", action: "index"
         end

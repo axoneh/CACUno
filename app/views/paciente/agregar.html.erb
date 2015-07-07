@@ -18,11 +18,24 @@
 	<br />
 	<%= text_field_tag "direccion", "" , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
 	<br />
+	<%= date_field_tag "fecha_n", nil, required:"required"%>
+	<br />
 	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre)%>
 	<br />
 	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre)%>
 	<br />
+	<% if @antecedentes%>
+		<h5>Antecedentes clinicos</h5>
+		<%@antecedentes.each do |a|%>
+			<br />
+			<%= check_box_tag a.id, a.id%> ¿<%= a.nombre%>?
+			<% if a.tipo%>
+				<%= text_area_tag a.id+"_comentario", size: "25*10"%>
+			<% end%>
+		<%end%>
+	<% end%>
 	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
+	<br />
 <% end%>
 <br />
 <%= @mensaje %>

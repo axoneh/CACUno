@@ -1,4 +1,5 @@
 class PacienteController < ApplicationController
+  
   def agregar
     if validacionAdmin()
       @mensaje=""
@@ -7,6 +8,7 @@ class PacienteController < ApplicationController
       @documentos=TipoDocumento.where(["estado = ?", 1])
       @estadosC=EstadoCivil.where(["estado = ?", 1])
       @patologias=Patologia.where(["estado = ?", 1])
+      @antecedentes=AntecedentePaciente.where(["estado = ? ", 1])
       if request.post?
         if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion] and params[:direccion]
           correo=params[:correo]
@@ -36,6 +38,15 @@ class PacienteController < ApplicationController
             paciente.estado=1
             paciente.save
             @mensaje="Agregado exitoso de paciente"
+            idpaciente=paciente.id
+            AntecedentePaciente.delete_all(["pacientes_id = ?", idpaciente])
+            @antecedentes.each do |a|
+              if params[a.id].present?
+                if a.tipo
+                  AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id, comentario: params[a.id+"_comentario"])
+                end
+              end  
+            end
           end
         end
       end
@@ -84,6 +95,33 @@ class PacienteController < ApplicationController
         patologia=paciente.patologia_id
         patologia=Patologia.find(patologia)
         @patologia=patologia.nombre
+        @desPatologia=patologia.descripcion
+        @fechaN=paciente.fecha_nacimiento
+        
+        @inr="--"
+        @fecha="(Sin referencia encontrada)"
+        @prescripcion=nil
+        @prescripcionDiaria=nil
+        @anticoagulante=nil
+        cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id, 1]).order(fecha: :desc).first
+        if cita
+          
+          inr=InrPaciente.where(["cita_medicas_id = ?", cita.id]).order([fecha: :desc]).first
+          if inr
+            @inr=inr.valorInr
+            @fecha=inr.fecha
+          end
+          
+          respuesta=RespuestaCita.find_by(cita_medicas_id: cita.id)
+          if respuesta
+            @prescripcion=Prescripcion.find_by(respuesta_cita_id: respuesta.id)
+            if @prescripcion
+              @anticoagulante=Anticoagulante.find_by(@prescripcion.anticoagulantes_id)
+              @prescripcionDiaria=PrescripcionDiaria.joins(:dia_asociados, :prescripcions).select("dia_asociados.nombre as dia, prescripcion_diaria.cantidadGramos as cantidad").where(["prescripcion_diaria.prescripcions_id = ?", prescripcion.id])                                                  
+            end
+          end
+          
+        end
         
       else
         @mensaje="No se encontro registro con esa especificacion"
@@ -116,5 +154,26 @@ class PacienteController < ApplicationController
       return false
     end
   end
+  
+  def validacionMedico
+    if cuenta_usuario_signed_in?
+      if current_cuenta_usuario.estado==1
+        rol=Rol.find(current_cuenta_usuario.rols_id);
+        if rol
+          if rol.nombre=="Medico Espesialista"
+            return true
+          else
+            return false
+          end
+        else
+          return false
+        end
+      else
+        return false
+      end
+    else
+      return false
+    end
+  end  
   
 end

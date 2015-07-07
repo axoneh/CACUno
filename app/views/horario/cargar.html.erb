@@ -1,7 +1,4 @@
-<h1>Horario de usuario</h1>
-<% if @admin%>
-	<h2>Usuario actual: <%= @nombre%></h2>
-<% end%>
+<h1>Horario de <%= @nombre%></h1>
 <% @lista.each do |t|%>
 	<br />
 	<%= t%>

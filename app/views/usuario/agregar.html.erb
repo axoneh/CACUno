@@ -12,10 +12,11 @@
 		<option value=0>Femenino</option>
 		<option value=1>Masculino</option>
 	</select>
+	<%= date_field_tag "fecha_n", nil, required:"required"%>
+	<br />
+	<%= text_field_tag "especialidad", "", size: 30, maxlenght: 30, placeholder: "Especialidad", required:"required"%>
 	<br />
 	<%= text_field_tag "direccion", "", size: 30, maxlenght: 45, placeholder: "Direccion", required:"required"%>
-	<br />
-	<%= select_tag "ecivil", options_from_collection_for_select(@estadosC,:id,:nombre)%>
 	<br />
 	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
 <%end%>

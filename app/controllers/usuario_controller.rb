@@ -6,7 +6,6 @@ class UsuarioController < ApplicationController
       usuario=current_cuenta_usuario
       cargo=usuario.rols_id
       @mensaje="";
-      @estadosC=EstadoCivil.where(["estado = ?", 1])
       
       @cargo=Rol.find(cargo)
       @cargo=@cargo.nombre
@@ -16,19 +15,23 @@ class UsuarioController < ApplicationController
       documento=usuario.tipo_documentos_id
       documento=TipoDocumento.find(documento)
       @documento=documento.nombre
+      
       if request.post?
-        if (params[:nombre].present? and params[:apellido].present? and params[:genero].present? and params[:direccion].present? and params[:ecivil].present?)
+        if (params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:ecivil].present? and params[:fecha_n].present? and params[:especialidad].present?)                                        
+          
+          fechaN=params[:fecha_n]
+          especial=params[:especialidad]
           nombre=params[:nombre]
           apellido=params[:apellido]
           genero=params[:genero]
-          estadoC=params[:ecivil]
           direccion=params[:direccion]
           
           usuario.nombre=nombre
           usuario.apellido=apellido
           usuario.genero=genero
           usuario.direccion=direccion
-          usuario.estado_civils_id=estadoC
+          usuario.fecha_nacimiento=fechaN
+          usuario.especialidad=especial
           
           usuario.estado=1
           usuario.save
@@ -66,16 +69,13 @@ class UsuarioController < ApplicationController
         @apellido=usuario.apellido
         @correo=usuario.email
         @identificacion=usuario.identificacion
-        
+        @especialidad=usuario.especialidad
+        @fechaN=usuario.fecha_nacimiento
         documento=usuario.tipo_documentos_id
         documento=TipoDocumento.find(documento)
         @documento=documento.nombre
         
         @direccion=usuario.direccion
-        
-        estadoC=usuario.estado_civils_id
-        estadoC=EstadoCivil.find(estadoC)
-        @estadoC=estadoC.nombre
         
         @genero="(Sin cargar)"
         if(usuario.genero==1)
@@ -188,7 +188,7 @@ class UsuarioController < ApplicationController
               @mensaje="Existe ya una cuenta asociada a ese correo, se procedio a autorizar";
             end
           else
-            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, nombre: '', apellido: '' , email: correo, password: "pass", direccion: '', estado_civils_id: 1, genero: true, estado: 2, rols_id: rol);
+            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, nombre: '', apellido: '' , email: correo, password: "pass", direccion: '', genero: true, estado: 2, rols_id: rol);
             @mensaje="Se genero la autorizacion exitosamente";
           end
         else

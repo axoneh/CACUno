@@ -18,8 +18,37 @@
 	<br />
 	Genero: <%= @genero%>
 	<br />
+	Fecha de nacimiento: <%= @fechaN%>
+	<br />
+	<br />
 	Patologia: <%= @patologia%>
 	<br />
+	Decripcion: <%= @desPatologia%>
+	<br />
+	<br />
+	Ultimo INR registrado: <%= @inr%>
+	<br />
+	tomado el <%= @fecha%>
+	<br />
+	<br />
+	<% if @prescripcion%>
+		Ultima prescripcion
+		<br />
+		Fecha de creacion: <%= @prescripcion.create_at%>
+		<br />
+		Fecha de vencimiento: <%= @prescripcion.fechaFin%>
+		<br />
+		Anticoagulante: <%= @anticoagulante.nombre%>
+		<br />
+		<% if @prescripcionDiaria%>
+			Prescripcion diaria
+			<br />
+			<% @prescripcionDiaria.each do |d|%>
+				Dia <%= d.dia%> - cantidad <%= d.cantidad%>
+				<br />
+			<% end%>
+		<% end%>
+	<% end%>
 <%else%>
 	<% @pacientes.each do |t|%>
 		<li>

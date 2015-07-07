@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
 
+  get 'cita_medica/crear'
+
+  get 'cita_medica/aplicar'
+
+  get 'cita_medica/efectuar'
+
+  get 'cita_medica/modificar'
+
   get 'paciente/agregar'
   post 'paciente/agregar'
 

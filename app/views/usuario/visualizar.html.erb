@@ -17,11 +17,13 @@
 	<br />
 	Correo: <%= @correo%>
 	<br />
-	Estado Civil: <%= @estadoC%>
-	<br />
 	Genero: <%= @genero%>
 	<br />
 	Cargo: <%= @cargo%>
+	<br />
+	Especialidad: <%= @especialidad%>
+	<br />
+	Fecha de nacimiento: <%= @fechaN%>
 	<br />
 	<% if @modificar%>
 		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario"%>

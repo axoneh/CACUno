@@ -50,19 +50,16 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.integer  "pacientes_id"
     t.integer  "cuenta_usuarios_id"
     t.date     "fecha"
-    t.boolean  "tipo"
+    t.string   "tipo"
     t.integer  "estado"
+    t.time     "hora_ini"
+    t.time     "hora_fin"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.integer  "hora_cita_id"
-    t.integer  "sucursals_id"
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id"], name: "index_cita_medicas_on_cuenta_usuarios_id"
-  add_index "cita_medicas", ["hora_cita_id", "pacientes_id", "fecha"], name: "index_", unique: true
-  add_index "cita_medicas", ["hora_cita_id"], name: "index_cita_medicas_on_hora_cita_id"
   add_index "cita_medicas", ["pacientes_id"], name: "index_cita_medicas_on_pacientes_id"
-  add_index "cita_medicas", ["sucursals_id"], name: "index_cita_medicas_on_sucursals_id"
 
   create_table "cuenta_usuarios", force: :cascade do |t|
     t.string   "identificacion"
@@ -73,7 +70,8 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.string   "encrypted_password",                default: "", null: false
     t.boolean  "genero"
     t.string   "direccion",              limit: 50
-    t.integer  "estado_civils_id"
+    t.string   "especialidad"
+    t.date     "fecha_nacimiento"
     t.integer  "estado"
     t.integer  "rols_id"
     t.string   "reset_password_token"
@@ -85,7 +83,6 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true
-  add_index "cuenta_usuarios", ["estado_civils_id"], name: "index_cuenta_usuarios_on_estado_civils_id"
   add_index "cuenta_usuarios", ["identificacion", "tipo_documentos_id"], name: "index_identificacion_documento_usuario", unique: true
   add_index "cuenta_usuarios", ["rols_id"], name: "index_cuenta_usuarios_on_rols_id"
   add_index "cuenta_usuarios", ["tipo_documentos_id"], name: "index_cuenta_usuarios_on_tipo_documentos_id"
@@ -109,15 +106,6 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   end
 
   add_index "estado_civils", ["nombre"], name: "index_nombre_estado_civil", unique: true
-
-  create_table "hora_cita", force: :cascade do |t|
-    t.time     "hora_inicial"
-    t.time     "hora_final"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "hora_cita", ["hora_inicial", "hora_inicial"], name: "index_hora_inicial_final", unique: true
 
   create_table "horario_usuarios", force: :cascade do |t|
     t.integer  "cuenta_usuarios_id"
@@ -171,12 +159,13 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   add_index "observacion_medicas", ["respuesta_cita_id"], name: "index_observacion_medicas_on_respuesta_cita_id", unique: true
 
   create_table "pacientes", force: :cascade do |t|
-    t.integer  "identificacion"
+    t.string   "identificacion"
     t.integer  "tipo_documentos_id"
     t.string   "nombre",             limit: 30
     t.string   "apellido",           limit: 30
     t.string   "correo",             limit: 45
     t.boolean  "genero"
+    t.date     "fecha_nacimiento"
     t.string   "direccion",          limit: 50
     t.integer  "estado_civils_id"
     t.integer  "patologia_id"

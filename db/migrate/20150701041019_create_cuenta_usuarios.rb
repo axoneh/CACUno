@@ -9,7 +9,8 @@ class CreateCuentaUsuarios < ActiveRecord::Migration
       t.string :encrypted_password, null: false, default: ""
       t.boolean :genero
       t.string :direccion, limit: 50
-      t.references :estado_civils, index: true, foreign_key: true
+      t.string :especialidad
+      t.date :fecha_nacimiento
       t.integer :estado
       t.references :rols , index: true, foreign_key: true
       t.string   :reset_password_token

@@ -4,18 +4,10 @@ class HorarioController < ApplicationController
     @mensaje=""
     @lista=Hash.new
     @admin=validacionAdmin();
-    if @admin
-      usuario=current_cuenta_usuario
-      cargo=Rol.find(usuario.rols_id)
-      if cargo.nombre=="Administrador"
-        redirect_to controller: "principal", action: "index"
-      end
-      @nombre=usuario.nombre+" "+usuario.apellido
-    end
     if params[:correo].present?
       usuario=CuentaUsuario.find_by(email: params[:correo])
-      @correo=usuario.email
       if usuario
+        @nombre= usuario.nombre+" "+usuario.apellido
         horarios=HorarioUsuario.where(["cuenta_usuarios_id = ?", usuario.id])
         horarios.each do |t|
           dia=DiaAsociado.find(t.dia_asociados_id)
