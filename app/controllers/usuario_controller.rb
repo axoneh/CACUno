@@ -6,14 +6,16 @@ class UsuarioController < ApplicationController
       usuario=current_cuenta_usuario
       cargo=usuario.rols_id
       @mensaje="";
-      @estadosC=EstadoCivil.all
+      @estadosC=EstadoCivil.where(["estado = ?", 1])
       
       @cargo=Rol.find(cargo)
       @cargo=@cargo.nombre
       @correo=usuario.email
       @identificacion= usuario.identificacion
-      @documento=usuario.tipo_documentos_id
-      @documento=TipoDocumento.nombre
+      
+      documento=usuario.tipo_documentos_id
+      documento=TipoDocumento.find(documento)
+      @documento=documento.nombre
       if request.post?
         if (params[:nombre].present? and params[:apellido].present? and params[:genero].present? and params[:direccion].present? and params[:ecivil].present?)
           nombre=params[:nombre]
@@ -88,6 +90,7 @@ class UsuarioController < ApplicationController
         
         @modificar=false;
         @desactivar=false;
+        @horario=false;
         
         estado=usuario.estado;
         @estado="(Sin cargar)"
@@ -102,6 +105,7 @@ class UsuarioController < ApplicationController
         if cuenta_usuario_signed_in?
           if usuario.email==current_cuenta_usuario.email
             @modificar=true;
+            @horario=false;
             if cargo.nombre=="Administrador"
               @desactivar=true;
             else
@@ -111,14 +115,17 @@ class UsuarioController < ApplicationController
             @modificar=false;
             if cargo.nombre=="Administrador"
               @desactivar=false;
+              @horario=false
             else
               cargoSesion=current_cuenta_usuario.rols_id
               cargoSesion=Rol.find(cargoSesion)
               
               if cargoSesion.nombre=="Administrador"
                 @desactivar=true;
+                @horario=true;
               else 
                 @desactivar=false;
+                @horario=false;
               end
             end
           end
@@ -141,19 +148,31 @@ class UsuarioController < ApplicationController
     if validacion
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
-      @documentos=TipoDocumento.all
+      @documentos=TipoDocumento.where(["estado = ?", 1])
       @mensaje="";
       @roles=Rol.all
       if request.post?
-        if params[:correo].present? and params[:rol].present? and params[:identificacion].present? and params[:tipoD].present?
+        if params[:correo].present? and params[:identificacion].present?
           #pass=rand(1000000).to_s
           correo=params[:correo]
           ident=params[:identificacion]
           tipoDoc=params[:documento]
           rol=params[:rol]
-          #if CuentaUsuario.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc])
-            
-          if CuentaUsuario.exists?(["email = ?", correo])
+          if CuentaUsuario.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc])
+            autorizado=CuentaUsuario.where(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc]).first;
+            cargo=autorizado.rols_id
+            cargo=Rol.find(cargo)
+            if cargo.nombre=="Administrador" and autorizado.estado==1
+              @mensaje="Existe ya una cuenta asociada a esa identificacion pero no se puede actualizar por motivos de permisos";
+            else
+              autorizado.password="pass";
+              autorizado.rols_id=rol;
+              autorizado.estado=2;
+              autorizado.email=correo
+              autorizado.save();
+              @mensaje="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar";
+            end
+          elsif CuentaUsuario.exists?(["email = ?", correo])
             autorizado=CuentaUsuario.find_by(email: correo);
             cargo=autorizado.rols_id
             cargo=Rol.find(cargo)

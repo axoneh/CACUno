@@ -1,7 +1,7 @@
 class CreateCuentaUsuarios < ActiveRecord::Migration
   def change
     create_table :cuenta_usuarios do |t|
-      t.integer :identificacion
+      t.string :identificacion
       t.references :tipo_documentos, index: true, foreign_key: true
       t.string :nombre, limit: 30
       t.string :apellido, limit: 30

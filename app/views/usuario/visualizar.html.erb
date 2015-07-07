@@ -26,7 +26,9 @@
 	<% if @modificar%>
 		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario"%>
 	<% end%> | 
-	<%= link_to "Horario", action: "cargar", controller: "horario", correo: @correo%>
+	<% if @horario%>
+		<%= link_to "Horario", action: "cargar", controller: "horario", correo: @correo%>
+	<%end%> | 
 	<% if @desactivar%>
 		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", correo: @correo%>
 	<% end%> | 

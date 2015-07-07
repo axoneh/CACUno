@@ -1,18 +1,17 @@
 Rails.application.routes.draw do
 
   get 'paciente/agregar'
+  post 'paciente/agregar'
 
   get 'paciente/actualizar'
+  post 'paciente/actualizar'
+
+  get 'paciente/visualizar'
 
   get 'omniauth_callbacks/google_oauth2'
 
-  get 'paciente/agregar'
-
-  get 'paciente/actualizar'
-
-  get 'horario/cargar'
-
   get 'horario/modificar'
+  post 'horario/modificar'
 
   get 'horario/cargar'
 

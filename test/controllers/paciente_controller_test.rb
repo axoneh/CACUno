@@ -11,4 +11,9 @@ class PacienteControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get visualizar" do
+    get :visualizar
+    assert_response :success
+  end
+
 end

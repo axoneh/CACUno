@@ -53,7 +53,7 @@ HoraCita.create(hora_inicial: '16:00:00', hora_final: '17:00:00')
 HoraCita.create(hora_inicial: '17:00:00', hora_final: '18:00:00')
 #-----------------------------------------------------------------------
 CuentaUsuario.delete_all
-CuentaUsuario.create(identificacion: 1032485940, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , email: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: 1, estado: 1, rols_id: 1)
+CuentaUsuario.create(identificacion: "1032485940", tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , email: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', estado_civils_id: 2, genero: 1, estado: 1, rols_id: 1)
 
 Paciente.delete_all
 #-----------------------------------------------------------------------

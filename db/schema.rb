@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   add_index "cita_medicas", ["sucursals_id"], name: "index_cita_medicas_on_sucursals_id"
 
   create_table "cuenta_usuarios", force: :cascade do |t|
-    t.integer  "identificacion"
+    t.string   "identificacion"
     t.integer  "tipo_documentos_id"
     t.string   "nombre",                 limit: 30
     t.string   "apellido",               limit: 30

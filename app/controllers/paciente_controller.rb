@@ -18,7 +18,7 @@ class PacienteController < ApplicationController
           genero=params[:genero]
           estadoC=params[:estadoC]
           patologia=params[:patologia]
-          if Paciente.exists(["correo = ?",correo])
+          if Paciente.exists?(["correo = ?",correo])
             @mensaje="Ya existe ese correo registrado, por favor verifique los datos"
           elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, documento])
             @mensaje="Ya existe un usuario con ese documento, verifique los datos"
@@ -31,8 +31,8 @@ class PacienteController < ApplicationController
             paciente.direccion=direccion
             paciente.tipo_documentos_id=documento
             paciente.genero=genero
-            paciente.estado_civils=estadoC
-            paciente.patologia=patologia
+            paciente.estado_civils_id=estadoC
+            paciente.patologia_id=patologia
             paciente.estado=1
             paciente.save
             @mensaje="Agregado exitoso de paciente"
@@ -60,11 +60,11 @@ class PacienteController < ApplicationController
       if Paciente.exists?(["correo = ?", params[:correo]])
         paciente=Paciente.find_by(correo: params[:correo])
         @nombre=paciente.nombre
-        @apllido=paciente.apellido
+        @apellido=paciente.apellido
         @correo=paciente.correo
         @ide=paciente.identificacion
         
-        documento=paciente_tipo_documentos_id
+        documento=paciente.tipo_documentos_id
         documento=TipoDocumento.find(documento)
         @documento=documento.nombre
         

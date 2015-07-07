@@ -23,7 +23,9 @@
 <%else%>
 	<% @pacientes.each do |t|%>
 		<li>
-			<%link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
+			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
 		</li>
 	<%end%>
 <%end%>
+<br />
+<%=link_to "Ir al menu", action:"index", controller: "principal"%>
