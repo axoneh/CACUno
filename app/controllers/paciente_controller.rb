@@ -1,13 +1,97 @@
 class PacienteController < ApplicationController
   def agregar
     if validacionAdmin()
-      
+      @mensaje=""
+      usuario=current_cuenta_usuario
+      @nombre=usuario.nombre+" "+usuario.apellido
+      @documentos=TipoDocumento.where(["estado = ?", 1])
+      @estadosC=EstadoCivil.where(["estado = ?", 1])
+      @patologias=Patologia.where(["estado = ?", 1])
+      if request.post?
+        if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion] and params[:direccion]
+          correo=params[:correo]
+          nombre=params[:nombre]
+          apellido=params[:apellido]
+          ident=params[:identificacion]
+          direccion=params[:direccion]
+          documento=params[:documento]
+          genero=params[:genero]
+          estadoC=params[:estadoC]
+          patologia=params[:patologia]
+          if Paciente.exists(["correo = ?",correo])
+            @mensaje="Ya existe ese correo registrado, por favor verifique los datos"
+          elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, documento])
+            @mensaje="Ya existe un usuario con ese documento, verifique los datos"
+          else
+            paciente=Paciente.new
+            paciente.correo=correo
+            paciente.nombre=nombre
+            paciente.apellido=apellido
+            paciente.identificacion=ident
+            paciente.direccion=direccion
+            paciente.tipo_documentos_id=documento
+            paciente.genero=genero
+            paciente.estado_civils=estadoC
+            paciente.patologia=patologia
+            paciente.estado=1
+            paciente.save
+            @mensaje="Agregado exitoso de paciente"
+          end
+        end
+      end
     else
       redirect_to controller: "principal", action: "index"
     end
   end
 
   def actualizar
+    if validacionAdmin()
+      
+    else
+      redirect_to controller: "principal", action: "index"
+    end
+  end
+  
+  def visualizar
+    @especifico=false
+    @mensaje=""
+    if params[:correo]
+      @especifico=true
+      if Paciente.exists?(["correo = ?", params[:correo]])
+        paciente=Paciente.find_by(correo: params[:correo])
+        @nombre=paciente.nombre
+        @apllido=paciente.apellido
+        @correo=paciente.correo
+        @ide=paciente.identificacion
+        
+        documento=paciente_tipo_documentos_id
+        documento=TipoDocumento.find(documento)
+        @documento=documento.nombre
+        
+        @direccion=paciente.direccion
+        
+        @genero="(Sin cargar)"
+        if paciente.genero==1
+          @genero="Masculino"
+        else
+          @genero="Femenino"
+        end
+        
+        estadoC=paciente.estado_civils_id
+        estadoC=EstadoCivil.find(estadoC)
+        @estadoC=estadoC.nombre
+        
+        patologia=paciente.patologia_id
+        patologia=Patologia.find(patologia)
+        @patologia=patologia.nombre
+        
+      else
+        @mensaje="No se encontro registro con esa especificacion"
+      end
+    else
+      @especifico=false
+      @pacientes=Paciente.all
+    end
   end
   
   private

@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.datetime "reset_password_sent_at"
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
+    t.string   "provider"
+    t.string   "uid"
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true
@@ -174,7 +176,6 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.string   "nombre",             limit: 30
     t.string   "apellido",           limit: 30
     t.string   "correo",             limit: 45
-    t.string   "password",           limit: 30
     t.boolean  "genero"
     t.string   "direccion",          limit: 50
     t.integer  "estado_civils_id"

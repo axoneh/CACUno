@@ -6,7 +6,6 @@ class CreatePacientes < ActiveRecord::Migration
       t.string :nombre, limit: 30
       t.string :apellido, limit: 30
       t.string :correo, limit: 45
-      t.string :password, limit: 30
       t.boolean :genero
       t.string :direccion, limit: 50
       t.references :estado_civils, index: true, foreign_key: true

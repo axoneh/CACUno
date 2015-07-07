@@ -10,5 +10,11 @@ class CreateHorarioUsuarios < ActiveRecord::Migration
       t.timestamps null: false
     end
     add_index(:horario_usuarios,[:cuenta_usuarios_id, :dia_asignados_id], unique: true, name: 'index_horario_usuario_dia')
+    
+    change_table :cuenta_usuarios do |t|
+      t.string :provider
+      t.string :uid
+    end
+    
   end
 end

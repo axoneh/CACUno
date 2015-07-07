@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'devise'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -37,8 +39,6 @@ gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'momentjs-rails'
 gem 'bootstrap3-datetimepicker-rails'
-
-gem 'omniauth-google-oauth2'
 
 group :development, :test do
   # Call 'debugger' anywhere in the code to stop execution and get a debugger console

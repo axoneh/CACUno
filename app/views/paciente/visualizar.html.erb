@@ -1,0 +1,29 @@
+<h1>Ver pacientes</h1>
+<% if @especifico%>
+	<h3>Paciente especificado</h3>
+	<br />
+	Nombre: <%= @nombre%>
+	<br />
+	Apellido: <%= @apellido%>
+	<br />
+	Numero de identificacion: <%= @identificacion%>
+	<br />
+	Documento: <%= @documento%>
+	<br />
+	Direccion: <%= @direccion%>
+	<br />
+	Correo: <%= @correo%>
+	<br />
+	Estado Civil: <%= @estadoC%>
+	<br />
+	Genero: <%= @genero%>
+	<br />
+	Patologia: <%= @patologia%>
+	<br />
+<%else%>
+	<% @pacientes.each do |t|%>
+		<li>
+			<%link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
+		</li>
+	<%end%>
+<%end%>

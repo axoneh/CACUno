@@ -1,2 +1,30 @@
-<h1>Paciente#agregar</h1>
-<p>Find me in app/views/paciente/agregar.html.erb</p>
+<h1>Agregar paciente</h1>
+<h2>Usuario actual: <%= @nombre%></h2>
+<%= form_tag({controller: "paciente", action: "agregar"} , method: "post") do %>
+	<%= text_field_tag "identificacion", "" , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
+	<br />
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
+	<br />
+	<%= text_field_tag "nombre", "" , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
+	<br />
+	<%= text_field_tag "apellido", "" , size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
+	<br />
+	<%= text_field_tag "correo", "" , size: 30, maxlenght: 30, placeholder: "Correo electronico", required:"required"%>
+	<br />
+	<select id="genero" name="genero">
+		<option value=0>Femenino</option>
+		<option value=1>Masculino</option>
+	</select>
+	<br />
+	<%= text_field_tag "direccion", "" , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
+	<br />
+	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre)%>
+	<br />
+	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre)%>
+	<br />
+	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
+<% end%>
+<br />
+<%= @mensaje %>
+<br />
+<% link_to "Ir al menu", controller: "principal", action: "index"%>
