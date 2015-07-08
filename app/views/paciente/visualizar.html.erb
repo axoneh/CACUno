@@ -31,6 +31,20 @@
 	tomado el <%= @fecha%>
 	<br />
 	<br />
+	<% if @antecedentesPaciente%>
+		<h2>Antecedentes clinicos del paciente</h2>
+		<% @antecedentesPaciente.each do |a|%>
+			<%= a.nombre%>
+			<% if a.tipo%>
+				<br />
+				<%=a.descripcion%>: <%=a.comentario%>
+				<br />
+			<% end%>
+			<br />
+		<% end%>
+	<% end%>
+	<br />
+	<br />
 	<% if @prescripcion%>
 		Ultima prescripcion
 		<br />
@@ -49,10 +63,31 @@
 			<% end%>
 		<% end%>
 	<% end%>
+	<% if @citasMedicas%>
+		<br />
+		<h2>Citas medicas del paciente</h2>
+		<br />
+		<% @citasMedicas.each do |t| %>
+			<br />
+			Fecha: <%= t.fecha %>
+			<br />
+			Tipo: <%= t.tipo%>
+			<br />
+			INR de la cita: <%= t.inr%>
+			<br />
+			<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
+		<% end%>
+	<% end%>
+	<% if @medico%>
+		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @correo%>
+	<% end%>
 <%else%>
 	<% @pacientes.each do |t|%>
 		<li>
-			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
+			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%> - 
+			<% if @medico%>
+				<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>
+			<% end%>
 		</li>
 	<%end%>
 <%end%>

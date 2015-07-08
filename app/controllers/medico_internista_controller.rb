@@ -8,7 +8,7 @@ class MedicoInternistaController < ApplicationController
           @nombre=usuario.nombre+" "+usuario.apellido
           @busqueda=params[:nombreP].present?
           if @busqueda
-            @pacientesAcorde=Paciente.where(["nombre||' '||apellido like '%?%'", params[:nombreP]])
+            @pacientesAcorde=Paciente.where(["nombre||' '||apellido like ?", '%'+params[:nombreP]+'%'])
           end
         else
           redirect_to controller: "principal", action: "index"

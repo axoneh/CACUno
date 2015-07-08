@@ -1,14 +1,15 @@
 class PacienteController < ApplicationController
   
   def agregar
-    if validacionAdmin()
+    validacion=Application.new
+    if ( validacion.validacionAdmin() or validacion.validacionMedico() )
       @mensaje=""
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
       @documentos=TipoDocumento.where(["estado = ?", 1])
       @estadosC=EstadoCivil.where(["estado = ?", 1])
       @patologias=Patologia.where(["estado = ?", 1])
-      @antecedentes=AntecedentePaciente.where(["estado = ? ", 1])
+      @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
       if request.post?
         if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion] and params[:direccion]
           correo=params[:correo]
@@ -41,9 +42,11 @@ class PacienteController < ApplicationController
             idpaciente=paciente.id
             AntecedentePaciente.delete_all(["pacientes_id = ?", idpaciente])
             @antecedentes.each do |a|
-              if params[a.id].present?
+              if params[a.id.to_s].present?
                 if a.tipo
-                  AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id, comentario: params[a.id+"_comentario"])
+                  AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
+                else
+                  AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id)
                 end
               end  
             end
@@ -56,7 +59,8 @@ class PacienteController < ApplicationController
   end
 
   def actualizar
-    if validacionAdmin()
+    validacion=Application.new
+    if validacion.validacionAdmin()
       
     else
       redirect_to controller: "principal", action: "index"
@@ -66,6 +70,8 @@ class PacienteController < ApplicationController
   def visualizar
     @especifico=false
     @mensaje=""
+    validacion=Application.new
+    @medico=validacion.validacionMedico()
     if params[:correo]
       @especifico=true
       if Paciente.exists?(["correo = ?", params[:correo]])
@@ -103,6 +109,9 @@ class PacienteController < ApplicationController
         @prescripcion=nil
         @prescripcionDiaria=nil
         @anticoagulante=nil
+        @antecedentesPaciente=nil
+        @citasMedicas=nil
+        
         cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id, 1]).order(fecha: :desc).first
         if cita
           
@@ -122,6 +131,10 @@ class PacienteController < ApplicationController
           end
           
         end
+
+        @antecedentesPaciente=AntecedentePaciente.joins(:antecedente_medicos).select("*").where(["pacientes_id = ?", paciente.id])
+        
+        @citasMedicas=CitaMedica.joins(:inr_pacientes).select("inr_pacientes.valorInr as inr, cita_medicas.fecha as fecha, cita_medicas.tipo as tipo, cita_medicas.id as id").where(["pacientes_id = ? and inr_pacientes.fecha=cita_medicas.fecha", paciente.id])
         
       else
         @mensaje="No se encontro registro con esa especificacion"
@@ -131,49 +144,5 @@ class PacienteController < ApplicationController
       @pacientes=Paciente.all
     end
   end
-  
-  private
-  
-  def validacionAdmin
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Administrador"
-            return true
-          else
-            return false
-          end
-        else
-          return false
-        end
-      else
-        return false
-      end
-    else
-      return false
-    end
-  end
-  
-  def validacionMedico
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Medico Espesialista"
-            return true
-          else
-            return false
-          end
-        else
-          return false
-        end
-      else
-        return false
-      end
-    else
-      return false
-    end
-  end  
   
 end

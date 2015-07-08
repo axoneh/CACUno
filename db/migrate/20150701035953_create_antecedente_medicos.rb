@@ -1,8 +1,8 @@
 class CreateAntecedenteMedicos < ActiveRecord::Migration
   def change
     create_table :antecedente_medicos do |t|
-      t.string :nombre, limit: 30
-      t.text :descripcion
+      t.string :nombre
+      t.string :descripcion
       t.boolean :tipo
       t.integer :estado
 

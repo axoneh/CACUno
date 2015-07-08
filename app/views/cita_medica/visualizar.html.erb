@@ -1,0 +1,43 @@
+<h1>Citas</h1>
+<% if @nivel==3%>
+	<h3>Cita especifica</h3>
+	<br />
+	Fecha: <%= @fechaCita%>
+	<br />
+	Hora: <%= @horaCita%>
+	<br />
+	Paciente: <%= @paciente%>
+	<br />
+	INR: <%= @inr%>
+	<br />
+<% elsif @nivel==2%>
+	<h3>Cita por paciente</h3>
+	<br />
+	<% @citasRegistradas.each do |t|%>
+		<br />
+		Fecha: <%= t.fecha%>
+		<br />
+		Hora: <%= t.hora%>
+		<br />
+		Paciente: <%= t.paciente%>
+		<br />
+		INR: <%= t.inr%>
+		<br />
+		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita_ t.id%>
+	<% end%>
+<% elsif @nivel==3%>
+	<h3>Cita registradas</h3>
+	<br />
+	<% @citasRegistradas.each do |t|%>
+		<br />
+		Fecha: <%= t.fecha%>
+		<br />
+		Hora: <%= t.hora%>
+		<br />
+		Paciente: <%= t.paciente%>
+		<br />
+		INR: <%= t.inr%>
+		<br />
+		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita_ t.id%>
+	<% end%>
+<% end%>

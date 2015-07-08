@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   get 'cita_medica/efectuar'
 
   get 'cita_medica/modificar'
+  
+  get 'cita_medica/visualizar'
 
   get 'paciente/agregar'
   post 'paciente/agregar'

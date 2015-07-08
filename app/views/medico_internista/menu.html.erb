@@ -1,7 +1,12 @@
 <h1>Menu de medico especialista</h1>
 <h4>Usuario actual: <%= @nombre%></h4>
+<br />
 <%= link_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)%>
+<br />
+<%= link_to "Ver todos los pacientes", controller: "paciente", action:"visualizar"%>
+<br />
 <% if @busqueda%>
+	<br />
 	<% @pacientesAcorde.each do |p|%>
 		<div>
 			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%> - 
@@ -9,6 +14,7 @@
 		</div>
 	<% end%>
 <% else%>
+	<br />
 	<%= form_tag({controller: "medico_internista", action: "menu", correo: @correo} , method: "get") do%>
 		<%= text_field_tag "nombreP", "", size: 30, maxlenght: 30, placeholder: "Nombre del paciente", required:"required"%>
 		<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>

@@ -25,13 +25,15 @@
 	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre)%>
 	<br />
 	<% if @antecedentes%>
-		<h5>Antecedentes clinicos</h5>
+		<h2>Antecedentes clinicos</h2>
 		<%@antecedentes.each do |a|%>
-			<br />
-			<%= check_box_tag a.id, a.id%> ¿<%= a.nombre%>?
+			<%= check_box_tag a.id.to_s, a.id.to_s%> ¿<%= a.nombre%>?
 			<% if a.tipo%>
-				<%= text_area_tag a.id+"_comentario", size: "25*10"%>
+				<br />
+				<%= a.descripcion%>
+				<%= text_area_tag a.id.to_s+'_comentario' %>
 			<% end%>
+			<br />
 		<%end%>
 	<% end%>
 	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>

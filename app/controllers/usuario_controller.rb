@@ -17,9 +17,9 @@ class UsuarioController < ApplicationController
       @documento=documento.nombre
       
       if request.post?
-        if (params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:ecivil].present? and params[:fecha_n].present? and params[:especialidad].present?)                                        
+        if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                   
           
-          fechaN=params[:fecha_n]
+          fechaN=params[:fecha]
           especial=params[:especialidad]
           nombre=params[:nombre]
           apellido=params[:apellido]
@@ -37,7 +37,6 @@ class UsuarioController < ApplicationController
           usuario.save
           
           redirect_to controller: "principal", action: "index"
-          
         end
       end
     else

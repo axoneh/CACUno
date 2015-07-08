@@ -14,12 +14,12 @@
 ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
-    t.string   "nombre",      limit: 30
-    t.text     "descripcion"
+    t.string   "nombre"
+    t.string   "descripcion"
     t.boolean  "tipo"
     t.integer  "estado"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "antecedente_medicos", ["nombre"], name: "index_nombre_antecedentes_medicos", unique: true

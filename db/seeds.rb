@@ -11,6 +11,8 @@ Anticoagulante.create(nombre: 'Warfarina', descripcion: 'Tableta x 5 mg', estado
 Anticoagulante.create(nombre: 'Dabigatran', descripcion: 'Capsula x 75 mg', estado: 1)
 
 AntecedenteMedico.delete_all
+AntecedenteMedico.create(nombre: 'Hay diabeticos en la familia', descripcion: 'Quien(es)', tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Ha tomado anticoagulantes antes', descripcion: 'Cual(es)', tipo: true, estado: 1)
 
 DiaAsociado.delete_all
 DiaAsociado.create(numero:1, nombre: 'Lunes', estado:1)
