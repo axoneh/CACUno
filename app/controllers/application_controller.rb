@@ -69,4 +69,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def validacionAutorizado
+    if cuenta_usuario_signed_in?
+      if current_cuenta_usuario.estado==2
+        return true
+      else
+        return false
+      end
+    else
+      return false
+    end
+  end
+
 end

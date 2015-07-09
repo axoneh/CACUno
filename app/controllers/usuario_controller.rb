@@ -1,8 +1,8 @@
 class UsuarioController < ApplicationController
   
   def agregar
-    validacion=validacionAutorizado()
-    if validacion
+    validacion=Application.new
+    if validacion.validaionAutorizado()
       usuario=current_cuenta_usuario
       cargo=usuario.rols_id
       @mensaje="";
@@ -53,11 +53,6 @@ class UsuarioController < ApplicationController
       usuario=current_cuenta_usuario
       @nombreSesion=usuario.nombre+" "+usuario.apellido
     end
-    
-    if validacionAutorizado()
-      redirect_to controller: "principal", action: "index"
-    end
-    
     @especifico=false;
     @mensaje="";
     if params[:correo]
@@ -143,8 +138,8 @@ class UsuarioController < ApplicationController
   end
 
   def autorizar
-    validacion=validacionAdmin()
-    if validacion
+    validacion=Application.new
+    if validacion.validacionAdmin()
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
       @documentos=TipoDocumento.where(["estado = ?", 1])
@@ -201,41 +196,6 @@ class UsuarioController < ApplicationController
 
   def desactivar
 
-  end
-  
-  private
-  
-  def validacionAdmin
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Administrador"
-            return true
-          else
-            return false
-          end
-        else
-          return false
-        end
-      else
-        return false
-      end
-    else
-      return false
-    end
-  end
-  
-  def validacionAutorizado
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==2
-        return true
-      else
-        return false
-      end
-    else
-      return false
-    end
   end
   
 end

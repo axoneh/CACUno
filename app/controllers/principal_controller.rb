@@ -10,6 +10,8 @@ class PrincipalController < ApplicationController
             redirect_to controller: "administracion", action: "menu"
           elsif rol.nombre=="Medico Especialista"
             redirect_to controller: "medico_internista", action: "menu"
+          elsif rol.nombre=="Paramedico"
+            
           else
             redirect_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)
           end
