@@ -5,7 +5,8 @@ class CreateRespuestaCita < ActiveRecord::Migration
       t.references :cuenta_usuarios, index: true, foreign_key: true
       t.text :analisis
       t.text :plan
-
+      t.integer :estado
+      
       t.timestamps null: false
     end
   end

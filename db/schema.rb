@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "anticoagulantes", force: :cascade do |t|
     t.string   "nombre",      limit: 30
-    t.text     "descripcion"
+    t.string   "descripcion"
     t.integer  "estado"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
@@ -53,12 +53,13 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.string   "tipo"
     t.integer  "estado"
     t.time     "hora_ini"
-    t.time     "hora_fin"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
 
+  add_index "cita_medicas", ["cuenta_usuarios_id", "fecha", "hora_ini"], name: "index_usuario_fecha_hora_cita", unique: true
   add_index "cita_medicas", ["cuenta_usuarios_id"], name: "index_cita_medicas_on_cuenta_usuarios_id"
+  add_index "cita_medicas", ["pacientes_id", "fecha", "hora_ini"], name: "index_paciente_fecha_hora_cita", unique: true
   add_index "cita_medicas", ["pacientes_id"], name: "index_cita_medicas_on_pacientes_id"
 
   create_table "cuenta_usuarios", force: :cascade do |t|
@@ -191,7 +192,7 @@ ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "pregunta", force: :cascade do |t|
     t.string   "pregunta",    limit: 50
-    t.text     "descripcion"
+    t.string   "descripcion"
     t.integer  "estado"
     t.boolean  "tipo"
     t.datetime "created_at",             null: false
@@ -240,6 +241,7 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.integer  "cuenta_usuarios_id"
     t.text     "analisis"
     t.text     "plan"
+    t.integer  "estado"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end

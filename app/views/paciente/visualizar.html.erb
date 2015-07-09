@@ -44,11 +44,10 @@
 		<% end%>
 	<% end%>
 	<br />
-	<br />
 	<% if @prescripcion%>
-		Ultima prescripcion
+		<h2>Ultima prescripcion</h2>
 		<br />
-		Fecha de creacion: <%= @prescripcion.create_at%>
+		Fecha de creacion: <%= @prescripcion.created_at%>
 		<br />
 		Fecha de vencimiento: <%= @prescripcion.fechaFin%>
 		<br />
@@ -58,17 +57,16 @@
 			Prescripcion diaria
 			<br />
 			<% @prescripcionDiaria.each do |d|%>
-				Dia <%= d.dia%> - cantidad <%= d.cantidad%>
-				<br />
+				<li>
+					Dia <%= d.dia%> - cantidad <%= d.cantidad%> gramos.
+				</li>
 			<% end%>
 		<% end%>
 	<% end%>
 	<% if @citasMedicas%>
 		<br />
 		<h2>Citas medicas del paciente</h2>
-		<br />
 		<% @citasMedicas.each do |t| %>
-			<br />
 			Fecha: <%= t.fecha %>
 			<br />
 			Tipo: <%= t.tipo%>
@@ -76,9 +74,11 @@
 			INR de la cita: <%= t.inr%>
 			<br />
 			<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
+			<br />
 		<% end%>
 	<% end%>
 	<% if @medico%>
+		<br />
 		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @correo%>
 	<% end%>
 <%else%>
@@ -91,5 +91,7 @@
 		</li>
 	<%end%>
 <%end%>
+<br />
+<%= @mensaje%>
 <br />
 <%=link_to "Ir al menu", action:"index", controller: "principal"%>

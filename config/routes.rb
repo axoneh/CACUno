@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'cita_medica/aplicar'
 
   get 'cita_medica/efectuar'
+  post 'cita_medica/efectuar'
 
   get 'cita_medica/modificar'
   

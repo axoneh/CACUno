@@ -2,7 +2,7 @@ class CreatePregunta < ActiveRecord::Migration
   def change
     create_table :pregunta do |t|
       t.string :pregunta, limit: 50
-      t.text :descripcion
+      t.string :descripcion
       t.integer :estado
       t.boolean :tipo
 

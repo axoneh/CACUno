@@ -1,15 +1,16 @@
 class PacienteController < ApplicationController
   
   def agregar
-    validacion=Application.new
-    if ( validacion.validacionAdmin() or validacion.validacionMedico() )
+    if validacionAdmin() or validacionMedico()
       @mensaje=""
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
+      
       @documentos=TipoDocumento.where(["estado = ?", 1])
       @estadosC=EstadoCivil.where(["estado = ?", 1])
       @patologias=Patologia.where(["estado = ?", 1])
       @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
+      
       if request.post?
         if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion] and params[:direccion]
           correo=params[:correo]
@@ -21,12 +22,14 @@ class PacienteController < ApplicationController
           genero=params[:genero]
           estadoC=params[:estadoC]
           patologia=params[:patologia]
+          fechaN=params[:fecha_n]
           if Paciente.exists?(["correo = ?",correo])
             @mensaje="Ya existe ese correo registrado, por favor verifique los datos"
           elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, documento])
             @mensaje="Ya existe un usuario con ese documento, verifique los datos"
           else
             paciente=Paciente.new
+            paciente.fecha_nacimiento=fechaN
             paciente.correo=correo
             paciente.nombre=nombre
             paciente.apellido=apellido
@@ -59,8 +62,7 @@ class PacienteController < ApplicationController
   end
 
   def actualizar
-    validacion=Application.new
-    if validacion.validacionAdmin()
+    if validacionAdmin()
       
     else
       redirect_to controller: "principal", action: "index"
@@ -70,8 +72,7 @@ class PacienteController < ApplicationController
   def visualizar
     @especifico=false
     @mensaje=""
-    validacion=Application.new
-    @medico=validacion.validacionMedico()
+    @medico=validacionMedico()
     if params[:correo]
       @especifico=true
       if Paciente.exists?(["correo = ?", params[:correo]])
@@ -112,9 +113,8 @@ class PacienteController < ApplicationController
         @antecedentesPaciente=nil
         @citasMedicas=nil
         
-        cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id, 1]).order(fecha: :desc).first
+        cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id,2]).order(fecha: :desc).first
         if cita
-          
           inr=InrPaciente.where(["cita_medicas_id = ?", cita.id]).order([fecha: :desc]).first
           if inr
             @inr=inr.valorInr
@@ -126,7 +126,7 @@ class PacienteController < ApplicationController
             @prescripcion=Prescripcion.find_by(respuesta_cita_id: respuesta.id)
             if @prescripcion
               @anticoagulante=Anticoagulante.find_by(@prescripcion.anticoagulantes_id)
-              @prescripcionDiaria=PrescripcionDiaria.joins(:dia_asociados, :prescripcions).select("dia_asociados.nombre as dia, prescripcion_diaria.cantidadGramos as cantidad").where(["prescripcion_diaria.prescripcions_id = ?", prescripcion.id])                                                  
+              @prescripcionDiaria=PrescripcionDiaria.joins(:dia_asociados, :prescripcions).select("dia_asociados.nombre as dia, prescripcion_diaria.cantidadGramos as cantidad").where(["prescripcion_diaria.prescripcions_id = ?", @prescripcion.id])                                                  
             end
           end
           

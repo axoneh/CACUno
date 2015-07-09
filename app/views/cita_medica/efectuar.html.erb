@@ -1,0 +1,88 @@
+<h2>Cita</h2>
+<% if @nivel%>
+	<h2>Cita presencial</h2>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
+		<br />
+		<div>
+			<h3>Preguntas</h3>
+			<br />
+			<% @preguntas.each do |t|%>
+				<br />
+				<%= check_box_tag t.id.to_s+"_p", t.id.to_s+"_p"%> ¿<%= t.pregunta%>?
+				<% if t.tipo%>
+					<br />
+					<%= t.descripcion%>
+					<%= text_area_tag t.id.to_s+"_comentario"%>
+				<% end%>
+			<% end%>
+			<br />
+			<%= text_field_tag "inr", "" , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
+			<br />
+			Anticoagulante: <%= select_tag "antic_inr", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
+		</div>
+		<div>
+			<h3>Respuesta Medica</h3>
+			<br />Analisis
+			<br />
+			<%= text_area_tag "analisis"%>
+			<br />
+			<br />Plan
+			<br />
+			<%= text_area_tag "plan"%>
+			<br />
+			<br />Observacion Subjetiva
+			<br />
+			<%= text_area_tag "subjetiva"%>
+			<br />
+			<br />Observacion Objetiva
+			<br />
+			<%= text_area_tag "objetiva"%>
+			<br />
+			<%= check_box_tag "indefinido"%> ¿Tratamiento indefinido?
+			<br />
+			De no ser indefinido: <%= text_field_tag "semanas_t", "" , size: 30, maxlenght: 30, placeholder: "Semanas de tratamiento"%>
+		</div>
+		<div>
+			<h3>Preinscripcion</h3>
+			<br />
+			Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
+			<br />
+			Fecha limite del tratamiento: 
+			<%= date_field_tag "fecha_fin", nil, required:"required"%>
+			<br />
+			Dosis diaria
+			<br />
+			<% @diasAsociados.each do |t|%>
+				<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_t"%> <%= t.nombre%>
+				<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5, placeholder: "Cantidad en gramos"%>
+				<br />
+			<% end%>
+		</div>
+		<br />
+		<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
+		<br />
+	<% end%>
+<% else%>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
+		<br />
+		Preguntas
+		<br />
+		<% @preguntas.each do |t|%>
+			<br />
+			<%= check_box_tag a.id.to_s, a.id.to_s%> ¿<%= t.pregunta%>?
+			<% if t.tipo%>
+				<br />
+				<%= t.descripcion%>
+				<%= text_area_tag t.id.to_s+"_comentario"%>
+			<% end%>
+		<% end%>
+		<br />
+		<%= text_field_tag "inr", "" , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
+		<br />
+		<%= submit_tag "Enviar para respuesta", disabled: false, disable_with: "Por favor espere..."%>
+	<% end%>
+<% end%>
+<br />
+<%= @mensaje%>
+<br />
+<%= link_to "Ir al menu", controller: "principal", action: "index" %>

@@ -4,18 +4,21 @@ class CitaMedicaController < ApplicationController
 
   def aplicar
     @mensaje=""
-    validacion=Application.new
-    if validacion.validacionMedico()
+    if validacionMedico() or validacionParamedico()
       correop=params[:paciente]
       if correop
         paciente=Paciente.find_by(correo: correop)
         citaActual=CitaMedica.new
         citaActual.pacientes_id=paciente.id
         citaActual.cuenta_usuarios_id=current_cuenta_usuario.id
-        citaActual.fecha=Date.now.to_date
+        citaActual.fecha=Date.current
         citaActual.estado = 1
         citaActual.hora_ini=Time.now.to_time
-        citaActual.tipo=true
+        if validacionMedico()
+          citaActual.tipo="Presencial"
+        else
+          citaActual.tipo="Domiciliaria"
+        end
         if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and hora_ini= ? ",citaActual.pacientes_id, citaActual.fecha, citaActual.hora_ini])
           @mensaje="El paciente tiene una cita para esta misma hora, verifique los datos"
         elsif CitaMedica.exists?(["cuenta_usuarios_id = ? and fecha = ? and hora_ini= ? ",citaActual.cuenta_usuarios_id, citaActual.fecha, citaActual.hora_ini])
@@ -33,7 +36,121 @@ class CitaMedicaController < ApplicationController
   end
 
   def efectuar
-
+    @nivel=true
+    @mensaje=""
+    if params[:cita].present?
+      if CitaMedica.exists?(["id = ?", params[:cita]])
+        citaActual=CitaMedica.find(params[:cita])
+        if citaActual.estado!=1
+          redirect_to controller: "principal", action: "index"
+        end
+        @preguntas=Pregunta.where(["estado = ?", 1])
+        if validacionMedico()
+          if citaActual.tipo=="Presencial"
+            @nivel=true
+            @anticoagulantes=Anticoagulante.where(["estado = ?",1])
+            @diasAsociados=DiaAsociado.where(["estado = ?", 1])
+            if request.post?
+              PreguntaCita.delete_all(["cita_medicas_id = ?", citaActual.id])
+              @preguntas.each do |t|
+                if params[t.id.to_s+"_p"].present?
+                  if t.tipo
+                    PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
+                  else
+                    PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id)
+                  end
+                end
+              end
+              if RespuestaCita.exists?(["cita_medicas_id = ?",citaActual.id])
+                @mensaje="No se puede agregar respuesta porque ya existe una para esta cita"
+              elsif params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present?
+                inrPac=InrPaciente.new
+                inrPac.cita_medicas_id=citaActual.id
+                inrPac.anticoagulantes_id=params[:antic_inr]
+                inrPac.fecha=citaActual.fecha
+                inrPac.valorInr=params[:inr]
+                inrPac.save
+                
+                respuesta=RespuestaCita.new()
+                respuesta.cita_medicas_id=citaActual.id
+                respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
+                respuesta.analisis=params[:analisis]
+                respuesta.plan=params[:plan]
+                respuesta.estado=1
+                respuesta.save()
+                
+                observacion=ObservacionMedica.new()
+                observacion.respuesta_cita_id=respuesta.id
+                observacion.subjetivo=params[:subjetiva]
+                observacion.objetivo=params[:objetiva]
+                if params[:indefinido].present?
+                  observacion.tiempoIndefinido=true
+                else
+                  observacion.tiempoIndefinido=false
+                  observacion.semanasTratamiento=params[:semanas_t]
+                end
+                observacion.save()
+                
+                prescripcion=Prescripcion.new()
+                prescripcion.anticoagulantes_id=params[:antic]
+                prescripcion.respuesta_cita_id=citaActual.id
+                prescripcion.fechaFin=params[:fecha_fin]
+                prescripcion.save()
+                
+                @diasAsociados.each do |t|
+                  if params[t.id.to_s+"_d"].present?
+                    PrescripcionDiaria.create(prescripcions_id: prescripcion.id, dia_asociados_id: t.id, cantidadGramos: params[t.id.to_s+"_cantidad"])
+                  end
+                end
+                
+                citaActual.estado=2
+                citaActual.save()
+                
+                @mensaje="Se guardaron todos los datos exitosamente"
+              else
+                @mensaje="Debe diligenciar todos los campos de la respuesta"
+              end
+            end
+          else
+            redirect_to controller: "principal", action: "index"
+          end
+        elsif validacion.validacionParamedico()
+          if citaActual.tipo=="Domiciliaria"
+            @nivel=false
+            if request.post?
+              PreguntaCita.delete_all(["cita_medicas_id = ?", citaActual.id])
+              @preguntas.each do |t|
+                if params[t.id.to_s+"_p"].present?
+                  if t.tipo
+                    PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
+                  else
+                    PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id)
+                  end
+                end
+              end
+              if params[:inr].present?
+                inrPac=InrPaciente.new
+                inrPac.cita_medicas_id=citaActual.id
+                inrPac.anticoagulantes_id=params[:antic_inr]
+                inrPac.fecha=citaActual.fecha
+                inrPac.valorInr=params[:inr]
+                @mensaje="Se guardaron todos los datos exitosamente"
+              else
+                @mensaje="Debe diligenciar todos los campos de la respuesta"
+              end
+            end
+          else
+            redirect_to controller: "principal", action: "index"
+          end
+        else
+          redirect_to controller: "principal", action: "index"
+        end
+      else
+        redirect_to controller: "principal", action: "index"
+      end
+    else
+      redirect_to controller: "principal", action: "index"
+    end
   end
 
   def modificar
@@ -42,7 +159,7 @@ class CitaMedicaController < ApplicationController
   def visualizar
     @mensaje=""
     @nivel=1
-    if params[:cita].present?
+    if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=3
       cita=CitaMedica.find(params[:cita])
       @fechaCita=cita.fecha
@@ -51,8 +168,8 @@ class CitaMedicaController < ApplicationController
       paciente=Paciente.find(cita.pacientes_id)
       @paciente=paciente.nombre+" "+paciente.apellido
       
-      inrpaciente=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id])
-      @inr=inrpaciente.valorInr
+      inrPac=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
+      @inr=inrPac.valorInr
       
     elsif params[:paciente].present?
       @nivel=2

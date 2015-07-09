@@ -1,8 +1,7 @@
 class UsuarioController < ApplicationController
   
   def agregar
-    validacion=Application.new
-    if validacion.validaionAutorizado()
+    if validacionAutorizado()
       usuario=current_cuenta_usuario
       cargo=usuario.rols_id
       @mensaje="";
@@ -138,8 +137,7 @@ class UsuarioController < ApplicationController
   end
 
   def autorizar
-    validacion=Application.new
-    if validacion.validacionAdmin()
+    if validacionAdmin()
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
       @documentos=TipoDocumento.where(["estado = ?", 1])

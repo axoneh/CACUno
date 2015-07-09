@@ -2,7 +2,7 @@ class CreateAnticoagulantes < ActiveRecord::Migration
   def change
     create_table :anticoagulantes do |t|
       t.string :nombre, limit: 30
-      t.text :descripcion
+      t.string :descripcion
       t.integer :estado
 
       t.timestamps null: false

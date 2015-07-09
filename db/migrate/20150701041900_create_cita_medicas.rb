@@ -11,6 +11,6 @@ class CreateCitaMedicas < ActiveRecord::Migration
       t.timestamps null: false
     end
     add_index(:cita_medicas, [:pacientes_id, :fecha, :hora_ini], unique: true, name: 'index_paciente_fecha_hora_cita')
-    add_index(:cita_medicas, [:cuenta_usuarios_id, :fecha, :hora_ini], unique: true, name: 'index_paciente_fecha_hora_cita')
+    add_index(:cita_medicas, [:cuenta_usuarios_id, :fecha, :hora_ini], unique: true, name: 'index_usuario_fecha_hora_cita')
   end
 end

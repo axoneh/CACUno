@@ -31,6 +31,8 @@ Patologia.delete_all
 Patologia.create(nombre: 'Fibrilacion auricular', descripcion: 'Vibracion de las auriculas del corazon', estado: 1)
 
 Pregunta.delete_all
+Pregunta.create(pregunta: 'Ha tenido sangrado nosal', descripcion: '', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Ha consumido comidas verdes', descripcion: 'Con  que frecuencia', tipo: true, estado: 1)
 
 Rol.delete_all
 Rol.create(nombre: 'Administrador', descripcion: '(Sin descripcion)')

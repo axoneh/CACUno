@@ -22,8 +22,7 @@ class HorarioController < ApplicationController
   end
 
   def modificar
-    validacion=Application.new
-    if validacion.validacionAdmin()
+    if validacionAdmin()
       usuarioSesion=current_cuenta_usuario
       @nombre=usuarioSesion.nombre+" "+usuarioSesion.apellido
       @sucursales=Sucursal.where(["estado = ?", 1])

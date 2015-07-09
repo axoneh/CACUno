@@ -23,7 +23,7 @@
 		<br />
 		INR: <%= t.inr%>
 		<br />
-		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita_ t.id%>
+		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
 	<% end%>
 <% elsif @nivel==3%>
 	<h3>Cita registradas</h3>
@@ -38,6 +38,6 @@
 		<br />
 		INR: <%= t.inr%>
 		<br />
-		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita_ t.id%>
+		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
 	<% end%>
 <% end%>
