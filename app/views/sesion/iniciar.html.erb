@@ -1,7 +1,0 @@
-<h1>Digite los datos para iniciar sesion</h1>
-<%= form_tag({:controller =>"sesion", :action=>"iniciar"} , :method=>"post") do %>
-	<%= email_field_tag "correo", "",:id=>"correo", :name=>"correo", :size => 30, :maxlenght => 45, :placeholder=>"Correo electronico", :required=>"required" %>
-	<%= password_field_tag "password", "",:id=>"password", :name=>"password", :size=>30, :maxlenght=>30, :placeholder=>"Contraseña", :required=>"required" %>
-	<%= submit_tag "enviar", :id => "enviar", :name => "enviar", :disabled => false, :disable_with => "Por favor espere..."%>
-	<p><%= @respuesta%></p>
-<%end%>
