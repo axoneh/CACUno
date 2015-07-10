@@ -37,6 +37,7 @@ Pregunta.create(pregunta: 'Ha consumido comidas verdes', descripcion: 'Con  que 
 Rol.delete_all
 Rol.create(nombre: 'Administrador', descripcion: '(Sin descripcion)')
 Rol.create(nombre: 'Medico Especialista', descripcion: '(Sin descripcion)')
+Rol.create(nombre: 'Paramedico', descripcion: '(Sin descripcion)')
 
 TipoDocumento.delete_all
 TipoDocumento.create(nombre: 'Cedula de ciudadania', estado: 1)

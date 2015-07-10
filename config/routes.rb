@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'paramedico/menu'
+
   get 'cita_medica/crear'
 
   get 'cita_medica/aplicar'

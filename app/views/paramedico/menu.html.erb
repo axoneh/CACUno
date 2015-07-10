@@ -1,0 +1,23 @@
+<h1>Menu de paramedico</h1>
+<h4>Usuario actual: <%= @nombre%></h4>
+<br />
+<%= link_to('Cerrar sesion', destroy_cuenta_usuario_session_path, method: :delete)%>
+<br />
+<% if @pacientesProximos%>
+	<% @pacientesProximos.each do |t|%>
+		<br />
+		Paciente: <%= t.paciente%>
+		<br />
+		Correo: <%= t.correo%>
+		<br />
+		Direccion: <%= t.direccion%>
+		<br />
+		Fecha de final: <%= t.fecha %>
+		<% if t.fecha.to_date < @fechaActual%>
+			<br />
+			<%=link_to "Hace visita", controller: "cita_medica", action: "aplicar"%>
+		<% end%>
+		<br />
+	<% end%>
+<% end%>
+<br />

@@ -73,7 +73,8 @@ class PacienteController < ApplicationController
     @especifico=false
     @mensaje=""
     @medico=validacionMedico()
-    if params[:correo]
+    @paramedico=validacionParamedico()
+    if params[:correo].present?
       @especifico=true
       if Paciente.exists?(["correo = ?", params[:correo]])
         paciente=Paciente.find_by(correo: params[:correo])

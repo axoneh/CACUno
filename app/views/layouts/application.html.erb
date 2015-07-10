@@ -11,5 +11,8 @@
        <p class="alert"><%= alert %></p>
 <%= yield %>
 
+<% if cuenta_usuario_signed_in?%>
+	<%= link_to "Ir al menu", controller: "principal", action: "index"%>
+<% end%>
 </body>
 </html>

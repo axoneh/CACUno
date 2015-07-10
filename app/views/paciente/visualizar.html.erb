@@ -77,7 +77,7 @@
 			<br />
 		<% end%>
 	<% end%>
-	<% if @medico%>
+	<% if @medico or @paramedico%>
 		<br />
 		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @correo%>
 	<% end%>
@@ -85,7 +85,7 @@
 	<% @pacientes.each do |t|%>
 		<li>
 			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%> - 
-			<% if @medico%>
+			<% if @medico% or @paramedico>
 				<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>
 			<% end%>
 		</li>
@@ -94,4 +94,3 @@
 <br />
 <%= @mensaje%>
 <br />
-<%=link_to "Ir al menu", action:"index", controller: "principal"%>

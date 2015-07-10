@@ -9,7 +9,42 @@
 	Paciente: <%= @paciente%>
 	<br />
 	INR: <%= @inr%>
-	<br />
+	<div>
+		<h3>Respuesta medica</h3>
+		<% if @analisis%>
+			<br />
+			Analisis: <%= @analisis%> 
+		<% end%>
+		<% if @plan%>
+			<br />
+			Plan: <%= @plan%> 
+		<% end%>
+		<% if @subjetivo%>
+			<br />
+			Observacion subjetiva: <%= @subjetivo%> 
+		<% end%>
+		<% if @objetivo%>
+			<br />
+			Observacion objetiva: <%= @objetivo%> 
+		<% end%>
+		<% if @prescripcionDiaria%>
+			<h4>Prescripcion diaria</h4>
+			<% if @fechafin%>
+				Vencimiento de la prescripcion: <%= @fechafin%> 
+			<% end%>
+			<% if @antic%>
+				<br />
+				Anticoagulante medicado: <%= @antic%> 
+			<% end%>
+			<br />
+			<br />
+			<% @prescripcionDiaria.each do |t|%>
+				<li>
+					Dia: <%=t.dia%>, cantidad: <%=t.cantidad%> gramos
+				</li>
+			<% end%>
+		<% end%>
+	</div>
 <% elsif @nivel==2%>
 	<h3>Cita por paciente</h3>
 	<br />
@@ -25,7 +60,7 @@
 		<br />
 		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
 	<% end%>
-<% elsif @nivel==3%>
+<% elsif @nivel==1%>
 	<h3>Cita registradas</h3>
 	<br />
 	<% @citasRegistradas.each do |t|%>

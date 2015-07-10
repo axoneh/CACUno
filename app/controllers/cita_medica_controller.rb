@@ -13,7 +13,7 @@ class CitaMedicaController < ApplicationController
         citaActual.cuenta_usuarios_id=current_cuenta_usuario.id
         citaActual.fecha=Date.current
         citaActual.estado = 1
-        citaActual.hora_ini=Time.now.to_time
+        citaActual.hora_ini=Time.now.strftime("%I:%M:%S")
         if validacionMedico()
           citaActual.tipo="Presencial"
         else
@@ -164,12 +164,49 @@ class CitaMedicaController < ApplicationController
       cita=CitaMedica.find(params[:cita])
       @fechaCita=cita.fecha
       @horaCita=cita.hora_ini
+      @tipo=cita.tipo
       
       paciente=Paciente.find(cita.pacientes_id)
       @paciente=paciente.nombre+" "+paciente.apellido
       
       inrPac=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
       @inr=inrPac.valorInr
+      
+      @analisis=nil
+      @plan=nil
+      @subjetivo=nil
+      @objetivo=nil
+      @fechafin=nil
+      @antic=nil
+      @prescripcionDiaria=nil
+      
+      respuesta=RespuestaCita.find_by(cita_medicas_id: cita.id)
+      if respuesta
+        
+        @analisis=respuesta.analisis
+        @plan=respuesta.plan
+        
+        observacion=ObservacionMedica.find_by(respuesta_cita_id: cita.id)
+        
+        if observacion
+          
+          @subjetivo=observacion.subjetivo
+          @objetivo=observacion.objetivo
+          
+        end
+        
+        prescripcion=Prescripcion.find_by(respuesta_cita_id: cita.id)
+        
+        if prescripcion
+          @fechafin=prescripcion.fechaFin
+          anticoagulante=Anticoagulante.find(prescripcion.anticoagulantes_id)
+          if anticoagulante
+            @antic=anticoagulante.nombre
+            @prescripcionDiaria=PrescripcionDiaria.joins(:dia_asociados, :prescripcions).select("dia_asociados.nombre as dia, prescripcion_diaria.cantidadGramos as cantidad").where(["prescripcion_diaria.prescripcions_id = ?", prescripcion.id])
+          end
+        end
+        
+      end
       
     elsif params[:paciente].present?
       @nivel=2
