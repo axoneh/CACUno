@@ -15,6 +15,7 @@ class CreateCuentaUsuarios < ActiveRecord::Migration
       t.references :rols , index: true, foreign_key: true
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at
+      t.boolean :encargado_respuesta, default: false
       t.timestamps null: false
     end
     add_index(:cuenta_usuarios, [:identificacion,:tipo_documentos_id], unique: true, name: 'index_identificacion_documento_usuario')

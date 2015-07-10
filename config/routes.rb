@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   
   get 'cita_medica/visualizar'
 
+  get 'cita_medica/agregar_respuesta'
+  post 'cita_medica/agregar_respuesta'
+
   get 'paciente/agregar'
   post 'paciente/agregar'
 

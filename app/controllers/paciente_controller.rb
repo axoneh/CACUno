@@ -83,6 +83,8 @@ class PacienteController < ApplicationController
         @correo=paciente.correo
         @ide=paciente.identificacion
         
+        @fechaActual=Date.current
+        
         documento=paciente.tipo_documentos_id
         documento=TipoDocumento.find(documento)
         @documento=documento.nombre

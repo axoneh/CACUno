@@ -69,7 +69,7 @@
 		<br />
 		<% @preguntas.each do |t|%>
 			<br />
-			<%= check_box_tag a.id.to_s, a.id.to_s%> ¿<%= t.pregunta%>?
+			<%= check_box_tag t.id.to_s, t.id.to_s%> ¿<%= t.pregunta%>?
 			<% if t.tipo%>
 				<br />
 				<%= t.descripcion%>
@@ -78,6 +78,8 @@
 		<% end%>
 		<br />
 		<%= text_field_tag "inr", "" , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
+		<br />
+		Anticoagulante que ha usado: <%= select_tag "antic_inr", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 		<br />
 		<%= submit_tag "Enviar para respuesta", disabled: false, disable_with: "Por favor espere..."%>
 	<% end%>

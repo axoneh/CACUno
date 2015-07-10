@@ -45,10 +45,10 @@ class CitaMedicaController < ApplicationController
           redirect_to controller: "principal", action: "index"
         end
         @preguntas=Pregunta.where(["estado = ?", 1])
+        @anticoagulantes=Anticoagulante.where(["estado = ?",1])
         if validacionMedico()
           if citaActual.tipo=="Presencial"
             @nivel=true
-            @anticoagulantes=Anticoagulante.where(["estado = ?",1])
             @diasAsociados=DiaAsociado.where(["estado = ?", 1])
             if request.post?
               PreguntaCita.delete_all(["cita_medicas_id = ?", citaActual.id])
@@ -114,7 +114,7 @@ class CitaMedicaController < ApplicationController
           else
             redirect_to controller: "principal", action: "index"
           end
-        elsif validacion.validacionParamedico()
+        elsif validacionParamedico()
           if citaActual.tipo=="Domiciliaria"
             @nivel=false
             if request.post?
@@ -134,7 +134,13 @@ class CitaMedicaController < ApplicationController
                 inrPac.anticoagulantes_id=params[:antic_inr]
                 inrPac.fecha=citaActual.fecha
                 inrPac.valorInr=params[:inr]
-                @mensaje="Se guardaron todos los datos exitosamente"
+                inrPac.save
+                @mensaje="Se guardaron todos los datos exitosamente, espere la respuesta"
+                citaActual.estado=3;
+                citaActual.save
+                
+                redirect_to controller: "cita_medica", action: "visualizar", cita: citaActual.id
+                
               else
                 @mensaje="Debe diligenciar todos los campos de la respuesta"
               end
@@ -160,6 +166,7 @@ class CitaMedicaController < ApplicationController
     @mensaje=""
     @nivel=1
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
+      @encargado=validacionEncargadoRespuesta()
       @nivel=3
       cita=CitaMedica.find(params[:cita])
       @fechaCita=cita.fecha
@@ -170,7 +177,11 @@ class CitaMedicaController < ApplicationController
       @paciente=paciente.nombre+" "+paciente.apellido
       
       inrPac=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
+      if inrPac
       @inr=inrPac.valorInr
+      else  
+      @inr="(Sin cargar)"
+      end
       
       @analisis=nil
       @plan=nil
@@ -179,12 +190,14 @@ class CitaMedicaController < ApplicationController
       @fechafin=nil
       @antic=nil
       @prescripcionDiaria=nil
+      @respuesta= false
       
       respuesta=RespuestaCita.find_by(cita_medicas_id: cita.id)
       if respuesta
         
         @analisis=respuesta.analisis
         @plan=respuesta.plan
+        @respuesta=true
         
         observacion=ObservacionMedica.find_by(respuesta_cita_id: cita.id)
         
@@ -216,5 +229,20 @@ class CitaMedicaController < ApplicationController
       @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente").all
     end
   end
-  
+
+  def agregar_respuesta
+    if validacionEncargadoRespuesta()
+      cita=params[:cita]
+      if cita and CitaMedica.exists?(["id = ? and estado = ?", cita, 3])
+        @diasAsociados=DiaAsociado.where(["estado = ?", 1])
+        @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
+        if request.post?
+          
+        end
+      else
+        redirect_to controller: "principal", action: "index"
+      end
+    end
+  end
+
 end

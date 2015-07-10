@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150705195222) do
+ActiveRecord::Schema.define(version: 20150710231125) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre"
@@ -67,8 +67,8 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.integer  "tipo_documentos_id"
     t.string   "nombre",                 limit: 30
     t.string   "apellido",               limit: 30
-    t.string   "email",                             default: "", null: false
-    t.string   "encrypted_password",                default: "", null: false
+    t.string   "email",                             default: "",    null: false
+    t.string   "encrypted_password",                default: "",    null: false
     t.boolean  "genero"
     t.string   "direccion",              limit: 50
     t.string   "especialidad"
@@ -77,10 +77,11 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.integer  "rols_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.string   "provider"
     t.string   "uid"
+    t.boolean  "encargado_respuesta",               default: false
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true

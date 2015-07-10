@@ -10,7 +10,14 @@
 	<br />
 	INR: <%= @inr%>
 	<div>
-		<h3>Respuesta medica</h3>
+		<h3>Respuesta medica 
+			<% if @respuesta==false%>
+				(En espera)
+			<% end%>
+		</h3>
+		<% if @respuesta==false and @encargado%>
+			<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita] %>
+		<% end%>
 		<% if @analisis%>
 			<br />
 			Analisis: <%= @analisis%> 

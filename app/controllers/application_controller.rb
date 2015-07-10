@@ -27,6 +27,18 @@ class ApplicationController < ActionController::Base
     end
   end 
 
+  def validacionEncargadoRespuesta
+    if validacionMedico()
+      if current_cuenta_usuario.encargado_respuesta
+        return true
+      else
+        return false
+      end
+    else
+      return false
+    end
+  end
+
   def validacionAdmin
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1

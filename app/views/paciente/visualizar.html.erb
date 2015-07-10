@@ -79,13 +79,17 @@
 	<% end%>
 	<% if @medico or @paramedico%>
 		<br />
+		<% if @prescripcion and (@fechaActual < @prescripcion.fechaFin.to_date)%>
+			Es recomendable no hacer la consulta.
+			<br />
+		<% end%>
 		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @correo%>
 	<% end%>
 <%else%>
 	<% @pacientes.each do |t|%>
 		<li>
 			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%> - 
-			<% if @medico% or @paramedico>
+			<% if @medico or @paramedico%>
 				<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>
 			<% end%>
 		</li>
