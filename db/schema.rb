@@ -11,18 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150710231125) do
+ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre"
     t.string   "descripcion"
     t.boolean  "tipo"
     t.integer  "estado"
+    t.string   "tag"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
 
   add_index "antecedente_medicos", ["nombre"], name: "index_nombre_antecedentes_medicos", unique: true
+  add_index "antecedente_medicos", ["tag", "estado"], name: "index_estado_tags_medicos", unique: true
 
   create_table "antecedente_pacientes", force: :cascade do |t|
     t.integer  "pacientes_id"
@@ -77,11 +79,11 @@ ActiveRecord::Schema.define(version: 20150710231125) do
     t.integer  "rols_id"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.boolean  "encargado_respuesta",               default: false
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
     t.string   "provider"
     t.string   "uid"
-    t.boolean  "encargado_respuesta",               default: false
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true
@@ -196,11 +198,13 @@ ActiveRecord::Schema.define(version: 20150710231125) do
     t.string   "descripcion"
     t.integer  "estado"
     t.boolean  "tipo"
+    t.string   "tag"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
 
   add_index "pregunta", ["pregunta"], name: "index_pregunta_preguntas", unique: true
+  add_index "pregunta", ["tag", "estado"], name: "index_tag_estado_pregunta", unique: true
 
   create_table "pregunta_cita", force: :cascade do |t|
     t.integer  "cita_medicas_id"

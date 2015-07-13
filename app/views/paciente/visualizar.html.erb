@@ -31,6 +31,13 @@
 	tomado el <%= @fecha%>
 	<br />
 	<br />
+	Empezando a calcular desde: <%= @fechaPrimera%>
+	<br />
+	Promedio INR: <%= @promedioINR%>
+	<br />
+	Porcentaje INR: <%= @porcentajeINR%>
+	<br />
+	<br />
 	<% if @antecedentesPaciente%>
 		<h2>Antecedentes clinicos del paciente</h2>
 		<% @antecedentesPaciente.each do |a|%>

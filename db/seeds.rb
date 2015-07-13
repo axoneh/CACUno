@@ -11,8 +11,17 @@ Anticoagulante.create(nombre: 'Warfarina', descripcion: 'Tableta x 5 mg', estado
 Anticoagulante.create(nombre: 'Dabigatran', descripcion: 'Capsula x 75 mg', estado: 1)
 
 AntecedenteMedico.delete_all
-AntecedenteMedico.create(nombre: 'Hay diabeticos en la familia', descripcion: 'Quien(es)', tipo: true, estado: 1)
-AntecedenteMedico.create(nombre: 'Ha tomado anticoagulantes antes', descripcion: 'Cual(es)', tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Hay diabeticos en la familia', descripcion: 'Quien(es)', tag: 'diabetes familia', tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Ha tomado anticoagulantes antes', descripcion: 'Cual(es)', tag: 'anticoagulante previo', tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Toma alcohol', descripcion: 'Con que frecuencia', tag: 'alcohol', tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Alto consumo de alimento verdes', descripcion: 'Que alimentos en especifico', tag: 'alimentos verdes' , tipo: true, estado: 1)
+AntecedenteMedico.create(nombre: 'Tiene diabetes', tag: 'diabetes', tipo: false , estado: 1 )
+AntecedenteMedico.create(nombre: 'Algun antecedente trombolico', tag: 'antecedente trombolico', tipo: false, estado: 1)
+AntecedenteMedico.create(nombre: 'Algun antecedente renal', tag: 'antecedente renal', tipo: false, estado: 1)
+AntecedenteMedico.create(nombre: 'Algun antecedente hepatico', tag: 'antecedente hepatico', tipo: false, estado: 1)
+AntecedenteMedico.create(nombre: 'Tiene INR inestable o dificil', tag: 'inr dificil', tipo: false, estado: 1)
+AntecedenteMedico.create(nombre: 'Tiene hipertension', tag: 'hipertension', tipo: false, estado: 1)
+
 
 DiaAsociado.delete_all
 DiaAsociado.create(numero:1, nombre: 'Lunes', estado:1)
@@ -31,8 +40,18 @@ Patologia.delete_all
 Patologia.create(nombre: 'Fibrilacion auricular', descripcion: 'Vibracion de las auriculas del corazon', estado: 1)
 
 Pregunta.delete_all
-Pregunta.create(pregunta: 'Ha tenido sangrado nosal', descripcion: '', tipo: false, estado: 1)
-Pregunta.create(pregunta: 'Ha consumido comidas verdes', descripcion: 'Con  que frecuencia', tipo: true, estado: 1)
+Pregunta.create(pregunta: 'Ha tenido sangrado nosal', tag: 'sangrado nasal' , tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Ha consumido comidas verdes', tag: 'comidas verdes' , descripcion: 'Con  que frecuencia', tipo: true, estado: 1)
+Pregunta.create(pregunta: 'Ha estado adherido', tag: 'adherido', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Ha ingerido nuevos farmacos que interfieran con su anticoagulante', tag: 'nuevos farmacos', tipo: true, estado: 1 , descripcion: 'Cuales y en que cantidad')
+Pregunta.create(pregunta: 'Ha ingerido alcohol ultimamente', tag: 'alcohol', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Tubo o tiene el ojo hematico', tag: 'ojo hematico', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Le han sangrado las encias o alguna parte interna de la boca', tag: 'sangrado oral', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Sufrio su piel algun cambio de color', tag: 'cambio color piel' , tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Su excremento cambio a ser un color oscuro y/o rogizo', tag: 'color deposicion', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Presencia de sangre en la orina', tag: 'Hematuria', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Alguna enfermedad vascular que nombre', tag: 'enfermedad vascular', tipo: true, estado: 1, descripcion: 'Cual(es)')
+Pregunta.create(pregunta: 'EVC previo', tag: 'evc previo', tipo: false, estado: 1)
 
 Rol.delete_all
 Rol.create(nombre: 'Administrador', descripcion: '(Sin descripcion)')

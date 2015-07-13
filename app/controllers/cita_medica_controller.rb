@@ -93,7 +93,7 @@ class CitaMedicaController < ApplicationController
                 
                 prescripcion=Prescripcion.new()
                 prescripcion.anticoagulantes_id=params[:antic]
-                prescripcion.respuesta_cita_id=citaActual.id
+                prescripcion.respuesta_cita_id=respuesta.id
                 prescripcion.fechaFin=params[:fecha_fin]
                 prescripcion.save()
                 
@@ -165,8 +165,8 @@ class CitaMedicaController < ApplicationController
   def visualizar
     @mensaje=""
     @nivel=1
+    @encargado=validacionEncargadoRespuesta()
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
-      @encargado=validacionEncargadoRespuesta()
       @nivel=3
       cita=CitaMedica.find(params[:cita])
       @fechaCita=cita.fecha
@@ -221,23 +221,65 @@ class CitaMedicaController < ApplicationController
         
       end
       
-    elsif params[:paciente].present?
-      @nivel=2
-      @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente").where(["pacientes.correo = ?",params[:paciente]])
+    elsif params[:notificacion].present? and params[:notificacion]
+      if validacionEncargadoRespuesta()
+        @nivel=2
+        @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente").where(["cita_medicas.estado = ?",3])
+      else
+        redirect_to controller: "principal", action: "index"
+      end
     else
       @nivel=1
-      @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente").all
+      @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente, cita_medicas.estado as estado").all
     end
   end
 
   def agregar_respuesta
     if validacionEncargadoRespuesta()
       cita=params[:cita]
-      if cita and CitaMedica.exists?(["id = ? and estado = ?", cita, 3])
+      if cita and (CitaMedica.exists?(["id = ? and estado = ?", cita, 3]) or RespuestaCita.exists?(["cita_medicas_id = ?", params[:cita]])==false )
+        cita=CitaMedica.find(cita)
+        if RespuestaCita.exists?(["cita_medicas_id = ?",cita.id])
+          cita.estado=2
+          cita.save
+          redirect_to controller: "cita_medica", action: "visualizar", cita: cita.id
+        end
         @diasAsociados=DiaAsociado.where(["estado = ?", 1])
         @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
+        @preguntas=PreguntaCita.joins(:pregunta).where(["pregunta_cita.cita_medicas_id = ?", cita.id])
+        inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
+        @inr=inr.valorInr
+        antic=Anticoagulante.find(inr.anticoagulantes_id)
+        @anticoagulante=antic.nombre
         if request.post?
-          
+          if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present?
+            
+            respuesta=RespuestaCita.new
+            respuesta.cita_medicas_id=cita.id
+            respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
+            respuesta.analisis=params[:analisis]
+            respuesta.plan=params[:plan]
+            respuesta.estado=1
+            respuesta.save
+            
+            prescripcion=Prescripcion.new
+            prescripcion.respuesta_cita_id=respuesta.id
+            prescripcion.anticoagulantes_id=params[:antic]
+            prescripcion.fechaFin=params[:fecha_fin]
+            prescripcion.save
+            
+            @diasAsociados.each do |t|
+              if params[t.id.to_s+"_d"].present?
+                PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"])
+              end
+            end
+            
+            cita.estado=2
+            cita.save
+            
+            redirect_to controller: "cita_medica", action: "visualizar", cita: cita.id
+            
+          end
         end
       else
         redirect_to controller: "principal", action: "index"

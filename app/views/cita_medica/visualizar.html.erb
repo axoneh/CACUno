@@ -53,7 +53,7 @@
 		<% end%>
 	</div>
 <% elsif @nivel==2%>
-	<h3>Cita por paciente</h3>
+	<h3>Notifiaciones</h3>
 	<br />
 	<% @citasRegistradas.each do |t|%>
 		<br />
@@ -66,6 +66,9 @@
 		INR: <%= t.inr%>
 		<br />
 		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
+		<br />
+		<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: t.id%>
+		<br />
 	<% end%>
 <% elsif @nivel==1%>
 	<h3>Cita registradas</h3>
@@ -81,5 +84,10 @@
 		INR: <%= t.inr%>
 		<br />
 		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
+		<% if t.estado ==3 and @encargado%>
+			<br />
+			<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: t.id%>
+		<% end%>
+		<br />
 	<% end%>
 <% end%>

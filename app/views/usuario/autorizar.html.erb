@@ -10,6 +10,8 @@
 	<p>Recuerde que si asigna como cargo "Administrador", no podra desactivar la cuenta en un futuro</p>
 	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
 	<br />
+	<%= check_box_tag "encr", "encr"%> Encargado de responder citas domiciliarias
+	<br />
 	<%= submit_tag "enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
 <br />

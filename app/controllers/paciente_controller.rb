@@ -108,6 +108,22 @@ class PacienteController < ApplicationController
         @desPatologia=patologia.descripcion
         @fechaN=paciente.fecha_nacimiento
         
+        @porcentajeINR="--"
+        @promedioINR="--"
+        
+        if CitaMedica.exists?(["pacientes_id = ? and estado= ?", paciente.id,2])
+          @fechaPrimera=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id,2]).order(:fecha).first.fecha
+        end
+        
+        if @fechaPrimera
+          @promedioINR=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", paciente.id, @fechaPrimera]).average(:valorInr)                                          
+          cantidadInr=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", paciente.id, @fechaPrimera]).count
+          if cantidadInr>0
+            cantidadInrBien=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ? and inr_pacientes.valorInr>= 2.5 and inr_pacientes.valorInr<=3.5", paciente.id, @fechaPrimera]).count
+            @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
+          end
+        end
+        
         @inr="--"
         @fecha="(Sin referencia encontrada)"
         @prescripcion=nil
@@ -117,6 +133,7 @@ class PacienteController < ApplicationController
         @citasMedicas=nil
         
         cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id,2]).order(fecha: :desc).first
+        
         if cita
           inr=InrPaciente.where(["cita_medicas_id = ?", cita.id]).order([fecha: :desc]).first
           if inr

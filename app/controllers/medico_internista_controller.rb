@@ -4,6 +4,7 @@ class MedicoInternistaController < ApplicationController
       usuario=current_cuenta_usuario
       @nombre=usuario.nombre+" "+usuario.apellido
       @busqueda=params[:nombreP].present?
+      @encargado=validacionEncargadoRespuesta()
       if @busqueda
         @pacientesAcorde=Paciente.where(["nombre||' '||apellido like ?", '%'+params[:nombreP]+'%'])
       end

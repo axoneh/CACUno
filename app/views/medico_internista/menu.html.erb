@@ -6,6 +6,9 @@
 <br />
 <%= link_to "Ver todos los pacientes", controller: "paciente", action:"visualizar"%>
 <br />
+<% if @encargado%>
+<%= link_to "Notificaciones", controller: "cita_medica", action: "visualizar", notificacion: true%>
+<% end%>
 <% if @busqueda%>
 	<br />
 	<% @pacientesAcorde.each do |p|%>

@@ -145,6 +145,7 @@ class UsuarioController < ApplicationController
       @roles=Rol.all
       if request.post?
         if params[:correo].present? and params[:identificacion].present?
+          encargadoRep=params[:encr].present?
           #pass=rand(1000000).to_s
           correo=params[:correo]
           ident=params[:identificacion]
@@ -161,6 +162,7 @@ class UsuarioController < ApplicationController
               autorizado.rols_id=rol;
               autorizado.estado=2;
               autorizado.email=correo
+              autorizado.encargado_respuesta=encargadoRep
               autorizado.save();
               @mensaje="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar";
             end
@@ -176,15 +178,14 @@ class UsuarioController < ApplicationController
               autorizado.tipo_documentos_id=tipoDoc;
               autorizado.rols_id=rol;
               autorizado.estado=2;
+              autorizado.encargado_respuesta=encargadoRep
               autorizado.save();
               @mensaje="Existe ya una cuenta asociada a ese correo, se procedio a autorizar";
             end
           else
-            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, nombre: '', apellido: '' , email: correo, password: "pass", direccion: '', genero: true, estado: 2, rols_id: rol);
+            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, nombre: '', apellido: '' , email: correo, password: "pass", direccion: '', genero: true, estado: 2, rols_id: rol, encargado_respuesta: encargadoRep);
             @mensaje="Se genero la autorizacion exitosamente";
           end
-        else
-          
         end
       end
     else

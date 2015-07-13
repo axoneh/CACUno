@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def validacionEncargadoRespuesta
     if validacionMedico()
-      if current_cuenta_usuario.encargado_respuesta
+      if current_cuenta_usuario.encargado_respuesta==true
         return true
       else
         return false
