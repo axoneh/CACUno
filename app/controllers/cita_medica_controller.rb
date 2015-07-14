@@ -44,10 +44,10 @@ class CitaMedicaController < ApplicationController
         if citaActual.estado!=1
           redirect_to controller: "principal", action: "index"
         end
-        @preguntas=Pregunta.where(["estado = ?", 1])
         @anticoagulantes=Anticoagulante.where(["estado = ?",1])
         if validacionMedico()
           if citaActual.tipo=="Presencial"
+            @preguntas=Pregunta.where(["estado = ?", 1])
             @nivel=true
             @diasAsociados=DiaAsociado.where(["estado = ?", 1])
             if request.post?
@@ -116,11 +116,12 @@ class CitaMedicaController < ApplicationController
           end
         elsif validacionParamedico()
           if citaActual.tipo=="Domiciliaria"
+            @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
             @nivel=false
             if request.post?
               PreguntaCita.delete_all(["cita_medicas_id = ?", citaActual.id])
               @preguntas.each do |t|
-                if params[t.id.to_s+"_p"].present?
+                if params[t.id.to_s].present?
                   if t.tipo
                     PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
                   else
@@ -169,6 +170,7 @@ class CitaMedicaController < ApplicationController
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=3
       cita=CitaMedica.find(params[:cita])
+      @preguntas=PreguntaCita.joins(:pregunta).where(["cita_medicas_id= ?", cita.id])
       @fechaCita=cita.fecha
       @horaCita=cita.hora_ini
       @tipo=cita.tipo
@@ -176,20 +178,15 @@ class CitaMedicaController < ApplicationController
       paciente=Paciente.find(cita.pacientes_id)
       @paciente=paciente.nombre+" "+paciente.apellido
       
+      @patologia= Patologia.find(paciente.patologia_id).nombre
+      
       inrPac=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
       if inrPac
-      @inr=inrPac.valorInr
+        @inr=inrPac.valorInr
       else  
-      @inr="(Sin cargar)"
+        @inr="(Sin cargar)"
       end
       
-      @analisis=nil
-      @plan=nil
-      @subjetivo=nil
-      @objetivo=nil
-      @fechafin=nil
-      @antic=nil
-      @prescripcionDiaria=nil
       @respuesta= false
       
       respuesta=RespuestaCita.find_by(cita_medicas_id: cita.id)
@@ -239,18 +236,21 @@ class CitaMedicaController < ApplicationController
       cita=params[:cita]
       if cita and (CitaMedica.exists?(["id = ? and estado = ?", cita, 3]) or RespuestaCita.exists?(["cita_medicas_id = ?", params[:cita]])==false )
         cita=CitaMedica.find(cita)
+        
         if RespuestaCita.exists?(["cita_medicas_id = ?",cita.id])
           cita.estado=2
           cita.save
           redirect_to controller: "cita_medica", action: "visualizar", cita: cita.id
         end
+        
         @diasAsociados=DiaAsociado.where(["estado = ?", 1])
         @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
         @preguntas=PreguntaCita.joins(:pregunta).where(["pregunta_cita.cita_medicas_id = ?", cita.id])
-        inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
-        @inr=inr.valorInr
-        antic=Anticoagulante.find(inr.anticoagulantes_id)
-        @anticoagulante=antic.nombre
+        @preguntaInr=Pregunta.where(["estado = 1 and tag = 'inr dificil'"]).first
+        @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first.valorInr
+        
+        @anticoagulante=Anticoagulante.find(inr.anticoagulantes_id).nombre
+
         if request.post?
           if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present?
             
@@ -272,6 +272,10 @@ class CitaMedicaController < ApplicationController
               if params[t.id.to_s+"_d"].present?
                 PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"])
               end
+            end
+            
+            if params[@preguntaInr.id.to_s+"_p"].present?
+              PreguntaCita.create(cita_medicas_id: cita.id, pregunta_id: @preguntaInr.id)
             end
             
             cita.estado=2

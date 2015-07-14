@@ -29,6 +29,10 @@
 		<br />
 		<%= text_area_tag "plan"%>
 		<br />
+		<% if @preguntaInr%>
+			<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?
+			<br />
+		<% end%>
 </div>
 	<div>
 		<h3>Preinscripcion</h3>

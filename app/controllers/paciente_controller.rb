@@ -85,31 +85,26 @@ class PacienteController < ApplicationController
         
         @fechaActual=Date.current
         
-        documento=paciente.tipo_documentos_id
-        documento=TipoDocumento.find(documento)
+        documento=TipoDocumento.find(paciente.tipo_documentos_id)
         @documento=documento.nombre
         
         @direccion=paciente.direccion
         
         @genero="(Sin cargar)"
-        if paciente.genero==1
+        if paciente.genero
           @genero="Masculino"
         else
           @genero="Femenino"
         end
-        
-        estadoC=paciente.estado_civils_id
-        estadoC=EstadoCivil.find(estadoC)
+
+        estadoC=EstadoCivil.find(paciente.estado_civils_id)
         @estadoC=estadoC.nombre
         
-        patologia=paciente.patologia_id
-        patologia=Patologia.find(patologia)
+        patologia=Patologia.find(paciente.patologia_id)
         @patologia=patologia.nombre
         @desPatologia=patologia.descripcion
         @fechaN=paciente.fecha_nacimiento
-        
-        @porcentajeINR="--"
-        @promedioINR="--"
+        @edad=edad(@fechaN.to_date)
         
         if CitaMedica.exists?(["pacientes_id = ? and estado= ?", paciente.id,2])
           @fechaPrimera=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id,2]).order(:fecha).first.fecha
@@ -123,14 +118,6 @@ class PacienteController < ApplicationController
             @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
           end
         end
-        
-        @inr="--"
-        @fecha="(Sin referencia encontrada)"
-        @prescripcion=nil
-        @prescripcionDiaria=nil
-        @anticoagulante=nil
-        @antecedentesPaciente=nil
-        @citasMedicas=nil
         
         cita=CitaMedica.where(["pacientes_id = ? and estado= ?", paciente.id,2]).order(fecha: :desc).first
         
@@ -156,6 +143,87 @@ class PacienteController < ApplicationController
         
         @citasMedicas=CitaMedica.joins(:inr_pacientes).select("inr_pacientes.valorInr as inr, cita_medicas.fecha as fecha, cita_medicas.tipo as tipo, cita_medicas.id as id").where(["pacientes_id = ? and inr_pacientes.fecha=cita_medicas.fecha", paciente.id])
         
+        #Riesgo de embolia
+        @riesgoEmbolia=0
+        
+        sumaRiesgo=AntecedenteMedico.find_by(tag: 'insuficiencia cardiaca')#si el paciente tiene insuficiencia cardiaca
+        if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", paciente.id, sumaRiesgo.id])
+          @riesgoEmbolia+=1
+        end
+        sumaRiesgo=AntecedenteMedico.find_by(tag: 'hipertension')#si el paciente tiene hipertension
+        if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", paciente.id, sumaRiesgo.id])
+          @riesgoEmbolia+=1
+        end
+        sumaRiesgo=AntecedenteMedico.find_by(tag: 'diabetes')#si el paciente tiene diabetes
+        if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", paciente.id, sumaRiesgo.id])
+          @riesgoEmbolia+=1
+        end
+        sumaRiesgo=AntecedenteMedico.find_by(tag: 'antecedente trombolico')#antecedente trombolico en el paciente
+        if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", paciente.id, sumaRiesgo.id])
+          @riesgoEmbolia+=2
+        end
+        if cita
+          sumaRiesgo=Pregunta.find_by(tag: 'enfermedad vascular')#si el paciente tiene alguna enfermedad cardio vascular
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoEmbolia+=1
+          end
+        end
+        unless paciente.genero#genero del paciente
+          @riesgoEmbolia+=1
+        end
+        sumaRiesgo=edad(@fechaN.to_date)#edad del paciente
+        if sumaRiesgo>64
+          @riesgoEmbolia+=1
+          if sumaRiesgo>74
+            @riesgoEmbolia+=2
+          end
+        end
+        
+        @riesgoEmbolia=@riesgoEmbolia * 10
+        
+        #riesgo hemorragico
+        @riesgoHemorragia=0
+        sumaRiesgo=AntecedenteMedico.find_by(tag: 'hipertension')#si el paciente tiene hipertension
+        if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", paciente.id, sumaRiesgo.id])
+          @riesgoHemorragia+=1
+        end
+        if cita
+          sumaRiesgo=Pregunta.find_by(tag: 'alteracion renal')#alguna alteracion renal
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'alteracion hepatica')#alguna alteracion hepatica
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'evc previo')#evc previo
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'sangrado oral')#evc previo
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'inr dificil')#evc previo
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'nuevos farmacos')#algun nuevo farmaco que tome el paciente y que interfiera con el anticoagulante
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=Pregunta.find_by(tag: 'alcohol')#alcohol
+          if sumaRiesgo and PreguntaCita.exists?(["cita_medicas_id = ? and pregunta_id = ?", cita.id, sumaRiesgo.id])
+            @riesgoHemorragia+=1
+          end
+          sumaRiesgo=edad(@fechaN.to_date)
+          if sumaRiesgo>74
+            @riesgoHemorragia+=1
+          end
+        end
+        
+        @riesgoHemorragia=@riesgoHemorragia*100/9
+        
       else
         @mensaje="No se encontro registro con esa especificacion"
       end
@@ -163,6 +231,15 @@ class PacienteController < ApplicationController
       @especifico=false
       @pacientes=Paciente.all
     end
+  end 
+  
+  private
+  
+  def edad( fecha)
+    hoy = Date.current.to_date
+    edad = hoy.year - fecha.year
+    edad -= 1 if(hoy.yday < fecha.yday)
+    edad
   end
   
 end

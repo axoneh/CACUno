@@ -19,8 +19,8 @@ AntecedenteMedico.create(nombre: 'Tiene diabetes', tag: 'diabetes', tipo: false 
 AntecedenteMedico.create(nombre: 'Algun antecedente trombolico', tag: 'antecedente trombolico', tipo: false, estado: 1)
 AntecedenteMedico.create(nombre: 'Algun antecedente renal', tag: 'antecedente renal', tipo: false, estado: 1)
 AntecedenteMedico.create(nombre: 'Algun antecedente hepatico', tag: 'antecedente hepatico', tipo: false, estado: 1)
-AntecedenteMedico.create(nombre: 'Tiene INR inestable o dificil', tag: 'inr dificil', tipo: false, estado: 1)
 AntecedenteMedico.create(nombre: 'Tiene hipertension', tag: 'hipertension', tipo: false, estado: 1)
+AntecedenteMedico.create(nombre: 'Insuficiencia cardiaca congestiva', tag: 'insuficiencia cardiaca', tipo: false, estado: 1)
 
 
 DiaAsociado.delete_all
@@ -45,13 +45,17 @@ Pregunta.create(pregunta: 'Ha consumido comidas verdes', tag: 'comidas verdes' ,
 Pregunta.create(pregunta: 'Ha estado adherido', tag: 'adherido', tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Ha ingerido nuevos farmacos que interfieran con su anticoagulante', tag: 'nuevos farmacos', tipo: true, estado: 1 , descripcion: 'Cuales y en que cantidad')
 Pregunta.create(pregunta: 'Ha ingerido alcohol ultimamente', tag: 'alcohol', tipo: false, estado: 1)
-Pregunta.create(pregunta: 'Tubo o tiene el ojo hematico', tag: 'ojo hematico', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Tuvo o tiene el ojo hematico', tag: 'ojo hematico', tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Le han sangrado las encias o alguna parte interna de la boca', tag: 'sangrado oral', tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Sufrio su piel algun cambio de color', tag: 'cambio color piel' , tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Su excremento cambio a ser un color oscuro y/o rogizo', tag: 'color deposicion', tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Presencia de sangre en la orina', tag: 'Hematuria', tipo: false, estado: 1)
 Pregunta.create(pregunta: 'Alguna enfermedad vascular que nombre', tag: 'enfermedad vascular', tipo: true, estado: 1, descripcion: 'Cual(es)')
 Pregunta.create(pregunta: 'EVC previo', tag: 'evc previo', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Alguna alteracion de tipo renal', tag: 'alteracion renal', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Alguna alteracion de tipo hepatica', tag: 'alteracion hepatica', tipo: false, estado: 1)
+Pregunta.create(pregunta: 'Tiene INR inestable o dificil', tag: 'inr dificil', tipo: false, estado: 1)
+
 
 Rol.delete_all
 Rol.create(nombre: 'Administrador', descripcion: '(Sin descripcion)')

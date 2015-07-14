@@ -18,7 +18,7 @@
 	<br />
 	Genero: <%= @genero%>
 	<br />
-	Fecha de nacimiento: <%= @fechaN%>
+	Fecha de nacimiento: <%= @fechaN%> (<%= @edad%>)
 	<br />
 	<br />
 	Patologia: <%= @patologia%>
@@ -35,7 +35,11 @@
 	<br />
 	Promedio INR: <%= @promedioINR%>
 	<br />
-	Porcentaje INR: <%= @porcentajeINR%>
+	Porcentaje INR: <%= @porcentajeINR%> %
+	<br />
+	Porcentaje de riesgo de hemorragia: <%= @riesgoHemorragia%> %
+	<br />
+	Porcentaje de riesgo de embolia: <%= @riesgoEmbolia%> %
 	<br />
 	<br />
 	<% if @antecedentesPaciente%>
