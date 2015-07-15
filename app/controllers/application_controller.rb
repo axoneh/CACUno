@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def validacionMedico #validacion para saber si fue un medico quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-          if current_cuenta_usuario.rol.nombre=="Medico Especialista"
+          if current_cuenta_usuario.rols.nombre=="Medico Especialista"
             return true
           else
             return false
@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
   def validacionAdmin #validacion para saber si fue un admin quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-          if current_cuenta_usuario.rol.nombre=="Administrador"
+          if current_cuenta_usuario.rols.nombre=="Administrador"
             return true
           else
             return false
@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   def validacionParamedico #validacion para saber si fue un paramedico quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-          if current_cuenta_usuario.rol.nombre=="Paramedico"
+          if current_cuenta_usuario.rols.nombre=="Paramedico"
             return true
           else
             return false

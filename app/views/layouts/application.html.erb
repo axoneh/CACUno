@@ -7,20 +7,26 @@
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
-		<p class="notice">
+		<br />
+		<% if cuenta_usuario_signed_in?%>
+			<%if current_cuenta_usuario.estado==2%>
+				Correo: <%= current_cuenta_usuario.email%>
+				<br />
+				Usuario por autenticar
+			<% else%>
+				Usuario Actual: <%= current_cuenta_usuario.nombre+' '+current_cuenta_usuario.apellido%>
+			<% end%>
+		<% end%>
+		<p id="notice" class="notice">
 			<%= notice %>
 		</p>
-		<p class="alert">
+		<p id="alert" class="alert">
 			<%= alert %>
 		</p>
-		<% if cuenta_usuario_signed_in?%>
-			<br />
-			Usuario Actual: <%= current_cuenta_usuario.nombre+' 'current_cuenta_usuario.apellido%>
-		<% end%>
 		<%= yield %>
 
-		<% if cuenta_usuario_signed_in?%>
-		<%= link_to "Ir al menu", controller: "principal", action: "index"%>
+		<% if cuenta_usuario_signed_in? and current_cuenta_usuario.estado==1%>
+			<%= link_to "Ir al menu", controller: "principal", action: "index"%>
 		<% end%>
 	</body>
 </html>

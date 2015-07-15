@@ -1,45 +1,52 @@
 class UsuarioController < ApplicationController
   
   def agregar
-    if validacionAutorizado()
-      usuario=current_cuenta_usuario
-      cargo=usuario.rols_id
-      @mensaje="";
-      
-      @cargo=Rol.find(cargo)
-      @cargo=@cargo.nombre
-      @correo=usuario.email
-      @identificacion= usuario.identificacion
-      
-      documento=usuario.tipo_documentos_id
-      documento=TipoDocumento.find(documento)
-      @documento=documento.nombre
-      
-      if request.post?
-        if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                   
-          
-          fechaN=params[:fecha]
-          especial=params[:especialidad]
-          nombre=params[:nombre]
-          apellido=params[:apellido]
-          genero=params[:genero]
-          direccion=params[:direccion]
-          
-          usuario.nombre=nombre
-          usuario.apellido=apellido
-          usuario.genero=genero
-          usuario.direccion=direccion
-          usuario.fecha_nacimiento=fechaN
-          usuario.especialidad=especial
-          
-          usuario.estado=1
-          usuario.save
-          
-          redirect_to controller: "principal", action: "index"
-        end
-      end
-    else
+    
+    unless validacionAutorizado()
       redirect_to controller: "principal", action: "index"
+    end
+    
+    @usuario=current_cuenta_usuario
+    
+    if request.post?
+      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                   
+        
+        fechaN=params[:fecha]
+        especial=params[:especialidad]
+        nombre=params[:nombre]
+        apellido=params[:apellido]
+        genero=params[:genero]
+        direccion=params[:direccion]
+        
+        @usuario.nombre=nombre
+        @usuario.apellido=apellido
+        @usuario.genero=genero
+        @usuario.direccion=direccion
+        @usuario.fecha_nacimiento=fechaN
+        @usuario.especialidad=especial
+        
+        @usuario.estado=1
+        @usuario.save
+        
+        redirect_to controller: "principal", action: "index"
+      else
+        if params[:nombre].present?
+          @valorNombre= params[:nombre]
+        end
+        if params[:apellido].present?
+          @valorApellido=params[:apellido]
+        end
+        if params[:direccion].present?
+          @valorDireccion=params[:direccion]
+        end
+        if params[:fecha].present?
+          @valorFecha=params[:fecha]
+        end
+        if params[:especialidad].present?
+          @valorEspecialidad=params[:especialidad]
+        end
+        flash.alert="Debe diligenciar todos los campos" 
+      end
     end
   end
 
@@ -48,88 +55,60 @@ class UsuarioController < ApplicationController
   end
 
   def visualizar
-    if cuenta_usuario_signed_in?
-      usuario=current_cuenta_usuario
-      @nombreSesion=usuario.nombre+" "+usuario.apellido
-    end
     @especifico=false;
-    @mensaje="";
-    if params[:correo]
+    if params[:correo] and CuentaUsuario.exists?(["email = ?", params[:correo]])
       @especifico=true;
-      usuario=CuentaUsuario.find_by(email: params[:correo])
-      if usuario
-        @nombre=usuario.nombre;
-        @apellido=usuario.apellido
-        @correo=usuario.email
-        @identificacion=usuario.identificacion
-        @especialidad=usuario.especialidad
-        @fechaN=usuario.fecha_nacimiento
-        documento=usuario.tipo_documentos_id
-        documento=TipoDocumento.find(documento)
-        @documento=documento.nombre
+      @usuario=CuentaUsuario.find_by(email: params[:correo])
         
-        @direccion=usuario.direccion
-        
-        @genero="(Sin cargar)"
-        if(usuario.genero==1)
-          @genero="Masculino"
-        else
-          @genero="Femenino"
-        end
-        
-        cargo=usuario.rols_id
-        cargo=Rol.find(cargo)
-        @cargo=cargo.nombre
-        
-        @modificar=false;
-        @desactivar=false;
-        @horario=false;
-        
-        estado=usuario.estado;
-        @estado="(Sin cargar)"
-        if estado==1
-          @estado="Activo"
-        elsif estado==2
-          @estado="Por autenticar"
-        else 
-          @estado="Inactivo"
-        end
-        
-        if cuenta_usuario_signed_in?
-          if usuario.email==current_cuenta_usuario.email
-            @modificar=true;
-            @horario=false;
-            if cargo.nombre=="Administrador"
-              @desactivar=true;
-            else
-              @desactivar=false;
-            end
-          else
-            @modificar=false;
-            if cargo.nombre=="Administrador"
-              @desactivar=false;
-              @horario=false
-            else
-              cargoSesion=current_cuenta_usuario.rols_id
-              cargoSesion=Rol.find(cargoSesion)
-              
-              if cargoSesion.nombre=="Administrador"
-                @desactivar=true;
-                @horario=true;
-              else 
-                @desactivar=false;
-                @horario=false;
-              end
-            end
-          end
-        else
-          @modificar=false;
-          @desactivar=false;
-        end
-        
+      @genero="(Sin cargar)"
+      if(@usuario.genero)
+        @genero="Masculino"
       else
-        @mensaje="No se encontro registro con esa especificacion"
+        @genero="Femenino"
       end
+      
+      estado=@usuario.estado;
+      @estado="(Sin cargar)"
+      if estado==1
+        @estado="Activo"
+      elsif estado==2
+        @estado="Por autenticar"
+      else 
+        @estado="Inactivo"
+      end
+      
+      if validacionAdmin()
+        if current_cuenta_usuario.id==@usuario.id
+          @modificar=true
+          @desactivar=true
+          @horario=false
+        else
+          if @usuario.rols.nombre=="Administrador"
+            @modificar=false
+            @desactivar=false
+            @horario=false
+          else
+            @modificar=false
+            @desactivar=true
+            @horario=true
+          end
+        end
+      elsif cuenta_usuario_signed_in?
+        if current_cuenta_usuario.id==@usuario.id
+          @modificar=true
+          @desactivar=false
+          @horario=false
+        else
+          @modificar=false
+          @desactivar=false
+          @horario=false          
+        end
+      else
+        @modificar=false
+        @desactivar=false
+        @horario=false
+      end
+      
     else
       @especifico=false;  
       @usuarios=CuentaUsuario.all    
@@ -137,59 +116,38 @@ class UsuarioController < ApplicationController
   end
 
   def autorizar
-    if validacionAdmin()
-      usuario=current_cuenta_usuario
-      @nombre=usuario.nombre+" "+usuario.apellido
-      @documentos=TipoDocumento.where(["estado = ?", 1])
-      @mensaje="";
-      @roles=Rol.all
-      if request.post?
-        if params[:correo].present? and params[:identificacion].present?
-          encargadoRep=params[:encr].present?
-          #pass=rand(1000000).to_s
-          correo=params[:correo]
-          ident=params[:identificacion]
-          tipoDoc=params[:documento]
-          rol=params[:rol]
-          if CuentaUsuario.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc])
-            autorizado=CuentaUsuario.where(["identificacion = ? and tipo_documentos_id = ?", ident, tipoDoc]).first;
-            cargo=autorizado.rols_id
-            cargo=Rol.find(cargo)
-            if cargo.nombre=="Administrador" and autorizado.estado==1
-              @mensaje="Existe ya una cuenta asociada a esa identificacion pero no se puede actualizar por motivos de permisos";
-            else
-              autorizado.password="pass";
-              autorizado.rols_id=rol;
-              autorizado.estado=2;
-              autorizado.email=correo
-              autorizado.encargado_respuesta=encargadoRep
-              autorizado.save();
-              @mensaje="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar";
-            end
-          elsif CuentaUsuario.exists?(["email = ?", correo])
-            autorizado=CuentaUsuario.find_by(email: correo);
-            cargo=autorizado.rols_id
-            cargo=Rol.find(cargo)
-            if cargo.nombre=="Administrador" and autorizado.estado==1
-              @mensaje="Existe ya una cuenta asociada a ese correo pero no se puede actualizar por motivos de permisos";
-            else
-              autorizado.password="pass";
-              autorizado.identificacion=ident;
-              autorizado.tipo_documentos_id=tipoDoc;
-              autorizado.rols_id=rol;
-              autorizado.estado=2;
-              autorizado.encargado_respuesta=encargadoRep
-              autorizado.save();
-              @mensaje="Existe ya una cuenta asociada a ese correo, se procedio a autorizar";
-            end
+    unless validacionAdmin()
+      redirect_to controller: "principal", action: "index"
+    end
+    
+    @documentos=TipoDocumento.where(["estado = ?", 1])
+    @roles=Rol.all
+    
+    if request.post?
+      if params[:correo].present? and params[:identificacion].present?
+        encargado=params[:encr].present?
+        correo=params[:correo]
+        ident=params[:identificacion]
+        tipoDoc=params[:documento]
+        rol=params[:rol]
+        if CuentaUsuario.exists?(["(identificacion = ? and tipo_documentos_id = ?) or email = ? ", ident, tipoDoc, correo])
+          autorizado=CuentaUsuario.where(["(identificacion = ? and tipo_documentos_id = ?) or email= ?", ident, tipoDoc, correo]).first;
+          if autorizado.rols.nombre=="Administrador" and autorizado.estado==1
+            flash.alert="Existe ya una cuenta asociada a esa identificacion pero no se puede actualizar por motivos de permisos";
           else
-            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, nombre: '', apellido: '' , email: correo, password: "pass", direccion: '', genero: true, estado: 2, rols_id: rol, encargado_respuesta: encargadoRep);
-            @mensaje="Se genero la autorizacion exitosamente";
+            autorizado.password="pass";
+            autorizado.rols_id=rol;
+            autorizado.estado=2;
+            autorizado.email=correo
+            autorizado.encargado_respuesta=encargado
+            autorizado.save();
+            flash.notice="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar";
           end
+        else
+          CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, email: correo, password: "pass", estado: 2, rols_id: rol, encargado_respuesta: encargado);
+          flash.alert="Se genero la autorizacion exitosamente";
         end
       end
-    else
-      redirect_to controller: "principal", action: "index"
     end
   end
 

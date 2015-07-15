@@ -1,5 +1,4 @@
 <h1>Autorizar nuevo usuario</h1>
-<h2>Usuario actual: <%= @nombre%></h2>
 <%= form_tag({controller: "usuario", action: "autorizar"} , method: "post") do %>
 	<%= text_field_tag "identificacion", "" , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
 	<br />
@@ -14,6 +13,4 @@
 	<br />
 	<%= submit_tag "enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
-<br />
-<%= @mensaje%>
 <br />

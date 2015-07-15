@@ -20,9 +20,9 @@
 	<br />
 	Hora: <%= @cita.hora_ini%>
 	<br />
-	Paciente: <%= @cita.pacientes.nombre+' '+@cita.pacientes.aellido%>
+	Paciente: <%= @cita.pacientes.nombre+' '+@cita.pacientes.apellido%>
 	<br />
-	INR: <%= @inr%>
+	INR: <%= @inr.valorInr%>
 	<br />
 	Patologia del paciente: <%= @cita.pacientes.patologia.nombre%>
 	<br />
@@ -51,11 +51,9 @@
 				<br />
 				Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
 				<br />
-				<% if @prescripcionDiaria%>
-					<% @prescripcionDiaria.each do |t|%>
-						Dia: <%=t.dia_asociados.nombre%> - <%=t.cantidadGramos%> gramos
-						<br />
-					<% end%>
+				<% @prescripcion.prescripcion_diaria.each do |t|%>
+					Dia: <%=t.dia_asociados.nombre%> - <%=t.cantidadGramos%> gramos
+					<br />
 				<% end%>
 			<% end%>
 		<% end%>
@@ -67,11 +65,9 @@
 		<br />
 		Fecha: <%= t.fecha%>
 		<br />
-		Hora: <%= t.hora%>
+		Hora: <%= t.hora_ini%>
 		<br />
-		Paciente: <%= t.paciente%>
-		<br />
-		INR: <%= t.inr%>
+		Paciente: <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
 		<br />
 		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
 		<br />
@@ -85,11 +81,9 @@
 		<br />
 		Fecha: <%= t.fecha%>
 		<br />
-		Hora: <%= t.hora%>
+		Hora: <%= t.hora_ini%>
 		<br />
-		Paciente: <%= t.paciente%>
-		<br />
-		INR: <%= t.inr%>
+		Paciente: <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
 		<br />
 		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
 		<% if t.estado ==3 and @encargado%>
@@ -99,3 +93,4 @@
 		<br />
 	<% end%>
 <% end%>
+<br />

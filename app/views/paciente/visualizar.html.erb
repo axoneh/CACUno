@@ -2,33 +2,33 @@
 <% if @especifico%>
 	<h3>Paciente especificado</h3>
 	<br />
-	Nombre: <%= @nombre%>
+	Nombre: <%= @paciente.nombre%>
 	<br />
-	Apellido: <%= @apellido%>
+	Apellido: <%= @paciente.apellido%>
 	<br />
-	Numero de identificacion: <%= @identificacion%>
+	Numero de identificacion: <%= @paciente.identificacion%>
 	<br />
-	Documento: <%= @documento%>
+	Documento: <%= @paciente.tipo_documentos.nombre%>
 	<br />
-	Direccion: <%= @direccion%>
+	Direccion: <%= @paciente.direccion%>
 	<br />
-	Correo: <%= @correo%>
+	Correo: <%= @paciente.correo%>
 	<br />
-	Estado Civil: <%= @estadoC%>
+	Estado Civil: <%= @paciente.estado_civils.nombre%>
 	<br />
 	Genero: <%= @genero%>
 	<br />
-	Fecha de nacimiento: <%= @fechaN%> (<%= @edad%>)
+	Fecha de nacimiento: <%= @paciente.fecha_nacimiento%> (<%= @edad%>)
 	<br />
 	<br />
-	Patologia: <%= @patologia%>
+	Patologia: <%= @paciente.patologia.nombre%>
 	<br />
-	Decripcion: <%= @desPatologia%>
+	Decripcion: <%= @paciente.patologia.descripcion%>
 	<br />
 	<br />
-	Ultimo INR registrado: <%= @inr%>
+	Ultimo INR registrado: <%= (@inr.valorInr) if @inr%>
 	<br />
-	tomado el <%= @fecha%>
+	tomado el <%= (@inr.fecha) if @inr%>
 	<br />
 	<br />
 	Empezando a calcular desde: <%= @fechaPrimera%>
@@ -41,18 +41,15 @@
 	<br />
 	Porcentaje de riesgo de embolia: <%= @riesgoEmbolia%> %
 	<br />
-	<br />
-	<% if @antecedentesPaciente%>
-		<h2>Antecedentes clinicos del paciente</h2>
-		<% @antecedentesPaciente.each do |a|%>
-			<%= a.nombre%>
-			<% if a.tipo%>
-				<br />
-				<%=a.descripcion%>: <%=a.comentario%>
-				<br />
-			<% end%>
+	<h2>Antecedentes clinicos del paciente</h2>
+	<% @paciente.antecedente_paciente.each do |a|%>
+		<%= a.antecedente_medicos.nombre%>
+		<% if a.antecedente_medicos.tipo%>
+			<br />
+			<%=a.antecedente_medicos.descripcion%>: <%=a.comentario%>
 			<br />
 		<% end%>
+		<br />
 	<% end%>
 	<br />
 	<% if @prescripcion%>
@@ -62,50 +59,40 @@
 		<br />
 		Fecha de vencimiento: <%= @prescripcion.fechaFin%>
 		<br />
-		Anticoagulante: <%= @anticoagulante.nombre%>
+		Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
 		<br />
-		<% if @prescripcionDiaria%>
-			Prescripcion diaria
-			<br />
-			<% @prescripcionDiaria.each do |d|%>
-				<li>
-					Dia <%= d.dia%> - cantidad <%= d.cantidad%> gramos.
-				</li>
-			<% end%>
+		Prescripcion diaria
+		<br />
+		<% @@prescripcion.prescripcion_diaria.each do |d|%>
+			<li>
+				Dia <%= d.dia_asociados.nombre%> - cantidad <%= d.cantidad%> gramos.
+			</li>
 		<% end%>
 	<% end%>
-	<% if @citasMedicas%>
+	<br />
+	<h2>Citas medicas del paciente</h2>
+	<% @paciente.cita_medicas.each do |t| %>
+		Fecha: <%= t.fecha %> - Tipo: <%= t.tipo%>
 		<br />
-		<h2>Citas medicas del paciente</h2>
-		<% @citasMedicas.each do |t| %>
-			Fecha: <%= t.fecha %>
-			<br />
-			Tipo: <%= t.tipo%>
-			<br />
-			INR de la cita: <%= t.inr%>
-			<br />
-			<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
-			<br />
-		<% end%>
+		<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
+		<br />
 	<% end%>
 	<% if @medico or @paramedico%>
 		<br />
 		<% if @prescripcion and (@fechaActual < @prescripcion.fechaFin.to_date)%>
-			Es recomendable no hacer la consulta.
+			Es recomendable no hacer la consulta ahora.
 			<br />
 		<% end%>
-		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @correo%>
+		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @paciente.correo%>
 	<% end%>
 <%else%>
 	<% @pacientes.each do |t|%>
 		<li>
-			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%> - 
+			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
 			<% if @medico or @paramedico%>
-				<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>
+				- (<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>)
 			<% end%>
 		</li>
 	<%end%>
 <%end%>
-<br />
-<%= @mensaje%>
 <br />

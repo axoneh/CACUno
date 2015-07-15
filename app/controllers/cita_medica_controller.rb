@@ -3,12 +3,18 @@ class CitaMedicaController < ApplicationController
   end
 
   def aplicar
-    @mensaje=""
-    unless validacionMedico() and validacionParamedico() #debe ser medico o paramedico para aplicar alguna cita medica
+    unless validacionMedico() or validacionParamedico() #debe ser medico o paramedico para aplicar alguna cita medica
       redirect_to controller: "principal", action: "index"
+      return
     end
-    unless params[:paciente].present? or Paciente.exists?(["correo = ?", params[:paciente]])#debe estar el correo del paciente como parametro y existir en la base de datos
+    unless params[:paciente].present?#debe estar el correo del paciente como parametro y existir en la base de datos
       redirect_to controller: "principal", action: "index"
+      return
+    else
+      unless Paciente.exists?(["correo = ?", params[:paciente]])
+        redirect_to controller: "principal", action: "index"
+        return
+      end
     end
     correo=params[:paciente]
     citaActual = CitaMedica.new#creacion de la nueva cita medica
@@ -24,11 +30,11 @@ class CitaMedicaController < ApplicationController
     end
     #validaciones de existencia de citas previas
     if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and hora_ini= ? ",citaActual.pacientes_id, citaActual.fecha, citaActual.hora_ini])
-      @mensaje="El paciente tiene una cita para esta misma hora, verifique los datos"
+      flash.alert="El paciente tiene una cita para esta misma hora, verifique los datos"
     elsif CitaMedica.exists?(["cuenta_usuarios_id = ? and fecha = ? and hora_ini= ? ",citaActual.cuenta_usuarios_id, citaActual.fecha, citaActual.hora_ini])
-      @mensaje="Usted no deberia guardar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
+      flash.alert="Usted no deberia guardar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
     else
-      citaActual.save()#de pasar los filtros, se guarda y redirecciona para efectuar la cita
+      citaActual.save#de pasar los filtros, se guarda y redirecciona para efectuar la cita
       redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
     end
   end
@@ -130,7 +136,7 @@ class CitaMedicaController < ApplicationController
           if params[:inr].present?
             @valorInt=params[:inr]
           end
-          @mensaje="Debe diligenciar todos los campos de la respuesta"
+          flash.alert="Debe diligenciar todos los campos de la respuesta"
         end
       end
     elsif validacionParamedico() and citaActual.tipo=="Domiciliaria"
@@ -164,7 +170,7 @@ class CitaMedicaController < ApplicationController
           
           redirect_to controller: "cita_medica", action: "visualizar", cita: citaActual.id
         else
-          @mensaje="Debe diligenciar el inr"
+          flash.alert="Debe diligenciar el inr"
         end
       end
     else
@@ -181,19 +187,16 @@ class CitaMedicaController < ApplicationController
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=3
       @cita=CitaMedica.find(params[:cita])
-      @preguntas=PreguntaCita.joins(:pregunta).where(["cita_medicas_id= ?", cita.id])
-      @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first.valorInr
-      @respuesta=RespuestaCita.find_by(cita_medicas_id: cita.id)#consulta de respuesta para la cita
+      @preguntas=PreguntaCita.joins(:pregunta).where(["cita_medicas_id= ?", @cita.id])
+      @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
+      
+      @respuesta=RespuestaCita.find_by(cita_medicas_id: @cita.id)#consulta de respuesta para la cita
       
       if @respuesta
         
-        @observacion=ObservacionMedica.find_by(respuesta_cita_id: cita.id)#consulta de la observacion medica
+        @observacion=ObservacionMedica.find_by(respuesta_cita_id: @respuesta.id)#consulta de la observacion medica
         
-        @prescripcion=Prescripcion.find_by(respuesta_cita_id: cita.id)#consulta de la prescripcion
-        
-        if @prescripcion
-          @prescripcionDiaria=PrescripcionDiaria.where(["prescripcions_id = ?",@prescripcion.id])
-        end
+        @prescripcion=Prescripcion.find_by(respuesta_cita_id: @respuesta.id)#consulta de la prescripcion
         
       end
     elsif params[:notificacion].present? and params[:notificacion]#consulta de las citas sin responder
@@ -201,10 +204,10 @@ class CitaMedicaController < ApplicationController
         redirect_to controller: "principal", action: "index"
       end
         @nivel=2
-        @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente").where(["cita_medicas.estado = ?",3])
+        @citasRegistradas=CitaMedica.where(["estado = ?", 3])
     else
       @nivel=1
-      @citasRegistradas=CitaMedica.joins(:pacientes, :inr_pacientes).select("cita_medicas.id as id, cita_medicas.fecha as fecha, cita_medicas.hora_ini as hora, inr_pacientes.valorInr as inr, pacientes.nombre||' '||pacientes.apellido as paciente, cita_medicas.estado as estado").all
+      @citasRegistradas=CitaMedica.all
     end
   end
 #------------------------------------------------------------------------------------------------------
@@ -222,12 +225,15 @@ class CitaMedicaController < ApplicationController
     end
     
     @diasAsociados=DiaAsociado.where(["estado = ?", 1])
+    
     @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
+    
     @preguntaInr=Pregunta.where(["estado = 1 and tag = 'inr dificil'"]).first
-    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first.valorInr
-    @anticoagulante=Anticoagulante.find(inr.anticoagulantes_id).nombre
+    
+    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
 
     if request.post?
+      
       if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present?
         
         respuesta=RespuestaCita.new
@@ -268,6 +274,7 @@ class CitaMedicaController < ApplicationController
         if params[:fecha_fin].present?
           @valorFechaFin=params[:fecha_fin]
         end
+        flash.alert="Debe diligenciar todos los campos"
       end
     end
   end

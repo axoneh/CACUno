@@ -1,5 +1,4 @@
 <h1>Agregar paciente</h1>
-<h2>Usuario actual: <%= @nombre%></h2>
 <%= form_tag({controller: "paciente", action: "agregar"} , method: "post") do %>
 	<%= text_field_tag "identificacion", "" , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
 	<br />
@@ -40,6 +39,3 @@
 	<br />
 <% end%>
 <br />
-<%= @mensaje %>
-<br />
-<% link_to "Ir al menu", controller: "principal", action: "index"%>

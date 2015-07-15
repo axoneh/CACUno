@@ -14,12 +14,14 @@
 	<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
 <br />
-<% @pacientesAcorde.each do |p|%>
-	<div>
-		<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%>
-		<br />
-		<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>
-	</div>
+<% if @pacientesAcorde%>
+	<% @pacientesAcorde.each do |p|%>
+		<div>
+			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%>
+			<br />
+			<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>
+		</div>
+	<% end%>
 <% end%>
 <br />
 <%= link_to "Agregar paciente", action: "agregar", controller: "paciente"%>

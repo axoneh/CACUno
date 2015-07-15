@@ -1,7 +1,4 @@
 <h1>Agregar datos de cuenta</h1>
-<h2>Usuario actual: <%= @correo%></h2>
-<h2>Cargo: <%= @cargo%></h2>
-<h2>Documento: <%= @identificacion%> - <%= @documento%></h2>
 <%= form_tag({controller: "usuario", action: "agregar"} , method: "post") do %>
 	<br />
 	<%= text_field_tag "nombre", "", size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>

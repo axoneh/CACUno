@@ -1,39 +1,40 @@
 <h1>Usuarios en el sistema</h1>
-<% if cuenta_usuario_signed_in?%>
-	<h2>Usuario actual: <%= @nombre%></h2>
-<%end%>
 <%if @especifico%>
 	<h3>Usuario especificado</h3>
 	<br />
-	Nombre: <%= @nombre%>
+	Nombre: <%= @usuario.nombre%>
 	<br />
-	Apellido: <%= @apellido%>
+	Apellido: <%= @usuario.apellido%>
 	<br />
-	Numero de identificacion: <%= @identificacion%>
+	Numero de identificacion: <%= @usuario.identificacion%>
 	<br />
-	Documento: <%= @documento%>
+	Documento: <%= @usuario.tipo_documentos.nombre%>
 	<br />
-	Direccion: <%= @direccion%>
+	Direccion: <%= @usuario.direccion%>
 	<br />
-	Correo: <%= @correo%>
+	Correo: <%= @usuario.email%>
 	<br />
 	Genero: <%= @genero%>
 	<br />
-	Cargo: <%= @cargo%>
+	Cargo: <%= @usuario.rols.nombre%>
 	<br />
-	Especialidad: <%= @especialidad%>
+	Especialidad: <%= @usuario.especialidad%>
 	<br />
-	Fecha de nacimiento: <%= @fechaN%>
+	Fecha de nacimiento: <%= @usuario.fecha_nacimiento%>
 	<br />
 	<% if @modificar%>
+		<br />
 		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario"%>
-	<% end%> | 
+	<% end%>
 	<% if @horario%>
+		<br />
 		<%= link_to "Horario", action: "cargar", controller: "horario", correo: @correo%>
-	<%end%> | 
+	<%end%>
 	<% if @desactivar%>
+		<br />
 		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", correo: @correo%>
-	<% end%> | 
+	<% end%>
+	<br />
 	<br />
 	<%= link_to "Ir a la lista", action: "visualizar", controller: "usuario"%>
 <% else%>
