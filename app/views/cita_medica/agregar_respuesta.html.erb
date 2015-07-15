@@ -22,25 +22,25 @@
 		<h3>Respuesta Medica</h3>
 		Analisis
 		<br />
-		<%= text_area_tag "analisis"%>
+		<%= text_area_tag "analisis", @valorAnalisis%>
 		<br />
 		<br />
 		Plan
 		<br />
-		<%= text_area_tag "plan"%>
+		<%= text_area_tag "plan", @valorPlan%>
 		<br />
 		<% if @preguntaInr%>
 			<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?
 			<br />
 		<% end%>
-</div>
+	</div>
 	<div>
 		<h3>Preinscripcion</h3>
 		<br />
 		Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 		<br />
 		Fecha limite de este tratamiento: 
-		<%= date_field_tag "fecha_fin", nil, required:"required"%>
+		<%= date_field_tag "fecha_fin", @valorFechaFin, required:"required"%>
 		<br />
 		Dosis diaria
 		<br />
@@ -54,3 +54,6 @@
 	<%= submit_tag "Enviar respuesta", disabled: false, disable_with: "Por favor espere..."%>
 	<br />
 <% end%>
+<br />
+<%= @mensaje%>
+<br />

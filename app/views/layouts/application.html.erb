@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Clinica Anticoagulante</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-       <p class="notice"><%= notice %></p>
-       <p class="alert"><%= alert %></p>
-<%= yield %>
+	<head>
+		<title>Clinica Anticoagulante</title>
+		<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+		<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+		<%= csrf_meta_tags %>
+	</head>
+	<body>
+		<p class="notice">
+			<%= notice %>
+		</p>
+		<p class="alert">
+			<%= alert %>
+		</p>
+		<% if cuenta_usuario_signed_in?%>
+			<br />
+			Usuario Actual: <%= current_cuenta_usuario.nombre+' 'current_cuenta_usuario.apellido%>
+		<% end%>
+		<%= yield %>
 
-<% if cuenta_usuario_signed_in?%>
-	<%= link_to "Ir al menu", controller: "principal", action: "index"%>
-<% end%>
-</body>
+		<% if cuenta_usuario_signed_in?%>
+		<%= link_to "Ir al menu", controller: "principal", action: "index"%>
+		<% end%>
+	</body>
 </html>

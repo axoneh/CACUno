@@ -11,12 +11,11 @@
 				<%= check_box_tag t.id.to_s+"_p", t.id.to_s+"_p"%> ¿<%= t.pregunta%>?
 				<% if t.tipo%>
 					<br />
-					<%= t.descripcion%>
-					<%= text_area_tag t.id.to_s+"_comentario"%>
+					<%= text_area_tag t.id.to_s+"_comentario", "", placeholder: t.descripcion%>
 				<% end%>
 			<% end%>
 			<br />
-			<%= text_field_tag "inr", "" , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
+			<%= text_field_tag "inr", @valorInr , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
 			<br />
 			Anticoagulante: <%= select_tag "antic_inr", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 		</div>
@@ -24,19 +23,19 @@
 			<h3>Respuesta Medica</h3>
 			<br />Analisis
 			<br />
-			<%= text_area_tag "analisis"%>
+			<%= text_area_tag "analisis", @valorAnalisis%>
 			<br />
 			<br />Plan
 			<br />
-			<%= text_area_tag "plan"%>
+			<%= text_area_tag "plan", @valorPLan%>
 			<br />
 			<br />Observacion Subjetiva
 			<br />
-			<%= text_area_tag "subjetiva"%>
+			<%= text_area_tag "subjetiva", @valorSubjetivo%>
 			<br />
 			<br />Observacion Objetiva
 			<br />
-			<%= text_area_tag "objetiva"%>
+			<%= text_area_tag "objetiva", @valorObjetivo%>
 			<br />
 			<%= check_box_tag "indefinido"%> ¿Tratamiento indefinido?
 			<br />
@@ -48,13 +47,13 @@
 			Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 			<br />
 			Fecha limite del tratamiento: 
-			<%= date_field_tag "fecha_fin", nil, required:"required"%>
+			<%= date_field_tag "fecha_fin", @valorFechaFin, required:"required"%>
 			<br />
 			Dosis diaria
 			<br />
 			<% @diasAsociados.each do |t|%>
 				<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_t"%> <%= t.nombre%>
-				<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5, placeholder: "Cantidad en gramos"%>
+				<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5, required: "required"%> gramos
 				<br />
 			<% end%>
 		</div>
@@ -72,8 +71,7 @@
 			<%= check_box_tag t.id.to_s, t.id.to_s%> ¿<%= t.pregunta%>?
 			<% if t.tipo%>
 				<br />
-				<%= t.descripcion%>
-				<%= text_area_tag t.id.to_s+"_comentario"%>
+				<%= text_area_tag t.id.to_s+"_comentario", "", placeholder: t.descripcion%>
 			<% end%>
 		<% end%>
 		<br />

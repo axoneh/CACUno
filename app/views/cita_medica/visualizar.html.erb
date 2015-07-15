@@ -16,56 +16,47 @@
 		<% end%>
 	</div>
 	<br />
-	Fecha: <%= @fechaCita%>
+	Fecha: <%= @cita.fecha%>
 	<br />
-	Hora: <%= @horaCita%>
+	Hora: <%= @cita.hora_ini%>
 	<br />
-	Paciente: <%= @paciente%>
+	Paciente: <%= @cita.pacientes.nombre+' '+@cita.pacientes.aellido%>
 	<br />
 	INR: <%= @inr%>
 	<br />
-	Patologia del paciente: <%= @patologia%>
+	Patologia del paciente: <%= @cita.pacientes.patologia.nombre%>
 	<br />
 	<div>
-		<h3>Respuesta medica 
-			<% if @respuesta==false%>
-				(En espera)
+		<h3>Respuesta medica</h3>
+		<% unless @respuesta%>
+			<h4>(En espera)</h4>
+			<% if @encargado%>
+				<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: @cita.id%>
 			<% end%>
-		</h3>
-		<% if @respuesta==false and @encargado%>
-			<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita] %>
-		<% end%>
-		<% if @analisis%>
-			<br />
-			Analisis: <%= @analisis%> 
-		<% end%>
-		<% if @plan%>
-			<br />
-			Plan: <%= @plan%> 
-		<% end%>
-		<% if @subjetivo%>
-			<br />
-			Observacion subjetiva: <%= @subjetivo%> 
-		<% end%>
-		<% if @objetivo%>
-			<br />
-			Observacion objetiva: <%= @objetivo%> 
-		<% end%>
-		<% if @prescripcionDiaria%>
-			<h4>Prescripcion diaria</h4>
-			<% if @fechafin%>
-				Vencimiento de la prescripcion: <%= @fechafin%> 
+		<% else%>
+			<% if @observacion%>
+				<br />Observacion objetiva: <%=@observacion.objetivo%>
+				<br />Observacion subjetiva: <%= @observacion.subjetivo%>
+				<% if @observacion.tiempoIndefinifo%>
+					<br />Tratamiento de tiempo indefinido
+				<% else%>
+					<br />Duracion de tratamiento: <%= @observacion.semanasTratamiento%>
+				<% end%>
 			<% end%>
-			<% if @antic%>
+			<br />Analisis: <%= @respuesta.analisis%>
+			<br />Plan: <%= @respuesta.plan%>
+			<% if @prescripcion%>
+				<h3>Prescripcion medica</h3>
+				Fecha de vencimiento: <%= @prescripcion.fechaFin%>
 				<br />
-				Anticoagulante medicado: <%= @antic%> 
-			<% end%>
-			<br />
-			<br />
-			<% @prescripcionDiaria.each do |t|%>
-				<li>
-					Dia: <%=t.dia%>, cantidad: <%=t.cantidad%> gramos
-				</li>
+				Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
+				<br />
+				<% if @prescripcionDiaria%>
+					<% @prescripcionDiaria.each do |t|%>
+						Dia: <%=t.dia_asociados.nombre%> - <%=t.cantidadGramos%> gramos
+						<br />
+					<% end%>
+				<% end%>
 			<% end%>
 		<% end%>
 	</div>

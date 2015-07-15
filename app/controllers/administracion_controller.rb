@@ -1,10 +1,7 @@
 class AdministracionController < ApplicationController
   
-  def menu
-    if validacionAdmin()
-      usuario=current_cuenta_usuario
-      @nombre=usuario.nombre+" "+usuario.apellido
-    else
+  def menu #validacion de acceso al menu de administracion
+    unless validacionAdmin()
       redirect_to controller: "principal", action: "index"
     end
   end

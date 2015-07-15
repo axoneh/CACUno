@@ -62,9 +62,7 @@ class PacienteController < ApplicationController
   end
 
   def actualizar
-    if validacionAdmin()
-      
-    else
+    unless validacionAdmin()
       redirect_to controller: "principal", action: "index"
     end
   end

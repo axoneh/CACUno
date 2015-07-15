@@ -6,19 +6,14 @@ class ApplicationController < ActionController::Base
   #before_action :authenticate_cuenta_usuario!
   #^para pedir autentificacion antes de entrar al controlador
 
-  def validacionMedico
+  def validacionMedico #validacion para saber si fue un medico quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Medico Especialista"
+          if current_cuenta_usuario.rol.nombre=="Medico Especialista"
             return true
           else
             return false
           end
-        else
-          return false
-        end
       else
         return false
       end
@@ -27,9 +22,9 @@ class ApplicationController < ActionController::Base
     end
   end 
 
-  def validacionEncargadoRespuesta
+  def validacionEncargadoRespuesta #validacion para saber si quien entro al sistema esta autorizado para realizar respuestas a consultas domiciliarias
     if validacionMedico()
-      if current_cuenta_usuario.encargado_respuesta==true
+      if current_cuenta_usuario.encargado_respuesta
         return true
       else
         return false
@@ -39,19 +34,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def validacionAdmin
+  def validacionAdmin #validacion para saber si fue un admin quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Administrador"
+          if current_cuenta_usuario.rol.nombre=="Administrador"
             return true
           else
             return false
           end
-        else
-          return false
-        end
       else
         return false
       end
@@ -60,19 +50,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def validacionParamedico
+  def validacionParamedico #validacion para saber si fue un paramedico quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1
-        rol=Rol.find(current_cuenta_usuario.rols_id);
-        if rol
-          if rol.nombre=="Paramedico"
+          if current_cuenta_usuario.rol.nombre=="Paramedico"
             return true
           else
             return false
           end
-        else
-          return false
-        end
       else
         return false
       end
@@ -81,7 +66,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def validacionAutorizado
+  def validacionAutorizado #validacion para saber si quien entro al sistema esta por validar datos
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==2
         return true
