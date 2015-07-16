@@ -11,7 +11,7 @@ class PacienteController < ApplicationController
     @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
       
     if request.post?
-      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:direccion].present?
+      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:avatar].present? and params[:direccion].present?
         correo=params[:correo]
         ident=params[:identificacion]
         documento=params[:documento]

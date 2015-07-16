@@ -43,7 +43,7 @@ Rails.application.routes.draw do
   
   get 'usuario/desactivar'
 
-  devise_for :cuenta_usuarios
+  devise_for :cuenta_usuarios, :controllers => { :omniauth_callbacks => "callbacks" }
 
   get 'medico_internista/menu'
 

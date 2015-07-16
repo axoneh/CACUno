@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150716163848) do
+ActiveRecord::Schema.define(version: 20150705195222) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre"
@@ -82,9 +82,9 @@ ActiveRecord::Schema.define(version: 20150716163848) do
     t.boolean  "encargado_respuesta",               default: false
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
+    t.string   "link_foto"
     t.string   "provider"
     t.string   "uid"
-    t.string   "link_foto"
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true

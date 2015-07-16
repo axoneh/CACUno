@@ -8,8 +8,14 @@ class UsuarioController < ApplicationController
     
     @usuario=current_cuenta_usuario
     
+    @valorNombre= @usuario.nombre
+    @valorApellido= @usuario.apellido
+    @valorDireccion= @usuario.direccion
+    @valorFecha= @usuario.fecha_nacimiento
+    @valorEspecialidad=@usuario.especialidad
+    
     if request.post?
-      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                   
+      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                 
         
         fechaN=params[:fecha]
         especial=params[:especialidad]
@@ -126,7 +132,7 @@ class UsuarioController < ApplicationController
     if request.post?
       if params[:correo].present? and params[:identificacion].present?
         encargado=params[:encr].present?
-        correo=params[:correo]
+        correo=params[:correo]+"@axoneh.com"
         ident=params[:identificacion]
         tipoDoc=params[:documento]
         rol=params[:rol]
@@ -146,6 +152,13 @@ class UsuarioController < ApplicationController
         else
           CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, email: correo, password: "pass", estado: 2, rols_id: rol, encargado_respuesta: encargado);
           flash.alert="Se genero la autorizacion exitosamente";
+        end
+      else
+        if params[:correo].present?
+          @valorCorreo=params[:correo]
+        end
+        if params[:identificacion].present?
+          @valorIdentificacion=params[:identificacion]
         end
       end
     end

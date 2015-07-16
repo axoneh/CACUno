@@ -4,7 +4,7 @@ class ParamedicoController < ApplicationController
     unless validacionParamedico()
       redirect_to controller: "principal", action: "index"
     end
-    @citas=CitaMedica.select("*").select(:pacientes_id).distinct.where(["estado = ?",2]).order(fecha: :desc)
+    @citas=CitaMedica.select("*").where(["estado = ?",2]).order(fecha: :desc).select(:pacientes_id).distinct
     
   end
   

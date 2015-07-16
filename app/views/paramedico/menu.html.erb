@@ -14,6 +14,10 @@
 			<br />
 			<%fecha=t.respuesta_cita.first.prescripcions.first.fechaFin%>
 			Fecha de vencimiento de la prescripcion: <%= fecha%>
+			<% if fecha.to_date<=Date.current%>
+				<br />
+				Debe realizar una visita el paciente
+			<% end%>
 			<br />
 			<%= link_to "Nueva visita domiciliaria", controller: "cita_medica", action: "aplicar", paciente: t.pacientes.correo%>
 			<br />
