@@ -4,3 +4,26 @@
 <br />
 <%= link_to "Ver pacientes", controller: "paciente" , action: "visualizar"%>
 <br />
+<% if @citas%>
+	<h3>Prescripciones</h3>
+	<% @citas.each do |t|%>
+		<li>
+			Paciente: <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+			<br />
+			Direccion: <%= t.pacientes.direccion%>
+			<br />
+			<% 
+			if t.respuesta_cita.first
+				fecha=t.respuesta_cita.first.prescripcions.first.fechaFin
+			else
+				fecha="--"
+			end
+			%>
+			Fecha de vencimiento de prescripcion: <%= fecha%>
+			<br />
+			<%= link_to "Nueva visita domiciliaria", controller: "cita_medica", action: "aplicar", paciente: t.pacientes.correo%>
+			<br />
+		</li>
+	<% end%>
+<% end%>
+<br />

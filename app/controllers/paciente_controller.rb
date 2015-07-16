@@ -11,7 +11,7 @@ class PacienteController < ApplicationController
     @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
       
     if request.post?
-      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:direccion].present?
+      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:direccion].present?
         correo=params[:correo]
         ident=params[:identificacion]
         documento=params[:documento]
@@ -70,6 +70,9 @@ class PacienteController < ApplicationController
         if params[:direccion].present?
           @valorDireccion=params[:direccion]
         end
+        if params[:fecha_n].present?
+          @valorFechaN=params[:fecha_n]
+        end
         flash.alert="Debe diligenciar todos los campos"
       end
     end
@@ -108,13 +111,13 @@ class PacienteController < ApplicationController
       end
       
       if @fechaPrimera
-        @promedioINR=CitaMedica.where(["pacientes_id = ? ", @paciente.id]).inr_pacientes.where(["fecha >= ?", @fechaPrimera]).average(:valorInr)                                        
-        cantidadInr=CitaMedica.where(["pacientes_id = ? ", @paciente.id]).inr_pacientes.count
-        if cantidadInr>0
-          cantidadInrBien=CitaMedica.where(["pacientes_id = ?", @paciente.id]).inr_pacientes.where(["valorInr BETWEEN 2,5 AND 3,5 and fecha >= ?",@fechaPrimera]).count
-          @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
+          @promedioINR=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", @paciente.id, @fechaPrimera]).average(:valorInr)                                          
+          cantidadInr=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", @paciente.id, @fechaPrimera]).count
+          if cantidadInr>0
+            cantidadInrBien=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ? and inr_pacientes.valorInr>= 2.5 and inr_pacientes.valorInr<=3.5", @paciente.id, @fechaPrimera]).count
+            @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
+          end
         end
-      end
       
       cita=CitaMedica.where(["pacientes_id = ?", @paciente.id]).order(fecha: :desc).first
       

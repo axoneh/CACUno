@@ -53,7 +53,7 @@
 			<br />
 			<% @diasAsociados.each do |t|%>
 				<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_t"%> <%= t.nombre%>
-				<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5, required: "required"%> gramos
+				<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5%> gramos
 				<br />
 			<% end%>
 		</div>

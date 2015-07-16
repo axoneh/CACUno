@@ -18,7 +18,7 @@
 	<br />
 	Genero: <%= @genero%>
 	<br />
-	Fecha de nacimiento: <%= @paciente.fecha_nacimiento%> (<%= @edad%>)
+	Fecha de nacimiento: <%= @paciente.fecha_nacimiento%> (<%= @edad%> años)
 	<br />
 	<br />
 	Patologia: <%= @paciente.patologia.nombre%>
@@ -43,12 +43,14 @@
 	<br />
 	<h2>Antecedentes clinicos del paciente</h2>
 	<% @paciente.antecedente_paciente.each do |a|%>
-		<%= a.antecedente_medicos.nombre%>
-		<% if a.antecedente_medicos.tipo%>
+		<li>
+			<%= a.antecedente_medicos.nombre%>
+			<% if a.antecedente_medicos.tipo%>
+				<br />
+				<%=a.antecedente_medicos.descripcion%>: <%=a.comentario%>
+			<% end%>
 			<br />
-			<%=a.antecedente_medicos.descripcion%>: <%=a.comentario%>
-			<br />
-		<% end%>
+		</li>
 		<br />
 	<% end%>
 	<br />
@@ -63,9 +65,9 @@
 		<br />
 		Prescripcion diaria
 		<br />
-		<% @@prescripcion.prescripcion_diaria.each do |d|%>
+		<% @prescripcion.prescripcion_diaria.each do |d|%>
 			<li>
-				Dia <%= d.dia_asociados.nombre%> - cantidad <%= d.cantidad%> gramos.
+				Dia <%= d.dia_asociados.nombre%> - cantidad <%= d.cantidadGramos%> gramos.
 			</li>
 		<% end%>
 	<% end%>

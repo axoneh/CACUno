@@ -1,23 +1,23 @@
 <h1>Agregar paciente</h1>
 <%= form_tag({controller: "paciente", action: "agregar"} , method: "post") do %>
-	<%= text_field_tag "identificacion", "" , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
 	<br />
 	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
 	<br />
-	<%= text_field_tag "nombre", "" , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
+	<%= text_field_tag "nombre", @valorNombre , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
 	<br />
-	<%= text_field_tag "apellido", "" , size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
+	<%= text_field_tag "apellido", @valorApellido , size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
 	<br />
-	<%= text_field_tag "correo", "" , size: 30, maxlenght: 30, placeholder: "Correo electronico", required:"required"%>
+	<%= text_field_tag "correo", @valorCorreo , size: 30, maxlenght: 30, placeholder: "Correo electronico", required:"required"%>
 	<br />
 	<select id="genero" name="genero">
 		<option value=0>Femenino</option>
 		<option value=1>Masculino</option>
 	</select>
 	<br />
-	<%= text_field_tag "direccion", "" , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
+	<%= text_field_tag "direccion", @valorDireccion , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
 	<br />
-	<%= date_field_tag "fecha_n", nil, required:"required"%>
+	<%= date_field_tag "fecha_n", @valorFechaN , required:"required"%>
 	<br />
 	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre)%>
 	<br />
@@ -29,8 +29,7 @@
 			<%= check_box_tag a.id.to_s, a.id.to_s%> ¿<%= a.nombre%>?
 			<% if a.tipo%>
 				<br />
-				<%= a.descripcion%>
-				<%= text_area_tag a.id.to_s+'_comentario' %>
+				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
 			<% end%>
 			<br />
 		<%end%>
