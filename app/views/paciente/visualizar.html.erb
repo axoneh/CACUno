@@ -2,6 +2,8 @@
 <% if @especifico%>
 	<h3>Paciente especificado</h3>
 	<br />
+	<%= image_tag(@paciente.avatar.url(:medium))%>
+	<br />
 	Nombre: <%= @paciente.nombre%>
 	<br />
 	Apellido: <%= @paciente.apellido%>

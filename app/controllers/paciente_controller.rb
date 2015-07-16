@@ -40,6 +40,7 @@ class PacienteController < ApplicationController
           paciente.estado_civils_id=estadoC
           paciente.patologia_id=patologia
           paciente.estado=1
+          paciente.avatar=params[:avatar]
           paciente.save
           flash.notice="Agregado exitoso de paciente"
           idpaciente=paciente.id

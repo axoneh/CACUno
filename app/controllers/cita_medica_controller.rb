@@ -216,12 +216,12 @@ class CitaMedicaController < ApplicationController
       redirect_to controller: "principal", action: "index"
     end
     
-    cita=CitaMedica.find(params[:cita])
+    @cita=CitaMedica.find(params[:cita])
     
-    if RespuestaCita.exists?(["cita_medicas_id = ?",cita.id])
-      cita.estado=2
-      cita.save
-      redirect_to controller: "cita_medica", action: "visualizar", cita: cita.id
+    if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
+      @cita.estado=2
+      @cita.save
+      redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
     end
     
     @diasAsociados=DiaAsociado.where(["estado = ?", 1])
@@ -230,14 +230,14 @@ class CitaMedicaController < ApplicationController
     
     @preguntaInr=Pregunta.where(["estado = 1 and tag = 'inr dificil'"]).first
     
-    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", cita.fecha, cita.id]).first
+    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
 
     if request.post?
       
       if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present?
         
         respuesta=RespuestaCita.new
-        respuesta.cita_medicas_id=cita.id
+        respuesta.cita_medicas_id=@cita.id
         respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
         respuesta.analisis=params[:analisis]
         respuesta.plan=params[:plan]
@@ -257,13 +257,13 @@ class CitaMedicaController < ApplicationController
         end
         
         if params[@preguntaInr.id.to_s+"_p"].present?
-          PreguntaCita.create(cita_medicas_id: cita.id, pregunta_id: @preguntaInr.id)
+          PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: @preguntaInr.id)
         end
         
-        cita.estado=2
-        cita.save
+        @cita.estado=2
+        @cita.save
         
-        redirect_to controller: "cita_medica", action: "visualizar", cita: cita.id
+        redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
       else
         if params[:analisis].present? 
           @valorAnalisis=params[:analisis]

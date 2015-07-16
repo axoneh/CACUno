@@ -2,16 +2,15 @@
 <%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
 	<br />
 	<div>
-		<% if @preguntas%>
-			<h3>Encuesta medica</h3>
-			<% @preguntas.each do |t|%>
-				<br />
-				<%= t.pregunta%>
-				<% if t.tipo%>
+		<h3>Encuesta medica</h3>
+		<% @cita.pregunta_cita.each do |t|%>
+			<li>
+				<%= t.pregunta.pregunta%>
+				<% if t.pregunta.tipo%>
 					<br />
-					<%= t.descripcion%>: <%= t. comentario%>
+					<%= t.pregunta.descripcion%>: <%= t.comentario%>
 				<% end%>
-			<% end%>
+			</li>
 		<% end%>
 		<br />
 		Valor INR: <%= @inr.valorInr%>
@@ -54,6 +53,4 @@
 	<%= submit_tag "Enviar respuesta", disabled: false, disable_with: "Por favor espere..."%>
 	<br />
 <% end%>
-<br />
-<%= @mensaje%>
 <br />

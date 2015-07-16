@@ -12,14 +12,8 @@
 			<br />
 			Direccion: <%= t.pacientes.direccion%>
 			<br />
-			<% 
-			if t.respuesta_cita.first
-				fecha=t.respuesta_cita.first.prescripcions.first.fechaFin
-			else
-				fecha="--"
-			end
-			%>
-			Fecha de vencimiento de prescripcion: <%= fecha%>
+			<%fecha=t.respuesta_cita.first.prescripcions.first.fechaFin%>
+			Fecha de vencimiento de la prescripcion: <%= fecha%>
 			<br />
 			<%= link_to "Nueva visita domiciliaria", controller: "cita_medica", action: "aplicar", paciente: t.pacientes.correo%>
 			<br />

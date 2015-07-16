@@ -17,9 +17,8 @@
 <% if @pacientesAcorde%>
 	<% @pacientesAcorde.each do |p|%>
 		<div>
-			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%>
-			<br />
-			<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>
+			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%> 
+			- (<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>)
 		</div>
 	<% end%>
 <% end%>

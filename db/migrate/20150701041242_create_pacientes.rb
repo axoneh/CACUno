@@ -14,6 +14,7 @@ class CreatePacientes < ActiveRecord::Migration
       t.integer :estado
 
       t.timestamps null: false
+      t.attachment :avatar
     end
     add_index(:pacientes, [:identificacion,:tipo_documentos_id], unique: true, name: 'index_identificacion_tipo_documento_paciente')
   end

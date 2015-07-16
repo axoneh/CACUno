@@ -1,5 +1,8 @@
 <h1>Agregar paciente</h1>
-<%= form_tag({controller: "paciente", action: "agregar"} , method: "post") do %>
+<%= form_tag({controller: "paciente", action: "agregar"},  multipart: true , method: "post") do %>
+	<br />
+	<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required"%>
+	<br />
 	<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
 	<br />
 	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>

@@ -1,6 +1,9 @@
 <h1>Usuarios en el sistema</h1>
 <%if @especifico%>
 	<h3>Usuario especificado</h3>
+	<% if @usuario.link_foto%>
+		<%= image_tag(@usuario.link_foto)%>
+	<% end%>
 	<br />
 	Nombre: <%= @usuario.nombre%>
 	<br />

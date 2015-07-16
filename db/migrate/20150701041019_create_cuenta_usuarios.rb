@@ -17,6 +17,7 @@ class CreateCuentaUsuarios < ActiveRecord::Migration
       t.datetime :reset_password_sent_at
       t.boolean :encargado_respuesta, default: false
       t.timestamps null: false
+      t.string :link_foto
     end
     add_index(:cuenta_usuarios, [:identificacion,:tipo_documentos_id], unique: true, name: 'index_identificacion_documento_usuario')
     add_index(:cuenta_usuarios, :email, unique: true, name: 'index_correo_usuarios')

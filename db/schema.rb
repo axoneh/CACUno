@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150705195222) do
+ActiveRecord::Schema.define(version: 20150716163848) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20150705195222) do
     t.datetime "updated_at",                                        null: false
     t.string   "provider"
     t.string   "uid"
+    t.string   "link_foto"
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true
@@ -165,17 +166,21 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   create_table "pacientes", force: :cascade do |t|
     t.string   "identificacion"
     t.integer  "tipo_documentos_id"
-    t.string   "nombre",             limit: 30
-    t.string   "apellido",           limit: 30
-    t.string   "correo",             limit: 45
+    t.string   "nombre",              limit: 30
+    t.string   "apellido",            limit: 30
+    t.string   "correo",              limit: 45
     t.boolean  "genero"
     t.date     "fecha_nacimiento"
-    t.string   "direccion",          limit: 50
+    t.string   "direccion",           limit: 50
     t.integer  "estado_civils_id"
     t.integer  "patologia_id"
     t.integer  "estado"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "pacientes", ["estado_civils_id"], name: "index_pacientes_on_estado_civils_id"
