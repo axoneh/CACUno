@@ -30,6 +30,7 @@ class UsuarioController < ApplicationController
         @usuario.direccion=direccion
         @usuario.fecha_nacimiento=fechaN
         @usuario.especialidad=especial
+        @usuario.password= Devise.friendly_token[0,20]
         
         @usuario.estado=1
         @usuario.save
@@ -132,7 +133,7 @@ class UsuarioController < ApplicationController
     if request.post?
       if params[:correo].present? and params[:identificacion].present?
         encargado=params[:encr].present?
-        correo=params[:correo]+"@axoneh.com"
+        correo=params[:correo]
         ident=params[:identificacion]
         tipoDoc=params[:documento]
         rol=params[:rol]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150705195222) do
+ActiveRecord::Schema.define(version: 20150717230113) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   end
 
   add_index "anticoagulantes", ["nombre"], name: "index_nombre_anticoagulantes", unique: true
+
+  create_table "cita_icds", force: :cascade do |t|
+    t.integer  "icds_id"
+    t.integer  "cita_medicas_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "cita_icds", ["cita_medicas_id"], name: "index_cita_icds_on_cita_medicas_id"
+  add_index "cita_icds", ["icds_id", "cita_medicas_id"], name: "index_icd_cita_medica", unique: true
+  add_index "cita_icds", ["icds_id"], name: "index_cita_icds_on_icds_id"
 
   create_table "cita_medicas", force: :cascade do |t|
     t.integer  "pacientes_id"
@@ -126,6 +137,25 @@ ActiveRecord::Schema.define(version: 20150705195222) do
   add_index "horario_usuarios", ["cuenta_usuarios_id"], name: "index_horario_usuarios_on_cuenta_usuarios_id"
   add_index "horario_usuarios", ["dia_asignados_id"], name: "index_horario_usuarios_on_dia_asignados_id"
   add_index "horario_usuarios", ["sucursals_id"], name: "index_horario_usuarios_on_sucursals_id"
+
+  create_table "icds", force: :cascade do |t|
+    t.string   "col1"
+    t.string   "col2"
+    t.string   "col3"
+    t.string   "col4"
+    t.string   "col5"
+    t.string   "col6"
+    t.string   "col7"
+    t.string   "col8"
+    t.string   "col9"
+    t.string   "col10"
+    t.string   "col11"
+    t.string   "col12"
+    t.string   "col13"
+    t.string   "col14"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "inr_pacientes", force: :cascade do |t|
     t.integer  "cita_medicas_id"

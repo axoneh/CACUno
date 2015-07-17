@@ -4,7 +4,7 @@
 	<br />
 	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
 	<br />
-	<%= text_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %> @axoneh.com
+	<%= email_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %>
 	<br />
 	<p>Recuerde que si asigna como cargo "Administrador", no podra desactivar la cuenta en un futuro</p>
 	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>

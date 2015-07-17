@@ -40,6 +40,8 @@ gem 'omniauth-google-oauth2'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'mysql'
+
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'momentjs-rails'

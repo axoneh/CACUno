@@ -8,13 +8,7 @@ class CuentaUsuario < ActiveRecord::Base
   belongs_to :tipo_documentos, class_name: TipoDocumento
   
   def self.from_omniauth(auth)
-    where(["email = ? and estado< ? ", auth.info.email ,3]).first do |user|
-      user.provider = provider
-      user.uid = uid
-      user.link_foto=auth.info.image
-      user.nombre=auth.info.first_name
-      user.apellido=auth.info.last_name
-    end
+    where(["email = ? and estado < ? ", auth.info.email ,3]).first
   end
   
 end
