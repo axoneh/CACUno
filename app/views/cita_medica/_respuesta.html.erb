@@ -1,0 +1,38 @@
+<div id="respuesta">
+	<h3>Respuesta Medica</h3>
+	<br />Observacion Subjetiva
+	<br />
+	<%= text_area_tag "subjetiva", @valorSubjetivo%>
+	<br />
+	<br />Observacion Objetiva
+	<br />
+	<%= text_area_tag "objetiva", @valorObjetivo%>
+	<br />
+	<br />Analisis
+	<br />
+	<%= text_area_tag "analisis", @valorAnalisis%>
+	<br />
+	<br />Plan
+	<br />
+	<%= text_area_tag "plan", @valorPLan%>
+	<br />
+	<%= check_box_tag "indefinido"%> ¿Tratamiento indefinido?
+	<br />
+	De no ser indefinido: <%= text_field_tag "semanas_t", "" , size: 30, maxlenght: 30, placeholder: "Semanas de tratamiento"%>
+</div>
+<div id="prescripcion">
+	<h3>Preinscripcion</h3>
+	<br />
+	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
+	<br />
+	Fecha limite del tratamiento: 
+	<%= date_field_tag "fecha_fin", @valorFechaFin, required:"required"%>
+	<br />
+	Dosis diaria
+	<br />
+	<% @diasAsociados.each do |t|%>
+		<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_t"%> <%= t.nombre%>
+		<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5%> gramos
+		<br />
+	<% end%>
+</div>

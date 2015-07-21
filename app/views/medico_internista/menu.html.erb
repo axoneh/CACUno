@@ -9,19 +9,14 @@
 	<%= link_to "Notificaciones", controller: "cita_medica", action: "visualizar", notificacion: true%>
 <% end%>
 <br />
-<%= form_tag({controller: "medico_internista", action: "menu", correo: @correo} , method: "get") do%>
+<%= form_tag({controller: "medico_internista", action: "menu", correo: @correo}, remote: true , method: "get") do%>
 	<%= text_field_tag "nombreP", "", size: 30, maxlenght: 30, placeholder: "Nombre del paciente", required:"required"%>
 	<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
 <br />
-<% if @pacientesAcorde%>
-	<% @pacientesAcorde.each do |p|%>
-		<div>
-			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%> 
-			- (<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>)
-		</div>
-	<% end%>
-<% end%>
+<div id="paciente">
+	<%=render 'lista'%>
+</div>
 <br />
 <%= link_to "Agregar paciente", action: "agregar", controller: "paciente"%>
 <br />

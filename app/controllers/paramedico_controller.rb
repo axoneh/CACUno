@@ -11,8 +11,3 @@ class ParamedicoController < ApplicationController
   end
   
 end
-=begin
-
-=end
-
-

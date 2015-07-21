@@ -1,0 +1,17 @@
+<%if @pacientesAcorde%>
+	<% @pacientesAcorde.each do |p|%>
+		<div>
+			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%>
+			<br />
+			<% cita=p.cita_medicas.last
+			if cita
+				fecha = cita.fecha+" "+cita.hora
+			else
+				fecha = "(Sin registro)"
+			end%>
+			Fecha de la ultima cita registrada: <%=fecha%>
+			<br />
+			<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>
+		</div>
+	<% end%>
+<% end%>

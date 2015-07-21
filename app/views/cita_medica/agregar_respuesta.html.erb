@@ -1,54 +1,14 @@
 <h2>Agregar respuesta</h2>
 <%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
 	<br />
-	<div>
-		<h3>Encuesta medica</h3>
-		<% @cita.pregunta_cita.each do |t|%>
-			<li>
-				<%= t.pregunta.pregunta%>
-				<% if t.pregunta.tipo%>
-					<br />
-					<%= t.pregunta.descripcion%>: <%= t.comentario%>
-				<% end%>
-			</li>
-		<% end%>
+	<%) render 'ver_preguntas'%>
+	<br />
+	<% if @preguntaInr%>
+		<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?
 		<br />
-		Valor INR: <%= @inr.valorInr%>
-		<br />
-		Anticoagulante usado: <%= @inr.anticoagulantes.nombre%>
-	</div>
-	<div>
-		<h3>Respuesta Medica</h3>
-		Analisis
-		<br />
-		<%= text_area_tag "analisis", @valorAnalisis%>
-		<br />
-		<br />
-		Plan
-		<br />
-		<%= text_area_tag "plan", @valorPlan%>
-		<br />
-		<% if @preguntaInr%>
-			<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?
-			<br />
-		<% end%>
-	</div>
-	<div>
-		<h3>Preinscripcion</h3>
-		<br />
-		Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
-		<br />
-		Fecha limite de este tratamiento: 
-		<%= date_field_tag "fecha_fin", @valorFechaFin, required:"required"%>
-		<br />
-		Dosis diaria
-		<br />
-		<% @diasAsociados.each do |t|%>
-			<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_d"%> <%= t.nombre%>
-			<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5%> gramos
-			<br />
-		<% end%>
-	</div>
+	<% end%>
+	<br />
+	<%= render 'respuesta'%>
 	<br />
 	<%= submit_tag "Enviar respuesta", disabled: false, disable_with: "Por favor espere..."%>
 	<br />
