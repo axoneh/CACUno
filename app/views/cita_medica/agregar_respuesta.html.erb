@@ -1,7 +1,7 @@
 <h2>Agregar respuesta</h2>
 <%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
 	<br />
-	<%) render 'ver_preguntas'%>
+	<% render 'ver_preguntas'%>
 	<br />
 	<% if @preguntaInr%>
 		<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?

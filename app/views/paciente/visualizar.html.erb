@@ -78,7 +78,12 @@
 	<% @paciente.cita_medicas.each do |t| %>
 		Fecha: <%= t.fecha %> - Tipo: <%= t.tipo%>
 		<br />
-		INR: <%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
+		INR: 
+		<% if t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first %>
+			<%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
+		<% else%>
+			(Sin encontrar)
+		<% end%>
 		<br />
 		<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
 		<br />

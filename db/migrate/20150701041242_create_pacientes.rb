@@ -10,12 +10,13 @@ class CreatePacientes < ActiveRecord::Migration
       t.date :fecha_nacimiento
       t.string :direccion, limit: 50
       t.references :estado_civils, index: true, foreign_key: true
-      t.references :patologia, index: true, foreign_key: true
+      t.integer :patologia_id, index: true
       t.integer :estado
 
       t.timestamps null: false
       t.attachment :avatar
     end
     add_index(:pacientes, [:identificacion,:tipo_documentos_id], unique: true, name: 'index_identificacion_tipo_documento_paciente')
+    add_index(:pacientes, :correo, unique: true, name: 'index_correo_paciente')
   end
 end

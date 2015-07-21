@@ -3,13 +3,11 @@
 		<div>
 			<%= link_to p.nombre+" "+p.apellido, controller: "paciente", action: "visualizar", correo: p.correo%>
 			<br />
-			<% cita=p.cita_medicas.last
-			if cita
-				fecha = cita.fecha+" "+cita.hora
-			else
-				fecha = "(Sin registro)"
-			end%>
-			Fecha de la ultima cita registrada: <%=fecha%>
+			<%if p.cita_medicas.last%>
+				Fecha de la ultima cita registrada: <%=p.cita_medicas.last.fecha%>
+			<% else%>
+				Fecha de la ultima cita registrada: (Sin registro)
+			<% end%>
 			<br />
 			<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: p.correo%>
 		</div>

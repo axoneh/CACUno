@@ -10,7 +10,7 @@
 		</li>
 	<% end%>
 	<br />
-	Valor INR: <%= @inr.valorInr%>
+	Valor INR: <%= (@inr.valorInr) if @inr%>
 	<br />
-	Anticoagulante usado: <%= @inr.anticoagulantes.nombre%>
+	Anticoagulante usado: <%= (@inr.anticoagulantes.nombre) if @inr%>
 </div>
