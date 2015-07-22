@@ -1,3 +1,4 @@
+<%= render 'datos_pacientes'%>
 <h2>Agregar respuesta</h2>
 <%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
 	<br />

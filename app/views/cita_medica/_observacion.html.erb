@@ -1,0 +1,21 @@
+<div id="observacion">
+	<h3>Observacion</h3>
+	<br />Observacion Subjetiva
+	<br />
+	<%= text_area_tag "subjetiva", @valorSubjetivo%>
+	<br />
+	<br />Observacion Objetiva
+	<br />
+	<%= text_area_tag "objetiva", @valorObjetivo%>
+	<br />
+	<br />
+	<%= check_box_tag "indefinido"%> ¿Tratamiento indefinido?
+	<br />
+	De no ser indefinido: <%= text_field_tag "semanas_t", "" , size: 30, maxlenght: 30, placeholder: "Semanas de tratamiento"%>
+	<br>
+	<%= text_field_tag "frecuencia_car", "", size: 15, maxlenght: 15, placeholder: "Frecuencia cardiaca", request: "request" %>
+	<br />
+	<%= text_field_tag "hsis", "", size: 15, maxlenght: 15 , placeholder: "Hipertension sistolica", request: "request" %>
+	<br />
+	<%= text_field_tag "hdia", "", size: 15, maxlenght: 15, placeholder: "Hipertension diastolica" , request: "request" %>%>
+</div>
