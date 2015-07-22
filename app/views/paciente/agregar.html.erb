@@ -26,6 +26,10 @@
 	<br />
 	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre)%>
 	<br />
+	Antecedentes generales del paciente
+	<br />
+	<%= text_area_tag "antecedentes", @valorAntecedentes%>
+	<br />
 	<% if @antecedentes%>
 		<h2>Antecedentes clinicos</h2>
 		<%@antecedentes.each do |a|%>

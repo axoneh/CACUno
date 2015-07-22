@@ -1,13 +1,5 @@
 <div id="respuesta">
 	<h3>Respuesta Medica</h3>
-	<br />Observacion Subjetiva
-	<br />
-	<%= text_area_tag "subjetiva", @valorSubjetivo%>
-	<br />
-	<br />Observacion Objetiva
-	<br />
-	<%= text_area_tag "objetiva", @valorObjetivo%>
-	<br />
 	<br />Analisis
 	<br />
 	<%= text_area_tag "analisis", @valorAnalisis%>
@@ -15,10 +7,6 @@
 	<br />Plan
 	<br />
 	<%= text_area_tag "plan", @valorPLan%>
-	<br />
-	<%= check_box_tag "indefinido"%> ¿Tratamiento indefinido?
-	<br />
-	De no ser indefinido: <%= text_field_tag "semanas_t", "" , size: 30, maxlenght: 30, placeholder: "Semanas de tratamiento"%>
 </div>
 <div id="prescripcion">
 	<h3>Preinscripcion</h3>
@@ -35,4 +23,8 @@
 		<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5%> gramos
 		<br />
 	<% end%>
+	<br />
+	Recomendaciones de tratamiento:
+	<br />
+	<%= text_area_tag "recomendacion", @valorRecomendacion%>
 </div>

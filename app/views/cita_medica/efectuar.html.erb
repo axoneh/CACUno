@@ -1,7 +1,10 @@
 <h2>Cita</h2>
 <% if @nivel%>
+	<%= render 'datos_paciente'%>
 	<h2>Cita presencial</h2>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
+		<br />
+		<%= render 'observacion'%>
 		<br />
 		<%= render 'preguntas'%>
 		<br />
