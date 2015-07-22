@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Clinica Anticoagulante</title>
+		<title>Clinica Axon de Anticoagulación</title>
 		<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 		<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 		<%= csrf_meta_tags %>
 	</head>
-	<body>
+
+	
+	 <body<%= " id=#{controllername}" if controllername %>>
+	  	 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+	  	 	<div class="container">
+	  	 	<div class"navbar-header">
+	  	 	<a class="navbar-brand"><%= image_tag("CACBrand.png", height: '30') %></a>
+	  	 	</div>
+	  	 	<div class"navbar-collapse collapse">
+	  	 	<% if cuenta_usuario_signed_in? %>
+	  	 		<a class="navbar-brand navbar-right" href="#">
+        		<img height="30" class="img-rounded" alt="Brand" src="<%= current_cuenta_usuario.link_foto %>"</a>
+	  	 		<ul class="nav navbar-nav navbar-right">
+	        		<li class="dropdown">
+	          		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+	          			<%= current_cuenta_usuario.nombre+' '+current_cuenta_usuario.apellido %> 
+	          			<span class="caret"></span></a>
+	         		 <ul class="dropdown-menu">
+	            		<li><a href="#">Opciones</a></li>
+	            		<li role="separator" class="divider"></li>
+	            		<li> <%= link_to "Cerrar Sesión", destroy_cuenta_usuario_session_path, method: :delete, id: "sign_out" %></li>
+	          		</ul>
+	        		</li>
+	      		</ul>
+	 		<% else %>
+	 		<!--
+	 		<%  linkg = "<i class=\"fa fa-google\"></i> Ingresar con Google" %>
+	 			<%= link_to linkg.html_safe, "/auth/google_oauth2", id: "sign_in", class:'btn btn-sm btn-social btn-google navbar-btn navbar-right' %>
+	 		-->
+	 			<% end %>
+	 
+	 		</div>
+	  	 </div>
+	  	 </div>
+	  
+	  	    <div class="container">
+	  	    	<h3>Paramatros</h3>
+	  	    	<p>
+	  	    	 	<%= controllername %>
+				</p>	  	    	 	
+	  	    	 	
+	  	    </div>
+	  	 	<div id="notice" class="notice">
+				<%= notice %>
+		</div>
+		<div id="alert" class="alert">
+				<%= alert %>
+		</div>
+	  	 
+	  	 
+	  	    <%= yield %>
+  </body>
+	
+	
+	
+<!--
+	<body<%= " id=#{@body_id}" if @body_id %>>
 		<br />
 		<% if cuenta_usuario_signed_in?%>
 			<%if current_cuenta_usuario.estado==2%>
@@ -29,4 +85,5 @@
 			<%= link_to "Ir al menu", controller: "principal", action: "index"%>
 		<% end%>
 	</body>
+-->
 </html>

@@ -1,3 +1,35 @@
+
+
+<div class="section">
+            <div class="container">	
+            	<div class="row">
+            		<div class="col-md-4 col-md-offset-4"><div class="vspacer1"></div></div>
+            	</div>
+            	<div class="row">
+            		<div class="col-md-4 col-md-offset-4	"><center><%= image_tag("clinicaaxon.png", class: 'center') %></center></div>
+            	</div><div class="row">
+            		<div class="col-md-4 col-md-offset-4">
+            		<div class="panel panel-default">
+							  	<div class="panel-heading">
+							    <h2 class="panel-title">Bienvenido!</h2>
+							  	</div>
+							  	<div class="panel-body">
+							  	<center><%= image_tag("sumas.png", class: 'center') %></center>	
+							    <p class="text-center">La Clinica Axon de Anticoagulación controla con máximo resultado los pacientes en terapia anticoagulante oral, desde su casa!.</p>
+							    <% linkg = "<i class=\"fa fa-google\"></i> Ingresar con Google" %>
+	 			<%= link_to linkg.html_safe, "/cuenta_usuarios/auth/google_oauth2", id: "sign_in", class:'btn btn-md btn-social btn-google btn-block'%>
+	 			<a href="#" class="btn btn-primary btn-md btn-block">Deseo mas información!</a>
+							  	</div>
+							  	<div class="panel-footer"><h5 class="small"><small></h5>&copy; 2015 Axon e-health</small><h5></div>
+						</div>
+            	</div>
+            	</div>
+
+<!--
+
+
+
+
 <h2>Iniciar sesion</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
@@ -24,3 +56,4 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+-->

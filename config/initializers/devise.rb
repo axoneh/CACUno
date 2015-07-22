@@ -265,7 +265,8 @@ Devise.setup do |config|
   require "omniauth-google-oauth2"
   config.omniauth :google_oauth2, '812466055655-7aqaltu4gbvaepv7cme1j8040oq4j00u.apps.googleusercontent.com', '5JsY3D4BMPNi24FZcTgaWBcd',
   {
-    provider_ignores_state: true
+    provider_ignores_state: true,
+    prompt: "select_account"
   }
   
   
