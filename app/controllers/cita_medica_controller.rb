@@ -51,6 +51,8 @@ class CitaMedicaController < ApplicationController
       redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
     end
     
+    @paciente=@cita.pacientes
+    
     @anticoagulantes=Anticoagulante.where(["estado = ?",1])#consulta de anticoagulantes en uso actualmente
     
     if validacionMedico() and @cita.tipo=="Presencial" #validacion para saber si es cita presencial  y si el usuario es medico
@@ -186,6 +188,13 @@ class CitaMedicaController < ApplicationController
   end
 #------------------------------------------------------------------------------------------------------
   def modificar
+    
+    unless validacionAdmin() and params[:cita].present? and CitaMedica.exists?(["id = ? and estado = ?", params[:cita], 3])
+      redirect_to controller: "principal", action: "index"
+    end
+    
+    @cita=CitaMedica.find(params[:cita])
+    
   end
 #------------------------------------------------------------------------------------------------------ 
   def visualizar
@@ -224,6 +233,7 @@ class CitaMedicaController < ApplicationController
     end
     
     @cita=CitaMedica.find(params[:cita])
+    @paciente=@cita.pacientes
     
     if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
       @cita.estado=2
@@ -285,6 +295,31 @@ class CitaMedicaController < ApplicationController
         flash.alert="Debe diligenciar todos los campos"
       end
     end
+  end
+
+  def agregar_icd
+    
+    unless validacionMedico()
+      redirect_to controller: "principal", action: "index"
+    end
+
+    unless params[:cita].present? and CitaMedica.exists?(["id = ?",params[:cita]])
+      redirect_to controller: "principal", action: "index"
+    end
+    
+    @cita=CitaMedica.find(params[:cita])
+    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
+    
+    if params[:icd_b].present?
+      @icd_b=Icd.where(["CONCAT(id10,' ',dec10) like ?", '%'+params[:icd_b]+'%'])
+    end
+    
+    if params[:icd_v].present? and Icd.exists?(["id = ?", params[:icd_v]])
+      unless CitaIcd.exists?(["icds_id = ? and  cita_medicas_id = ?",params[:icd_v],@cita.id])
+        CitaIcd.create(icds_id: params[:icd_v], cita_medicas_id: @cita.id)
+      end
+    end
+    
   end
 
 end

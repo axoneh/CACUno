@@ -1,4 +1,17 @@
-<%= render 'vista_basica_paciente'%>
-<%= form_tag({controller: "paciente", action: @accion},  remote: true , method: "post") do %>
-
+<%= render 'cita_medica/datos_paciente'%>
+<br />
+<div id="inr_paciente">
+	<%= render 'vista_inr'%>
+</div>
+<br />
+<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+	<br />
+	<%= text_field_tag "inr", "", size: 15, maxlenght: 5, placeholder: "Valor inr del paciente", step: "any", required: "required"%>
+	<br />
+	Fecha del valor: <%= date_field_tag "fecha", nil, required: "required"%>
+	<br />
+	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id, :nombre) %>
+	<br />
+	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
+	<br />
 <% end%>

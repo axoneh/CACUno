@@ -14,15 +14,6 @@ class PacienteController < ApplicationController
     
     agregacion()
     
-    cita = CitaMedica.new
-    cita.pacientes_id = @paciente.id
-    cita.cuenta_usuarios_id = current_cuenta_usuario.id
-    cita.fecha = Date.current
-    cita.estado = 1
-    cita.hora_ini = Time.now.strftime("%I:%M:%S")
-    cita.tipo="Domiciliaria"
-    cita.generico=true
-    cita.save()
   end
 
   def actualizar
@@ -73,7 +64,7 @@ class PacienteController < ApplicationController
           end
         end
       
-      cita=CitaMedica.where(["pacientes_id = ? and estado = ?", @paciente.id, 2]).order("fecha").last
+      cita=CitaMedica.where(["pacientes_id = ? and estado = ? and generico = ?", @paciente.id, 2, false]).order("fecha").last
       
       if cita
         
@@ -142,15 +133,39 @@ class PacienteController < ApplicationController
       @riesgoHemorragia=@riesgoHemorragia*100/9
       
       @citasMedicas=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, false])
-      @InrPrevio=@paciente.cita_medicas.where(["generico = ?",true]).first.inr_pacientes
+      @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
       
     else
       @especifico=false
       @pacientes=Paciente.all
     end
   end 
-  
-  private
+
+  def agregar_inr
+    unless validacionAdmin() or validacionMedico()
+      redirect_to controller: "principal", action: "index"
+    end
+    unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
+      redirect_to controller: "principal", action: "index"
+    end
+    
+    @paciente=Paciente.find_by(correo: params[:paciente])
+    
+    @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
+    
+    if params[:inr].present? and params[:fecha].present?
+      cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+      unless cita
+        crear_cita_generica()
+      end
+      InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_i, fecha: params[:fecha] )
+    end
+    
+    @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
+    
+  end
+
+private
   
   def edad( fecha)
     hoy = Date.current.to_date
@@ -167,9 +182,7 @@ class PacienteController < ApplicationController
     end
     return valor
   end
-  
-private  
-  
+
   def agregacion
     
     @valorAntecedentes=@paciente.antecedente_general
@@ -231,6 +244,8 @@ private
           if @accion=="actualizar"
             flash.notice="Actualizado exitosamente"
             redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+          else
+            crear_cita_generica
           end
         end
       else
@@ -258,6 +273,18 @@ private
         flash.alert="Debe diligenciar todos los campos"
       end
     end
+  end
+  
+  def crear_cita_generica
+    cita = CitaMedica.new
+    cita.pacientes_id = @paciente.id
+    cita.cuenta_usuarios_id = current_cuenta_usuario.id
+    cita.fecha = Date.current
+    cita.estado = 2
+    cita.hora_ini = Time.now.strftime("%I:%M:%S")
+    cita.tipo="Domiciliaria"
+    cita.generico=true
+    cita.save()
   end
   
 end

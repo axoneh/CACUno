@@ -1,8 +1,0 @@
-<% if @paciente%>
-	<br />
-	<%= image_tag(@paciente.avatar.url(:medium))%>
-	<br />
-	Nombre: <%= @paciente.nombre+' '+@paciente.apellido%>
-	<br />
-	Patologia: <%= @paciente.patologia.nombre%>
-<% end%>

@@ -1,23 +1,18 @@
 <div id="datos_paciente">
-	<% if @cita%>
+	<% if @paciente%>
 		<h3>Datos del paciente</h3>
 		<%= image_tag(@paciente.avatar.url(:medium))%>
 		<br />
-		Paciente: <%= @cita.pacientes.nombre+' '+@cita.pacientes.apellido%>
+		Paciente: <%= @paciente.nombre+' '+@paciente.apellido%>
 		<br />
-		Patologia: <%= @cita.pacientes.patologia.nombre%>
+		Patologia: <%= @paciente.patologia.nombre%>
 		<br />
-		Descripcion patologica: <%= @cita.pacientes.patologia.descripcion%>
+		Descripcion patologica: <%= @paciente.patologia.descripcion%>
 		<br />
-		Antecedentes generales: <%= @cita.pacientes.antecedente_general%>
+		Antecedentes generales: <%= @paciente.antecedente_general%>
 		<br />
-		<% @cita.pacientes.antecedente_paciente.each do |t|%>
-			<br />
-			<%= t.antecedente_medicos.nombre%>
-			<br />
-			<%if t.antecedentes_medicos.tipo%>
-				<%= t.antecedentes_medicos.descripcion%>: <%= t.comentario%>
-			<% end%>
-		<% end%>
+		<div id="antecedente_paciente">
+			<%= render 'paciente/antecedente_paciente'%>
+		</div>
 	<% end%>
 </div>

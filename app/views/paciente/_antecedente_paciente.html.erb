@@ -1,0 +1,11 @@
+<h3>Antecedentes clinicos del paciente</h3>
+<% @paciente.antecedente_paciente.each do |a|%>
+	<li>
+		<%= a.antecedente_medicos.nombre%>
+		<% if a.antecedente_medicos.tipo%>
+			<br />
+			<%=a.antecedente_medicos.descripcion%>: <%=a.comentario%>
+		<% end%>
+		<br />
+	</li>
+<% end%>

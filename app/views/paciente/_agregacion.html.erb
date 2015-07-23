@@ -42,7 +42,7 @@
 	<%@antecedentes.each do |a|%>
 		<% antecedente=AntecedentePaciente.where(["pacientes_id = ? and antecedente_medicos_id = ?", @paciente.id, a.id]).first %>
 		<%if antecedente%>
-			<%= check_box_tag a.id.to_s, a.id.to_s%, true>
+			<%= check_box_tag a.id.to_s, a.id.to_s, true %>
 		<% else%>
 			<%= check_box_tag a.id.to_s, a.id.to_s%>
 		<% end%>

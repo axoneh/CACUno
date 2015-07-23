@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
   get 'paciente/actualizar'
   post 'paciente/actualizar'
+  
+  get 'paciente/agregar_inr'
 
   get 'paciente/visualizar'
 
