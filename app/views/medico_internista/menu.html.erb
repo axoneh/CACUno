@@ -23,7 +23,7 @@
 	<%end%>
 </div>
 <br />
-<%= form_tag({controller: "medico_internista", action: "menu", correo: @correo}, remote: true , method: "get") do%>
+<%= form_tag({controller: "medico_internista", action: "menu", correo: @correo}, id: "busqueda_paciente", remote: true , method: "get") do%>
 	<%= text_field_tag "nombreP", "", size: 30, maxlenght: 30, placeholder: "Nombre del paciente", required:"required"%>
 	<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>

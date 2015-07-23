@@ -4,6 +4,8 @@
 <br />
 <%= link_to "Ver pacientes", controller: "paciente" , action: "visualizar"%>
 <br />
+<%= link_to "Actualizar mis datos", controller: "usuario", action: "actualizar"%>
+<br />
 <% if @citas%>
 	<h3>Prescripciones</h3>
 	<% @citas.each do |t|%>
@@ -16,7 +18,7 @@
 	  		Fecha de vencimiento de la prescripcion: <%= fecha%>
 	  		<br />
 	  		<% if fecha.to_date<=Date.current%>
-	    		Debe realizar una visita el paciente
+	    		Debe realizar una visita al paciente
 	    	<% else%>
 	    		Aun no es tiempo para la visita
 	  		<% end%>

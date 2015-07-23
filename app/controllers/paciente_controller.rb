@@ -1,92 +1,40 @@
 class PacienteController < ApplicationController
   
+  def agregar_inr
+    
+  end
+  
   def agregar
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
     end
-      
-    @documentos=TipoDocumento.where(["estado = ?", 1])
-    @estadosC=EstadoCivil.where(["estado = ?", 1])
-    @patologias=Patologia.where(["estado = ?", 1])
-    @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
-      
-    if request.post?
-      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:avatar].present? and params[:direccion].present? and params[:antecedentes].present?
-        correo=params[:correo]
-        ident=params[:identificacion]
-        documento=params[:documento]
-        
-        nombre=params[:nombre]
-        apellido=params[:apellido]
-        direccion=params[:direccion]
-        genero=params[:genero]
-        estadoC=params[:estadoC]
-        patologia=params[:patologia]
-        fechaN=params[:fecha_n]
-        antecedentes=params[:antecedentes]
-        if Paciente.exists?(["correo = ?",correo])
-          flash.alert="Ya existe ese correo registrado, por favor verifique los datos"
-        elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ?", ident, documento])
-          flash.alert="Ya existe un usuario con ese documento, verifique los datos"
-        else
-          paciente=Paciente.new
-          paciente.fecha_nacimiento=fechaN
-          paciente.correo=correo
-          paciente.nombre=nombre
-          paciente.apellido=apellido
-          paciente.identificacion=ident
-          paciente.direccion=direccion
-          paciente.tipo_documentos_id=documento
-          paciente.genero=genero
-          paciente.estado_civils_id=estadoC
-          paciente.patologia_id=patologia
-          paciente.estado=1
-          paciente.avatar=params[:avatar]
-          paciente.save
-          flash.notice="Agregado exitoso de paciente"
-          idpaciente=paciente.id
-          AntecedentePaciente.delete_all(["pacientes_id = ?", idpaciente])
-          @antecedentes.each do |a|
-            if params[a.id.to_s].present?
-              if a.tipo
-                AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
-              else
-                AntecedentePaciente.create(pacientes_id: idpaciente, antecedente_medicos_id: a.id)
-              end
-            end  
-          end
-        end
-      else
-        if params[:correo].present?
-          @valorCorreo=params[:correo]
-        end
-        if params[:nombre].present?
-          @valorNombre=params[:nombre]
-        end
-        if params[:apellido].present?
-          @valorApellido=params[:apellido]
-        end  
-        if params[:identificacion].present?
-          @valorIdentificacion=params[:identificacion]
-        end  
-        if params[:direccion].present?
-          @valorDireccion=params[:direccion]
-        end
-        if params[:fecha_n].present?
-          @valorFechaN=params[:fecha_n]
-        end
-        if params[:antecedentes].present?
-          @valorAntecedentes=params[:antecedentes]
-        end
-        flash.alert="Debe diligenciar todos los campos"
-      end
-    end
+
+    @paciente=Paciente.new
+    @accion="agregar"
+    
+    agregacion()
+    
+    cita = CitaMedica.new
+    cita.pacientes_id = @paciente.id
+    cita.cuenta_usuarios_id = current_cuenta_usuario.id
+    cita.fecha = Date.current
+    cita.estado = 1
+    cita.hora_ini = Time.now.strftime("%I:%M:%S")
+    cita.tipo="Domiciliaria"
+    cita.generico=true
+    cita.save()
   end
 
   def actualizar
-    unless validacionAdmin()
+    unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
     end
+    
+    @paciente=Paciente.find_by(correo: params[:paciente])
+    @accion="actualizar"
+    
+    agregacion()
+    
   end
   
   def visualizar
@@ -94,6 +42,7 @@ class PacienteController < ApplicationController
     @especifico=false
     @medico=validacionMedico()
     @paramedico=validacionParamedico()
+    @admin=validacionAdmin()
     
     if params[:correo].present? and Paciente.exists?(["correo = ?", params[:correo]])
       
@@ -124,7 +73,7 @@ class PacienteController < ApplicationController
           end
         end
       
-      cita=CitaMedica.where(["pacientes_id = ? and estado = ?", @paciente.id, 2]).order(fecha).last
+      cita=CitaMedica.where(["pacientes_id = ? and estado = ?", @paciente.id, 2]).order("fecha").last
       
       if cita
         
@@ -192,6 +141,9 @@ class PacienteController < ApplicationController
       
       @riesgoHemorragia=@riesgoHemorragia*100/9
       
+      @citasMedicas=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, false])
+      @InrPrevio=@paciente.cita_medicas.where(["generico = ?",true]).first.inr_pacientes
+      
     else
       @especifico=false
       @pacientes=Paciente.all
@@ -214,6 +166,98 @@ class PacienteController < ApplicationController
       valor=1
     end
     return valor
+  end
+  
+private  
+  
+  def agregacion
+    
+    @valorAntecedentes=@paciente.antecedente_general
+    @valorApellido=@paciente.apellido
+    @valorCorreo=@paciente.correo
+    @valorDireccion=@paciente.direccion
+    @valorFechaN=@paciente.fecha_nacimiento
+    @valorIdentificacion=@paciente.identificacion
+    @valorNombre=@paciente.nombre
+    
+    @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])    
+    @documentos=TipoDocumento.where(["estado = ?", 1])
+    @estadosC=EstadoCivil.where(["estado = ?", 1])
+    @patologias=Patologia.where(["estado = ?", 1])
+    
+    if request.post?
+      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:direccion].present?
+        correo=params[:correo]
+        ident=params[:identificacion]
+        documento=params[:documento]
+        
+        if Paciente.exists?(["correo = ? and id <> ?",correo, @paciente.id])
+          flash.alert="Ya existe ese correo registrado, por favor verifique los datos"
+        elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ? and id <> ?", ident, documento, @paciente.id])
+          flash.alert="Ya existe un usuario con ese documento, verifique los datos"
+        else
+          
+          @paciente.correo=correo
+          @paciente.identificacion=ident
+          @paciente.tipo_documentos_id=documento
+          @paciente.fecha_nacimiento=params[:fecha_n]
+          @paciente.nombre=params[:nombre]
+          @paciente.apellido=params[:apellido]
+          @paciente.direccion=params[:direccion]
+          @paciente.genero=params[:genero]
+          @paciente.estado_civils_id=params[:estadoC]
+          @paciente.patologia_id=params[:patologia]
+          @paciente.estado=1
+          @paciente.antecedente_general=params[:antecedentes]
+          if params[:avatar].present?
+            @paciente.avatar=params[:avatar]
+          end
+          @paciente.save
+          
+
+          
+          AntecedentePaciente.delete_all(["pacientes_id = ?", @paciente.id])
+          
+          @antecedentes.each do |a|
+            if params[a.id.to_s].present?
+              if a.tipo
+                AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
+              else
+                AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id)
+              end
+            end  
+          end
+          flash.notice="Agregado exitoso de paciente"
+          if @accion=="actualizar"
+            flash.notice="Actualizado exitosamente"
+            redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+          end
+        end
+      else
+        if params[:correo].present?
+          @valorCorreo=params[:correo]
+        end
+        if params[:nombre].present?
+          @valorNombre=params[:nombre]
+        end
+        if params[:apellido].present?
+          @valorApellido=params[:apellido]
+        end  
+        if params[:identificacion].present?
+          @valorIdentificacion=params[:identificacion]
+        end  
+        if params[:direccion].present?
+          @valorDireccion=params[:direccion]
+        end
+        if params[:fecha_n].present?
+          @valorFechaN=params[:fecha_n]
+        end
+        if params[:antecedentes].present?
+          @valorAntecedentes=params[:antecedentes]
+        end
+        flash.alert="Debe diligenciar todos los campos"
+      end
+    end
   end
   
 end

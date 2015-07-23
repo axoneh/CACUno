@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'paramedico/menu'
 
   get 'cita_medica/crear'
+  post 'cita_medica/crear'
 
   get 'cita_medica/aplicar'
 
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
   post 'cita_medica/efectuar'
 
   get 'cita_medica/modificar'
+  post 'cita_medica/modificar'
   
   get 'cita_medica/visualizar'
 
@@ -35,6 +37,7 @@ Rails.application.routes.draw do
   post 'usuario/agregar'
 
   get 'usuario/actualizar'
+  post 'usuario/actualizar'
 
   get 'usuario/visualizar'
 

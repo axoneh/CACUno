@@ -1,2 +1,4 @@
-<h1>Paciente#actualizar</h1>
-<p>Find me in app/views/paciente/actualizar.html.erb</p>
+<h1>Actualizacion del paciente</h1>
+<%= form_tag({controller: "paciente", action: @accion, paciente: params[:paciente]},  multipart: true , method: "post") do %>
+	<%= render 'agregacion'%>
+<% end%>

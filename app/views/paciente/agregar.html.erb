@@ -1,47 +1,4 @@
 <h1>Agregar paciente</h1>
-<%= form_tag({controller: "paciente", action: "agregar"},  multipart: true , method: "post") do %>
-	<br />
-	<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required"%>
-	<br />
-	<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
-	<br />
-	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
-	<br />
-	<%= text_field_tag "nombre", @valorNombre , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
-	<br />
-	<%= text_field_tag "apellido", @valorApellido , size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
-	<br />
-	<%= text_field_tag "correo", @valorCorreo , size: 30, maxlenght: 30, placeholder: "Correo electronico", required:"required"%>
-	<br />
-	<select id="genero" name="genero">
-		<option value=0>Femenino</option>
-		<option value=1>Masculino</option>
-	</select>
-	<br />
-	<%= text_field_tag "direccion", @valorDireccion , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
-	<br />
-	<%= date_field_tag "fecha_n", @valorFechaN , required:"required"%>
-	<br />
-	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre)%>
-	<br />
-	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre)%>
-	<br />
-	Antecedentes generales del paciente
-	<br />
-	<%= text_area_tag "antecedentes", @valorAntecedentes%>
-	<br />
-	<% if @antecedentes%>
-		<h2>Antecedentes clinicos</h2>
-		<%@antecedentes.each do |a|%>
-			<%= check_box_tag a.id.to_s, a.id.to_s%> ¿<%= a.nombre%>?
-			<% if a.tipo%>
-				<br />
-				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
-			<% end%>
-			<br />
-		<%end%>
-	<% end%>
-	<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
-	<br />
+<%= form_tag({controller: "paciente", action: @accion},  multipart: true , method: "post") do %>
+	<%= render 'agregacion'%>
 <% end%>
-<br />

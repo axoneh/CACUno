@@ -1,0 +1,11 @@
+<% if @InrPaciente%>
+	<div id="inr_paciente">
+		<h3>Inr previos del paciente</h3>
+		<% @InrPaciente.each do |t|%>
+			Valor del inr: <%= t.valorInr%>
+			<br />
+			Fecha: <%= t.fecha%>
+			<br />
+		<% end%>
+	</div>
+<% end%>

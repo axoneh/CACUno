@@ -1,0 +1,23 @@
+<p>Recuerde que los datos deben ser veridicos, de lo contrario puede perder su caracer de usuario dentro de la aplicacion y acarrear varios procesos legales</p>
+<br />
+<%= form_tag({controller: "usuario", action: @accion} , method: "post") do %>
+	<br />
+	<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
+	<br />
+	<%= text_field_tag "apellido", @valorApellido, size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
+	<br />
+	<select id="genero" name="genero">
+		<option value=0>Femenino</option>
+		<option value=1>Masculino</option>
+	</select>
+	<br />Fecha de nacimiento
+	<%= date_field_tag "fecha", @valorFecha, required:"required"%>
+	<% if @medico%>
+		<br />
+		<%= text_field_tag "especialidad", @valorEspecialidad , size: 30, maxlenght: 30, placeholder: "Especialidad", required:"required"%>
+	<% end%>
+	<br />
+	<%= text_field_tag "direccion", @valorDireccion, size: 30, maxlenght: 45, placeholder: "Direccion", required:"required"%>
+	<br />
+	<%= submit_tag "Enviar Datos", disabled: false, disable_with: "Por favor espere..."%>
+<%end%>

@@ -56,6 +56,7 @@
 		<br />
 	<% end%>
 	<br />
+	<br />
 	<% if @prescripcion%>
 		<h2>Ultima prescripcion</h2>
 		<br />
@@ -75,7 +76,7 @@
 	<% end%>
 	<br />
 	<h2>Citas medicas del paciente</h2>
-	<% @paciente.cita_medicas.each do |t| %>
+	<% @citasMedicas.each do |t| %>
 		Fecha: <%= t.fecha %> - Tipo: <%= t.tipo%>
 		<br />
 		INR: 
@@ -95,6 +96,10 @@
 			<br />
 		<% end%>
 		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @paciente.correo%>
+	<% end%>
+	<% if @medico or @admin%>
+		<br />
+		<%= link_to "Modificar paciente", controller: "paciente", action: "actualizar", paciente: @paciente.correo%>
 	<% end%>
 <%else%>
 	<% @pacientes.each do |t|%>

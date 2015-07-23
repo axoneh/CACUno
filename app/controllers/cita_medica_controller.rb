@@ -1,21 +1,21 @@
 class CitaMedicaController < ApplicationController
+  
   def crear
   end
 
   def aplicar
     unless validacionMedico() or validacionParamedico() #debe ser medico o paramedico para aplicar alguna cita medica
       redirect_to controller: "principal", action: "index"
-      return
     end
+    
     unless params[:paciente].present?#debe estar el correo del paciente como parametro y existir en la base de datos
       redirect_to controller: "principal", action: "index"
-      return
-    else
-      unless Paciente.exists?(["correo = ?", params[:paciente]])
-        redirect_to controller: "principal", action: "index"
-        return
-      end
     end
+    
+    unless Paciente.exists?(["correo = ?", params[:paciente]])
+      redirect_to controller: "principal", action: "index"
+    end
+    
     correo=params[:paciente]
     citaActual = CitaMedica.new#creacion de la nueva cita medica
     citaActual.pacientes_id = Paciente.find_by(correo: correo).id

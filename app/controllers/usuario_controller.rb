@@ -1,64 +1,21 @@
 class UsuarioController < ApplicationController
   
   def agregar
-    
     unless validacionAutorizado()
       redirect_to controller: "principal", action: "index"
     end
-    
-    @usuario=current_cuenta_usuario
-    
-    @valorNombre= @usuario.nombre
-    @valorApellido= @usuario.apellido
-    @valorDireccion= @usuario.direccion
-    @valorFecha= @usuario.fecha_nacimiento
-    @valorEspecialidad=@usuario.especialidad
-    
-    if request.post?
-      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:especialidad].present?                                 
-        
-        fechaN=params[:fecha]
-        especial=params[:especialidad]
-        nombre=params[:nombre]
-        apellido=params[:apellido]
-        genero=params[:genero]
-        direccion=params[:direccion]
-        
-        @usuario.nombre=nombre
-        @usuario.apellido=apellido
-        @usuario.genero=genero
-        @usuario.direccion=direccion
-        @usuario.fecha_nacimiento=fechaN
-        @usuario.especialidad=especial
-        @usuario.password= Devise.friendly_token[0,20]
-        
-        @usuario.estado=1
-        @usuario.save
-        
-        redirect_to controller: "principal", action: "index"
-      else
-        if params[:nombre].present?
-          @valorNombre= params[:nombre]
-        end
-        if params[:apellido].present?
-          @valorApellido=params[:apellido]
-        end
-        if params[:direccion].present?
-          @valorDireccion=params[:direccion]
-        end
-        if params[:fecha].present?
-          @valorFecha=params[:fecha]
-        end
-        if params[:especialidad].present?
-          @valorEspecialidad=params[:especialidad]
-        end
-        flash.alert="Debe diligenciar todos los campos" 
-      end
-    end
+    @accion="agregar"
+    @medico=validacionMedico()
+    actualizacion()
   end
 
   def actualizar
-    
+    unless validacionUsuario()
+      redirect_to controller: "principal", action: "index"
+    end
+    @accion="actualizar"
+    @medico=validacionMedico()
+    actualizacion()
   end
 
   def visualizar
@@ -167,6 +124,64 @@ class UsuarioController < ApplicationController
 
   def desactivar
 
+  end
+  
+private
+
+  def actualizacion
+    @usuario=current_cuenta_usuario
+    
+    @valorNombre= @usuario.nombre
+    @valorApellido= @usuario.apellido
+    @valorDireccion= @usuario.direccion
+    @valorFecha= @usuario.fecha_nacimiento
+    @valorEspecialidad=@usuario.especialidad
+    
+    if request.post?
+      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present?                               
+        
+        fechaN=params[:fecha]
+        if params[:especialidad].present?
+          especial=params[:especialidad]
+        end 
+        nombre=params[:nombre]
+        apellido=params[:apellido]
+        genero=params[:genero]
+        direccion=params[:direccion]
+        
+        @usuario.nombre=nombre
+        @usuario.apellido=apellido
+        @usuario.genero=genero
+        @usuario.direccion=direccion
+        @usuario.fecha_nacimiento=fechaN
+        if validacionMedico
+          @usuario.especialidad=especial
+        end
+        @usuario.password= Devise.friendly_token[0,20]
+        
+        @usuario.estado=1
+        @usuario.save
+        
+        redirect_to controller: "principal", action: "index"
+      else
+        if params[:nombre].present?
+          @valorNombre= params[:nombre]
+        end
+        if params[:apellido].present?
+          @valorApellido=params[:apellido]
+        end
+        if params[:direccion].present?
+          @valorDireccion=params[:direccion]
+        end
+        if params[:fecha].present?
+          @valorFecha=params[:fecha]
+        end
+        if params[:especialidad].present?
+          @valorEspecialidad=params[:especialidad]
+        end
+        flash.alert="Debe diligenciar todos los campos" 
+      end
+    end
   end
   
 end

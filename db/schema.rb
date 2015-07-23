@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150721200734) do
+ActiveRecord::Schema.define(version: 20150722213819) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 255
@@ -66,8 +66,9 @@ ActiveRecord::Schema.define(version: 20150721200734) do
     t.string   "tipo",               limit: 255
     t.integer  "estado",             limit: 4
     t.time     "hora_ini"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.boolean  "generico",                       default: false
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id", "fecha", "hora_ini"], name: "index_usuario_fecha_hora_cita", unique: true, using: :btree
