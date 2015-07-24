@@ -1,9 +1,12 @@
-<%= render 'datos_pacientes'%>
+<%= render 'datos_paciente'%>
+<br />
+<%= render 'ver_preguntas'%>
+<br />
+<div id="ver_icd">
+	<%= render 'ver_icd'%>
+</div>
 <h2>Agregar respuesta</h2>
 <%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
-	<br />
-	<% render 'ver_preguntas'%>
-	<br />
 	<% if @preguntaInr%>
 		<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%> ¿Tiene el paciente inr dificil en este punto?
 		<br />
@@ -15,3 +18,6 @@
 	<br />
 <% end%>
 <br />
+<div id="buscar_icd">
+	<%= render 'buscar_icd'%>
+</div>

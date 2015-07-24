@@ -14,7 +14,7 @@
 	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 	<br />
 	Fecha limite del tratamiento: 
-	<%= date_field_tag "fecha_fin", @valorFechaFin, required:"required"%>
+	<%= date_field_tag "fecha_fin", @valorFechaFin%>
 	<br />
 	Dosis diaria
 	<br />

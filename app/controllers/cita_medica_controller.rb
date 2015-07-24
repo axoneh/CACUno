@@ -8,14 +8,10 @@ class CitaMedicaController < ApplicationController
       redirect_to controller: "principal", action: "index"
     end
     
-    unless params[:paciente].present?#debe estar el correo del paciente como parametro y existir en la base de datos
+    unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])#debe estar el correo del paciente como parametro y existir en la base de datos
       redirect_to controller: "principal", action: "index"
     end
-    
-    unless Paciente.exists?(["correo = ?", params[:paciente]])
-      redirect_to controller: "principal", action: "index"
-    end
-    
+
     correo=params[:paciente]
     citaActual = CitaMedica.new#creacion de la nueva cita medica
     citaActual.pacientes_id = Paciente.find_by(correo: correo).id
@@ -44,12 +40,16 @@ class CitaMedicaController < ApplicationController
     unless params[:cita].present? or CitaMedica.exists(["id = ?", params[:cita]])#validacion de existencia de parametros y de registro en la base de datos
       redirect_to controller: "principal", action: "index"
     end
+    
     @cita=CitaMedica.find(params[:cita])
+    
     if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])#si ya existe respuesta se procede a cambiar el estado de la respuesta y a redireccionar a la visualizacion
       @cita.estado=2
       @cita.save
       redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
     end
+    
+    agregar_icd()
     
     @paciente=@cita.pacientes
     
@@ -64,22 +64,11 @@ class CitaMedicaController < ApplicationController
       if request.post?
 
         if params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present? and params[:recomendacion].present?
-          #validacion de existencia de parametros
-          inrPac=InrPaciente.new#nuevo inr del paciente
-          inrPac.cita_medicas_id=@cita.id
-          inrPac.anticoagulantes_id=params[:antic_inr]
-          inrPac.fecha=citaActual.fecha
-          inrPac.valorInr=params[:inr]
-          inrPac.save
           
-          respuesta=RespuestaCita.new#nueva respuesta, asignada a la cita actual
-          respuesta.cita_medicas_id=@cita.id
-          respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
-          respuesta.analisis=params[:analisis]
-          respuesta.plan=params[:plan]
-          respuesta.estado=1
-          respuesta.save
-          
+          guardar_inr()
+
+          guardado_general()
+
           observacion=ObservacionMedica.new#nueva observacion para la cita
           observacion.respuesta_cita_id=respuesta.id
           observacion.subjetivo=params[:subjetiva]
@@ -95,22 +84,7 @@ class CitaMedicaController < ApplicationController
           end
           observacion.save
           
-          prescripcion=Prescripcion.new#nueva prescripcion para la respuesta medica
-          prescripcion.anticoagulantes_id=params[:antic]
-          prescripcion.respuesta_cita_id=respuesta.id
-          prescripcion.fechaFin=params[:fecha_fin]
-          prescripcion.recomendacion=params[:recomendacion]
-          prescripcion.save
-          
-          @preguntas.each do |t|#guardando las respuestas de la encuesta del paciente
-            if params[t.id.to_s+"_p"].present?
-              if t.tipo
-                PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
-              else
-                PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id)
-              end
-            end
-          end
+          guardar_preguntas()
           
           @diasAsociados.each do |t|#guardando la prescripcion diaria del paciente
             if params[t.id.to_s+"_d"].present?
@@ -148,7 +122,7 @@ class CitaMedicaController < ApplicationController
           flash.alert="Debe diligenciar todos los campos de la respuesta"
         end
       end
-    elsif validacionParamedico() and citaActual.tipo=="Domiciliaria"
+    elsif validacionParamedico() and @cita.tipo=="Domiciliaria"
       
       @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
       @nivel=false
@@ -157,27 +131,14 @@ class CitaMedicaController < ApplicationController
         
         if params[:inr].present?
           
-          inrPac=InrPaciente.new
-          inrPac.cita_medicas_id=@cita.id
-          inrPac.anticoagulantes_id=params[:antic_inr]
-          inrPac.fecha=citaActual.fecha
-          inrPac.valorInr=params[:inr]
-          inrPac.save
+          guardar_inr()
           
           @cita.estado=3;
           @cita.save
           
-          @preguntas.each do |t|
-            if params[t.id.to_s].present?
-              if t.tipo
-                PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
-              else
-                PreguntaCita.create(cita_medicas_id: citaActual.id, pregunta_id: t.id)
-              end
-            end
-          end
+          guardar_preguntas()
           
-          redirect_to controller: "cita_medica", action: "visualizar", cita: citaActual.id
+          redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
         else
           flash.alert="Debe diligenciar el inr"
         end
@@ -241,6 +202,8 @@ class CitaMedicaController < ApplicationController
       redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
     end
     
+    agregar_icd()
+    
     @diasAsociados=DiaAsociado.where(["estado = ?", 1])
     
     @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
@@ -251,22 +214,9 @@ class CitaMedicaController < ApplicationController
 
     if request.post?
       
-      if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present?
+      if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present? and params[:recomendacion].present?
         
-        respuesta=RespuestaCita.new
-        respuesta.cita_medicas_id=@cita.id
-        respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
-        respuesta.analisis=params[:analisis]
-        respuesta.plan=params[:plan]
-        respuesta.estado=1
-        respuesta.save
-        
-        prescripcion=Prescripcion.new
-        prescripcion.respuesta_cita_id=respuesta.id
-        prescripcion.anticoagulantes_id=params[:antic]
-        prescripcion.fechaFin=params[:fecha_fin]
-        prescripcion.recomendacion=params[:recomendacion]
-        prescripcion.save
+        guardado_general()
         
         @diasAsociados.each do |t|
           if params[t.id.to_s+"_d"].present?
@@ -297,29 +247,55 @@ class CitaMedicaController < ApplicationController
     end
   end
 
-  def agregar_icd
-    
-    unless validacionMedico()
-      redirect_to controller: "principal", action: "index"
-    end
+private
 
-    unless params[:cita].present? and CitaMedica.exists?(["id = ?",params[:cita]])
-      redirect_to controller: "principal", action: "index"
+  def guardar_preguntas
+    @preguntas.each do |t|#guardando las respuestas de la encuesta del paciente
+      if params[t.id.to_s+"_p"].present?
+        if t.tipo
+          PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
+        else
+          PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id)
+        end
+      end
     end
-    
-    @cita=CitaMedica.find(params[:cita])
-    @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
-    
+  end
+
+  def agregar_icd
     if params[:icd_b].present?
       @icd_b=Icd.where(["CONCAT(id10,' ',dec10) like ?", '%'+params[:icd_b]+'%'])
     end
-    
     if params[:icd_v].present? and Icd.exists?(["id = ?", params[:icd_v]])
       unless CitaIcd.exists?(["icds_id = ? and  cita_medicas_id = ?",params[:icd_v],@cita.id])
         CitaIcd.create(icds_id: params[:icd_v], cita_medicas_id: @cita.id)
       end
     end
+  end
+
+  def guardado_general
+    respuesta=RespuestaCita.new
+    respuesta.cita_medicas_id=@cita.id
+    respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
+    respuesta.analisis=params[:analisis]
+    respuesta.plan=params[:plan]
+    respuesta.estado=1
+    respuesta.save
     
+    prescripcion=Prescripcion.new
+    prescripcion.respuesta_cita_id=respuesta.id
+    prescripcion.anticoagulantes_id=params[:antic]
+    prescripcion.fechaFin=params[:fecha_fin]
+    prescripcion.recomendacion=params[:recomendacion]
+    prescripcion.save
+  end
+  
+  def guardar_inr
+    inrPac=InrPaciente.new
+    inrPac.cita_medicas_id=@cita.id
+    inrPac.anticoagulantes_id=params[:antic_inr]
+    inrPac.fecha=@cita.fecha
+    inrPac.valorInr=params[:inr]
+    inrPac.save
   end
 
 end

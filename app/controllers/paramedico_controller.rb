@@ -6,7 +6,7 @@ class ParamedicoController < ApplicationController
       redirect_to controller: "principal", action: "index"
     end
     
-    @citas=CitaMedica.where(["estado = ?",2]).order("fecha desc, hora_ini desc").group("pacientes_id")
+    @citas=CitaMedica.where(["estado = ? and generico = ? and tipo = ?",2, false, 'Presencial']).order("fecha desc, hora_ini desc").group("pacientes_id")
     
   end
   

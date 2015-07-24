@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 
   get 'horario/modificar'
   post 'horario/modificar'
-
+  
   get 'horario/cargar'
 
   get 'usuario/agregar'

@@ -1,0 +1,5 @@
+<h3>Diagnostico de la cita</h3>
+<%@cita.cita_icds.each do |t|%>
+	Enfermedad: <%= t.icds.dec10%>
+	<br />
+<% end%>

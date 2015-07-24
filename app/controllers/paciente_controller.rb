@@ -85,7 +85,7 @@ class PacienteController < ApplicationController
       @riesgoEmbolia+=buscar_antecedente('enfermedad vascular');
       
       if cita
-        sumaRiesdo=cita.respuesta_cita.first.observacion_medicas.first
+        sumaRiesgo=cita.respuesta_cita.first.observacion_medicas.first
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -115,7 +115,7 @@ class PacienteController < ApplicationController
       @riesgoHemorragia+=buscar_antecedente('alcohol')
       
       if cita
-        sumaRiesdo=cita.respuesta_cita.first.observacion_medicas.first
+        sumaRiesgo=cita.respuesta_cita.first.observacion_medicas.first
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -245,7 +245,9 @@ private
             flash.notice="Actualizado exitosamente"
             redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
           else
-            crear_cita_generica
+            if validacionMedico()
+              redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
+            end
           end
         end
       else
