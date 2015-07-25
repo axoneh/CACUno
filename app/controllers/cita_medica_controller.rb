@@ -284,7 +284,7 @@ private
     prescripcion=Prescripcion.new
     prescripcion.respuesta_cita_id=respuesta.id
     prescripcion.anticoagulantes_id=params[:antic]
-    prescripcion.fechaFin=params[:fecha_fin]
+    prescripcion.fechaFin=(Time.now + dhms2sec(params[:fecha_fin].to_i)).to_date
     prescripcion.recomendacion=params[:recomendacion]
     prescripcion.save
   end

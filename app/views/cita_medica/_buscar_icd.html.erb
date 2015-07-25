@@ -1,12 +1,12 @@
 <h3>Buscar ICD</h3>
-<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, remote: true , method: "get") do %>
+<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, remote: true , method: "get") do %>
 	<%= text_field_tag "icd_b", "", size: 30,placeholder: "Codigo o nombre del diagnostico"%>
 	<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>
 <% end%>
 <%if @icd_b%>
 	<h3>Resultados de la busqueda</h3>
 	<% @icd_b.each do |t|%>
-		<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita], icd_v: t.id}, remote: true , method: "get") do %>
+		<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id}, remote: true , method: "get") do %>
 			Enfermedad: <%= t.dec10%>
 			<br />
 			<%= submit_tag "Agregar", disabled: false, disable_with: "Por favor espere..."%>
