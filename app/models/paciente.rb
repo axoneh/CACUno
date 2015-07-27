@@ -12,4 +12,10 @@ class Paciente < ActiveRecord::Base
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   
   validates_attachment_presence :avatar
+
+  def self.ultima_cita_presencial(correo)
+    dato=Paciente.where(["correo = ?", correo]).first.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).order(fecha).last
+    dato
+  end
+  
 end

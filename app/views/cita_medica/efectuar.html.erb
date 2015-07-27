@@ -23,6 +23,21 @@
 		<%= render 'buscar_icd'%>
 	</div>
 <% else%>
+	<div id="cita_domiciliaria">
+		<% if @ultimaCita%>
+			<h3>Ultima cita domiciliaria</h3>
+			Fecha: <%= @ultimaCita.fecha%>
+			<br />
+			Hora: <%= @ultimaCita.hora_ini%>
+			<br />
+			Tiempo de tratamiento:
+			<% if @ultimaCia.respuesta_cita.observacion_medicas.tienpoIndefinido%>
+				Indefinido
+			<% else%>
+				<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCia.respuesta_cita.observacion_medicas.diasTratamiento%>
+			<% end%>
+		<% end%>
+	</div>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
 		<br />
 		<%= render 'preguntas'%>

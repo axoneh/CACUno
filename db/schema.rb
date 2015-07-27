@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.text     "subjetivo"
     t.text     "objetivo"
     t.boolean  "tiempoIndefinido"
-    t.integer  "semanasTratamiento",  limit: 4
+    t.integer  "diasTratamiento",  limit: 4
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
     t.integer  "frecuencia_cardiaca", limit: 4

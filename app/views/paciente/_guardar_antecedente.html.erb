@@ -5,8 +5,8 @@
 		<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%> ¿<%= a.nombre%>?
 		<% if a.tipo%>
 			<br />
-			<% unless seleccion%>
-				<%= text_area_tag a.id.to_s+'_comentario', antecedente.comentario, placeholder: a.descripcion %>
+			<% if seleccion%>
+				<%= text_area_tag a.id.to_s+'_comentario', @antecedentesPaciente.find_by(antecedente_medicos_id: a.id).comentario, placeholder: a.descripcion %>
 			<% else%>
 				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
 			<% end%>

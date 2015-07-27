@@ -11,7 +11,13 @@ class CitaMedicaController < ApplicationController
     unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])#debe estar el correo del paciente como parametro y existir en la base de datos
       redirect_to controller: "principal", action: "index"
     end
-
+    
+    ultimaCita=Paciente.ultima_cita_presencial(params[:paciente])
+    
+    unless validacionParamedico() and ultimaCita #debe existir una cita presencial no generica para crear una cita domiciliaria
+      redirect_to controller: "principal", action: "index"
+    end
+    
     correo=params[:paciente]
     citaActual = CitaMedica.new#creacion de la nueva cita medica
     citaActual.pacientes_id = Paciente.find_by(correo: correo).id
@@ -37,7 +43,7 @@ class CitaMedicaController < ApplicationController
 #-------------------------------------------------------------------------------------------------------------------------
   def efectuar
     @nivel=true#booleano para saber si es la cita sera domiciliaria o presencial
-    unless params[:cita].present? or CitaMedica.exists(["id = ?", params[:cita]])#validacion de existencia de parametros y de registro en la base de datos
+    unless params[:cita].present? or CitaMedica.exists?(["id = ?", params[:cita]])#validacion de existencia de parametros y de registro en la base de datos
       redirect_to controller: "principal", action: "index"
     end
     
@@ -56,10 +62,31 @@ class CitaMedicaController < ApplicationController
     @anticoagulantes=Anticoagulante.where(["estado = ?",1])#consulta de anticoagulantes en uso actualmente
     
     if validacionMedico() and @cita.tipo=="Presencial" #validacion para saber si es cita presencial  y si el usuario es medico
-      
+      @medicoC=true
       @preguntas=Pregunta.where(["estado = ?", 1])
       @nivel=true
       @diasAsociados=DiaAsociado.where(["estado = ?", 1])
+      
+      @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
+      
+      if params[:cambio_i].present?
+        @cambio=true
+        @antecedentesPaciente=AntecedentePaciente.where(["pacientes_id = ?", @paciente.id])
+      end
+      
+      if params[:cambio_t].present?
+        @cambio=false
+        AntecedentePaciente.delete_all(["pacientes_id = ?", @paciente.id])
+        @antecedentes.each do |a|
+          if params[a.id.to_s].present?
+            if a.tipo
+              AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
+            else
+              AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id)
+            end
+          end  
+        end
+      end
       
       if request.post?
 
@@ -80,7 +107,7 @@ class CitaMedicaController < ApplicationController
             observacion.tiempoIndefinido=true
           else
             observacion.tiempoIndefinido=false
-            observacion.semanasTratamiento=params[:semanas_t]
+            observacion.diasTratamiento=params[:semanas_t].to_i * 7
           end
           observacion.save
           
@@ -120,6 +147,7 @@ class CitaMedicaController < ApplicationController
       
       @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
       @nivel=false
+      @ultimaCita=Paciente.ultima_cita_presencial(@paciente.correo)
       
       if request.post?
         

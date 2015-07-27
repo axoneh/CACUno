@@ -9,3 +9,9 @@
 		<br />
 	</li>
 <% end%>
+<% if @medicoC%>
+	<br />
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_i: true}, remote: true, method: "post") do %>
+		<%= submit_tag "Actualizar antecedentes", disabled: false, disable_with: "Por favor espere..."%>
+	<% end%>
+<% end%>
