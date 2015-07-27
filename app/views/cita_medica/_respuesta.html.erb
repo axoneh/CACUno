@@ -19,9 +19,16 @@
 	Dosis diaria
 	<br />
 	<% @diasAsociados.each do |t|%>
-		<%= check_box_tag t.id.to_s+"_d", t.id.to_s+"_t"%> <%= t.nombre%>
-		<%= text_field_tag t.id.to_s+"_cantidad", "" , size: 5, maxlenght: 5%> gramos
-		<br />
+		<div id=<%= t.nombre%>>
+			<%= t.nombre%>
+			<br />
+			<%= radio_button_tag t.id.to_s+"_cantidad", "0""%> Ninguna medida
+			<br />
+			<%= radio_button_tag t.id.to_s+"_cantidad", "0.5"%> Media pastilla
+			<br />
+			<%= radio_button_tag t.id.to_s+"_cantidad", "1"%> Pastilla completa
+			<br />
+		</div>
 	<% end%>
 	<br />
 	Recomendaciones de tratamiento:

@@ -1,9 +1,5 @@
 class PacienteController < ApplicationController
   
-  def agregar_inr
-    
-  end
-  
   def agregar
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
@@ -144,6 +140,8 @@ class PacienteController < ApplicationController
   def agregar_inr
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
+    else
+      @validacion=true
     end
     unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
       redirect_to controller: "principal", action: "index"
@@ -153,16 +151,21 @@ class PacienteController < ApplicationController
     
     @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
     
+    cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+    
     if params[:inr].present? and params[:fecha].present?
-      cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
-      unless cita
-        crear_cita_generica()
+      if cita
+        InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_i, fecha: params[:fecha] )
       end
-      InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_i, fecha: params[:fecha] )
     end
     
     @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
     
+    if cita
+      if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
+        InrPaciente.delete_all(["id = ?",params[:inr_e]])
+      end
+    end
   end
 
 private
@@ -176,7 +179,7 @@ private
   
   def buscar_antecedente( nombre)
     valor=0
-    sumaRiesgo=AntecedenteMedico.find_by(tag: nombre)#si el paciente tiene diabetes
+    sumaRiesgo=AntecedenteMedico.find_by(tag: nombre)
     if sumaRiesgo and AntecedentePaciente.exists?(["pacientes_id = ? and antecedente_medicos_id = ?", @paciente.id, sumaRiesgo.id])
       valor=1
     end
@@ -185,6 +188,7 @@ private
 
   def agregacion
     
+    @antecedentesPaciente=AntecedentePaciente.where(["pacientes_id = ?", @paciente.id])
     @valorAntecedentes=@paciente.antecedente_general
     @valorApellido=@paciente.apellido
     @valorCorreo=@paciente.correo
@@ -284,7 +288,7 @@ private
     cita.fecha = Date.current
     cita.estado = 2
     cita.hora_ini = Time.now.strftime("%I:%M:%S")
-    cita.tipo="Domiciliaria"
+    cita.tipo="Presencial"
     cita.generico=true
     cita.save()
   end

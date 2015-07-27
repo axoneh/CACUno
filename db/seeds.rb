@@ -7,8 +7,11 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Anticoagulante.delete_all
-Anticoagulante.create(nombre: 'Warfarina', descripcion: 'Tableta x 5 mg', estado: 1)
-Anticoagulante.create(nombre: 'Dabigatran', descripcion: 'Capsula x 75 mg', estado: 1)
+Anticoagulante.create(nombre: 'Warfarina', estado: 1)
+Anticoagulante.create(nombre: 'Dabigatran', estado: 1)
+
+Icd.create(id10: "lawe", dec10: "Enfermedad sin descripcion presisa", grp10: nil)
+Icd.create(id10: "xdpm", dec10: "Etra enfermedad sin descripcion presisa", grp10: nil)
 
 AntecedenteMedico.delete_all
 AntecedenteMedico.create(nombre: 'Farmacos que interfieran con el anticoagulante', descripcion: 'Cual(es)', tag: 'farmaco', tipo: true, estado: 1)

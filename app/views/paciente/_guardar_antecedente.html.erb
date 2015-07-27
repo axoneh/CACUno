@@ -1,0 +1,16 @@
+<h3>Antecedentes clinicos</h3>
+<% if @antecedentes%>
+	<%@antecedentes.each do |a|%>
+		<% seleccion = @antecedentesPaciente.exists?(["antecedente_medicos_id = ?", a.id])%>
+		<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%> ¿<%= a.nombre%>?
+		<% if a.tipo%>
+			<br />
+			<% unless seleccion%>
+				<%= text_area_tag a.id.to_s+'_comentario', antecedente.comentario, placeholder: a.descripcion %>
+			<% else%>
+				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
+			<% end%>
+		<% end%>
+		<br />
+	<%end%>
+<% end%>

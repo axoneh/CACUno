@@ -41,7 +41,7 @@
 				Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
 				<br />
 				<% @prescripcion.prescripcion_diaria.each do |t|%>
-					Dia: <%=t.dia_asociados.nombre%> - <%=t.cantidadGramos%> gramos
+					Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f %> gramos
 					<br />
 				<% end%>
 			<% end%>

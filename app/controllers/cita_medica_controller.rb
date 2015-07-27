@@ -70,7 +70,7 @@ class CitaMedicaController < ApplicationController
           guardado_general()
 
           observacion=ObservacionMedica.new#nueva observacion para la cita
-          observacion.respuesta_cita_id=respuesta.id
+          observacion.respuesta_cita_id=@respuesta.id
           observacion.subjetivo=params[:subjetiva]
           observacion.objetivo=params[:objetiva]
           observacion.frecuencia_cardiaca=params[:frecuencia]
@@ -85,12 +85,6 @@ class CitaMedicaController < ApplicationController
           observacion.save
           
           guardar_preguntas()
-          
-          @diasAsociados.each do |t|#guardando la prescripcion diaria del paciente
-            if params[t.id.to_s+"_d"].present?
-              PrescripcionDiaria.create(prescripcions_id: prescripcion.id, dia_asociados_id: t.id, cantidadGramos: params[t.id.to_s+"_cantidad"])
-            end
-          end
           
           @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
           @cita.save()
@@ -159,11 +153,15 @@ class CitaMedicaController < ApplicationController
   end
 #------------------------------------------------------------------------------------------------------ 
   def visualizar
+    
     @nivel=1#entero encargado de manejar que tipo de consulta sera: 3 para unica, 2 para notificaciones y 1 para general
     @encargado=validacionEncargadoRespuesta()
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=3
       @cita=CitaMedica.find(params[:cita])
+      if @cita.generico
+        redirect_to controller: "principal", action: "index"
+      end
       @preguntas=PreguntaCita.joins(:pregunta).where(["cita_medicas_id= ?", @cita.id])
       @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
       
@@ -218,12 +216,6 @@ class CitaMedicaController < ApplicationController
         
         guardado_general()
         
-        @diasAsociados.each do |t|
-          if params[t.id.to_s+"_d"].present?
-            PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"])
-          end
-        end
-        
         if params[@preguntaInr.id.to_s+"_p"].present?
           PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: @preguntaInr.id)
         end
@@ -273,20 +265,27 @@ private
   end
 
   def guardado_general
-    respuesta=RespuestaCita.new
-    respuesta.cita_medicas_id=@cita.id
-    respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
-    respuesta.analisis=params[:analisis]
-    respuesta.plan=params[:plan]
-    respuesta.estado=1
-    respuesta.save
+    @respuesta=RespuestaCita.new
+    @respuesta.cita_medicas_id=@cita.id
+    @respuesta.cuenta_usuarios_id=current_cuenta_usuario.id
+    @respuesta.analisis=params[:analisis]
+    @respuesta.plan=params[:plan]
+    @respuesta.estado=1
+    @respuesta.save
     
     prescripcion=Prescripcion.new
-    prescripcion.respuesta_cita_id=respuesta.id
+    prescripcion.respuesta_cita_id=@respuesta.id
     prescripcion.anticoagulantes_id=params[:antic]
-    prescripcion.fechaFin=(Time.now + dhms2sec(params[:fecha_fin].to_i)).to_date
+    prescripcion.fechaFin=(Time.now + params[:fecha_fin].to_i.day).to_date
     prescripcion.recomendacion=params[:recomendacion]
     prescripcion.save
+    
+    @diasAsociados.each do |t|
+      if params[t.id.to_s+"_cantidad"].present?
+        PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"].to_f)
+      end
+    end
+    
   end
   
   def guardar_inr
@@ -294,7 +293,7 @@ private
     inrPac.cita_medicas_id=@cita.id
     inrPac.anticoagulantes_id=params[:antic_inr]
     inrPac.fecha=@cita.fecha
-    inrPac.valorInr=params[:inr]
+    inrPac.valorInr=params[:inr].to_f
     inrPac.save
   end
 

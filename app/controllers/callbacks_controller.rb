@@ -12,7 +12,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user
     else
       flash.alert="No esta habilitado para loguearse"
-      redirect_to controller: "principal", action: "index"
+      redirect_to new_cuenta_usuario_session_path
     end
   end
 end

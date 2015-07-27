@@ -1,6 +1,7 @@
 <h2>Cita</h2>
 <% if @nivel%>
 	<%= render 'datos_paciente'%>
+	<br />
 	<h2>Cita presencial</h2>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
 		<br />
@@ -10,9 +11,17 @@
 		<br />
 		<%= render 'respuesta'%>
 		<br />
+		<div id="ver_icd">
+			<%= render 'ver_icd'%>
+		</div>
+		<br />
 		<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
 		<br />
 	<% end%>
+	<br />
+	<div id="buscar_icd">
+		<%= render 'buscar_icd'%>
+	</div>
 <% else%>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
 		<br />

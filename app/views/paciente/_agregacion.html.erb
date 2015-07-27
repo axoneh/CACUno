@@ -37,29 +37,11 @@
 <br />
 <%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre, @paciente.patologia_id)%>
 <br />
-<% if @antecedentes%>
-	<h2>Antecedentes clinicos</h2>
-	<%@antecedentes.each do |a|%>
-		<% antecedente=AntecedentePaciente.where(["pacientes_id = ? and antecedente_medicos_id = ?", @paciente.id, a.id]).first %>
-		<%if antecedente%>
-			<%= check_box_tag a.id.to_s, a.id.to_s, true %>
-		<% else%>
-			<%= check_box_tag a.id.to_s, a.id.to_s%>
-		<% end%>
-		¿<%= a.nombre%>?
-		<% if a.tipo%>
-			<br />
-			<% if antecedente%>
-				<%= text_area_tag a.id.to_s+'_comentario', antecedente.comentario, placeholder: a.descripcion %>
-			<% else%>
-				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
-			<% end%>
-		<% end%>
-		<br />
-	<%end%>
-	Antecedentes generales del paciente
-	<br />
-	<%= text_area_tag "antecedentes", @valorAntecedentes%>
-	<br />
-<% end%>
+<div id="antecedente_paciente">
+	<%= render 'guardar_antecedente'%>
+</div>
+Antecedentes generales del paciente
+<br />
+<%= text_area_tag "antecedentes", @valorAntecedentes%>
+<br />
 <%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
