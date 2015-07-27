@@ -140,8 +140,6 @@ class PacienteController < ApplicationController
   def agregar_inr
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
-    else
-      @validacion=true
     end
     unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
       redirect_to controller: "principal", action: "index"
@@ -152,10 +150,14 @@ class PacienteController < ApplicationController
     @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
     
     cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+    unless cita
+      crear_cita_generica()
+      cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+    end
     
     if params[:inr].present? and params[:fecha].present?
       if cita
-        InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_i, fecha: params[:fecha] )
+        InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr], fecha: params[:fecha] )
       end
     end
     
@@ -249,6 +251,7 @@ private
             flash.notice="Actualizado exitosamente"
             redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
           else
+            crear_cita_generica()
             if validacionMedico()
               redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
             end

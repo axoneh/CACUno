@@ -4,7 +4,7 @@
 	<%= render 'vista_inr'%>
 </div>
 <br />
-<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_inr",  remote: true , method: "get") do %>
+<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
 	<br />
 	<%= text_field_tag "inr", "", size: 25, maxlenght: 5, placeholder: "Valor inr del paciente", required: "required"%>
 	<br />
@@ -16,4 +16,4 @@
 	<br />
 <% end%>
 <br />
-<%= link_to "Nueva consulta" , controller: "cita_medica", action: "aplicar", paciente: @paciente.correo%>
+<%= link_to "Nueva consulta" , controller: "cita_medica", action: "efectuar", paciente: @paciente.correo%>

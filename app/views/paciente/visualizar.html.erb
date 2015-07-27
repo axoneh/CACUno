@@ -87,7 +87,7 @@
 			Es recomendable no hacer la consulta ahora.
 			<br />
 		<% end%>
-		<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: @paciente.correo%>
+		<%= link_to "Nueva consulta", controller: "cita_medica", action: "efectuar", paciente: @paciente.correo%>
 	<% end%>
 	<% if @medico or @admin%>
 		<br />
@@ -102,7 +102,7 @@
 		<li>
 			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
 			<% if @medico or @paramedico%>
-				- (<%= link_to "Nueva consulta", controller: "cita_medica", action: "aplicar", paciente: t.correo%>)
+				- (<%= link_to "Nueva consulta", controller: "cita_medica", action: "efectuar", paciente: t.correo%>)
 			<% end%>
 		</li>
 	<%end%>

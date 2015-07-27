@@ -6,7 +6,7 @@
 	<br />
 	<br />Plan
 	<br />
-	<%= text_area_tag "plan", @valorPLan%>
+	<%= text_area_tag "plan", @valorPlan%>
 </div>
 <div id="prescripcion">
 	<h3>Preinscripcion</h3>
@@ -24,9 +24,9 @@
 			<br />
 			<%= radio_button_tag t.id.to_s+"_cantidad", "0"%> Ninguna medida
 			<br />
-			<%= radio_button_tag t.id.to_s+"_cantidad", "0.5"%> Media pastilla
+			<%= radio_button_tag t.id.to_s+"_cantidad", "5"%> Media pastilla
 			<br />
-			<%= radio_button_tag t.id.to_s+"_cantidad", "1"%> Pastilla completa
+			<%= radio_button_tag t.id.to_s+"_cantidad", "10"%> Pastilla completa
 			<br />
 		</div>
 	<% end%>

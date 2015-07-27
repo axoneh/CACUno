@@ -2,171 +2,166 @@ class CitaMedicaController < ApplicationController
   
   def crear
   end
-
-  def aplicar
-    unless validacionMedico() or validacionParamedico() #debe ser medico o paramedico para aplicar alguna cita medica
-      redirect_to controller: "principal", action: "index"
-    end
-    
-    unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])#debe estar el correo del paciente como parametro y existir en la base de datos
-      redirect_to controller: "principal", action: "index"
-    end
-    
-    ultimaCita=Paciente.ultima_cita_presencial(params[:paciente])
-    
-    unless validacionParamedico() and ultimaCita #debe existir una cita presencial no generica para crear una cita domiciliaria
-      redirect_to controller: "principal", action: "index"
-    end
-    
-    correo=params[:paciente]
-    citaActual = CitaMedica.new#creacion de la nueva cita medica
-    citaActual.pacientes_id = Paciente.find_by(correo: correo).id
-    citaActual.cuenta_usuarios_id = current_cuenta_usuario.id
-    citaActual.fecha = Date.current
-    citaActual.estado = 1
-    citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
-    if validacionMedico()
-      citaActual.tipo="Presencial"
-    else
-      citaActual.tipo="Domiciliaria"
-    end
-    #validaciones de existencia de citas previas
-    if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and hora_ini= ? ",citaActual.pacientes_id, citaActual.fecha, citaActual.hora_ini])
-      flash.alert="El paciente tiene una cita para esta misma hora, verifique los datos"
-    elsif CitaMedica.exists?(["cuenta_usuarios_id = ? and fecha = ? and hora_ini= ? ",citaActual.cuenta_usuarios_id, citaActual.fecha, citaActual.hora_ini])
-      flash.alert="Usted no deberia guardar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
-    else
-      citaActual.save#de pasar los filtros, se guarda y redirecciona para efectuar la cita
-      redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
-    end
-  end
 #-------------------------------------------------------------------------------------------------------------------------
   def efectuar
-    @nivel=true#booleano para saber si es la cita sera domiciliaria o presencial
-    unless params[:cita].present? or CitaMedica.exists?(["id = ?", params[:cita]])#validacion de existencia de parametros y de registro en la base de datos
+    unless validacionMedico() or validacionParamedico() #debe ser medico o paramedico para aplicar alguna cita medica
       redirect_to controller: "principal", action: "index"
-    end
-    
-    @cita=CitaMedica.find(params[:cita])
-    
-    if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])#si ya existe respuesta se procede a cambiar el estado de la respuesta y a redireccionar a la visualizacion
-      @cita.estado=2
-      @cita.save
-      redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
-    end
-    
-    agregar_icd()
-    
-    @paciente=@cita.pacientes
-    
-    @anticoagulantes=Anticoagulante.where(["estado = ?",1])#consulta de anticoagulantes en uso actualmente
-    
-    if validacionMedico() and @cita.tipo=="Presencial" #validacion para saber si es cita presencial  y si el usuario es medico
-      @medicoC=true
-      @preguntas=Pregunta.where(["estado = ?", 1])
-      @nivel=true
-      @diasAsociados=DiaAsociado.where(["estado = ?", 1])
-      
-      @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
-      
-      if params[:cambio_i].present?
-        @cambio=true
-        @antecedentesPaciente=AntecedentePaciente.where(["pacientes_id = ?", @paciente.id])
-      end
-      
-      if params[:cambio_t].present?
-        @cambio=false
-        AntecedentePaciente.delete_all(["pacientes_id = ?", @paciente.id])
-        @antecedentes.each do |a|
-          if params[a.id.to_s].present?
-            if a.tipo
-              AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
-            else
-              AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id)
-            end
-          end  
-        end
-      end
-      
-      if request.post?
-
-        if params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present? and params[:recomendacion].present?
-          
-          guardar_inr()
-
-          guardado_general()
-
-          observacion=ObservacionMedica.new#nueva observacion para la cita
-          observacion.respuesta_cita_id=@respuesta.id
-          observacion.subjetivo=params[:subjetiva]
-          observacion.objetivo=params[:objetiva]
-          observacion.frecuencia_cardiaca=params[:frecuencia]
-          observacion.hiper_sistolica=params[:hsis]
-          observacion.hiper_diastolica=params[:hdia]
-          if params[:indefinido].present?
-            observacion.tiempoIndefinido=true
-          else
-            observacion.tiempoIndefinido=false
-            observacion.diasTratamiento=params[:semanas_t].to_i * 7
-          end
-          observacion.save
-          
-          guardar_preguntas()
-          
-          @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
-          @cita.save()
-          
-          redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
-          
-        else#de no presentarce algun valor, se debe mantener los datos ya ingresados
-          if params[:analisis].present?
-            @valorAnalisis=params[:analisis]
-          end  
-          if params[:plan].present? 
-            @valorPlan=params[:plan]
-          end
-          if params[:subjetiva].present?
-            @valorSubjetiva=params[:subjetiva]
-          end
-          if params[:objetiva].present?
-            @valorObjetiva=params[:objetiva]
-          end
-          if params[:fecha_fin].present?
-            @valorFechaFin=params[:fecha_fin]
-          end
-          if params[:inr].present?
-            @valorInt=params[:inr]
-          end
-          if params[:recomendacion].present?
-            @valorRecomendacion=params[:recomendacion]
-          end
-          flash.alert="Debe diligenciar todos los campos de la respuesta"
-        end
-      end
-    elsif validacionParamedico() and @cita.tipo=="Domiciliaria"
-      
-      @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
-      @nivel=false
-      @ultimaCita=Paciente.ultima_cita_presencial(@paciente.correo)
-      
-      if request.post?
-        
-        if params[:inr].present?
-          
-          guardar_inr()
-          
-          @cita.estado=3;
-          @cita.save
-          
-          guardar_preguntas()
-          
-          redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
-        else
-          flash.alert="Debe diligenciar el inr"
-        end
-      end
     else
-      redirect_to controller: "principal", action: "index"
+      if params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
+      
+        ultimaCita=Paciente.ultima_cita_presencial(params[:paciente])
+        
+        if (validacionParamedico() and ultimaCita) or validacionMedico()
+        
+          correo=params[:paciente]
+          citaActual = CitaMedica.new
+          citaActual.pacientes_id = Paciente.find_by(correo: correo).id
+          citaActual.cuenta_usuarios_id = current_cuenta_usuario.id
+          citaActual.fecha = Date.current
+          citaActual.estado = 1
+          citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
+          if validacionMedico()
+            citaActual.tipo="Presencial"
+          else
+            citaActual.tipo="Domiciliaria"
+          end
+  
+          if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and hora_ini= ? ",citaActual.pacientes_id, citaActual.fecha, citaActual.hora_ini])
+            flash.alert="El paciente tiene una cita para esta misma hora, verifique los datos"
+          elsif CitaMedica.exists?(["cuenta_usuarios_id = ? and fecha = ? and hora_ini= ? ",citaActual.cuenta_usuarios_id, citaActual.fecha, citaActual.hora_ini])
+            flash.alert="Usted no deberia guardar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
+          else
+            citaActual.save
+            redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
+          end
+        end
+      
+      elsif params[:cita].present? and CitaMedica.exists?(["id = ?", params[:cita]])
+        @nivel=nil
+        @cita=CitaMedica.find(params[:cita])
+        
+        if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])#si yccionar a la visualizacion
+          @cita.estado=2
+          @cita.save
+          redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
+        end
+        
+        agregar_icd()
+        
+        @paciente=@cita.pacientes
+        
+        @anticoagulantes=Anticoagulante.where(["estado = ?",1])#consulta de anticoagulantes en uso actualmente
+        
+        if validacionMedico() and @cita.tipo=="Presencial" #validaciio es medico
+          @medicoC=true
+          @preguntas=Pregunta.where(["estado = ?", 1])
+          @nivel=true
+          @diasAsociados=DiaAsociado.where(["estado = ?", 1])
+          
+          @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])
+          
+          if params[:cambio_i].present?
+            @cambio=true
+            @antecedentesPaciente=AntecedentePaciente.where(["pacientes_id = ?", @paciente.id])
+          end
+          
+          if params[:cambio_t].present?
+            @cambio=false
+            AntecedentePaciente.delete_all(["pacientes_id = ?", @paciente.id])
+            @antecedentes.each do |a|
+              if params[a.id.to_s].present?
+                if a.tipo
+                  AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id, comentario: params[a.id.to_s+"_comentario"])
+                else
+                  AntecedentePaciente.create(pacientes_id: @paciente.id, antecedente_medicos_id: a.id)
+                end
+              end  
+            end
+          end
+          
+          if request.post?
+    
+            if params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present? and params[:recomendacion].present?
+              
+              guardar_inr()
+    
+              guardado_general()
+    
+              observacion=ObservacionMedica.new#nueva observacion para la cita
+              observacion.respuesta_cita_id=@respuesta.id
+              observacion.subjetivo=params[:subjetiva]
+              observacion.objetivo=params[:objetiva]
+              observacion.frecuencia_cardiaca=params[:frecuencia_car]
+              observacion.hiper_sistolica=params[:hsis]
+              observacion.hiper_diastolica=params[:hdia]
+              if params[:indefinido].present?
+                observacion.tiempoIndefinido=true
+              else
+                observacion.tiempoIndefinido=false
+                observacion.diasTratamiento=params[:semanas_t].to_i * 7
+              end
+              observacion.save
+              
+              guardar_preguntas()
+              
+              @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
+              @cita.save()
+              
+              redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
+              
+            else#de no presentarce algun valor, se debe mantener los datos ya ingresados
+              if params[:analisis].present?
+                @valorAnalisis=params[:analisis]
+              end  
+              if params[:plan].present? 
+                @valorPlan=params[:plan]
+              end
+              if params[:subjetiva].present?
+                @valorSubjetiva=params[:subjetiva]
+              end
+              if params[:objetiva].present?
+                @valorObjetiva=params[:objetiva]
+              end
+              if params[:fecha_fin].present?
+                @valorFechaFin=params[:fecha_fin]
+              end
+              if params[:inr].present?
+                @valorInr=params[:inr]
+              end
+              if params[:recomendacion].present?
+                @valorRecomendacion=params[:recomendacion]
+              end
+              flash.alert="Debe diligenciar todos los campos de la respuesta"
+            end
+          end
+        elsif validacionParamedico() and @cita.tipo=="Domiciliaria"
+          
+          @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
+          @nivel=false
+          @ultimaCita=Paciente.ultima_cita_presencial(@paciente.correo)
+          
+          if request.post?
+            
+            if params[:inr].present?
+              
+              guardar_inr()
+              
+              @cita.estado=3;
+              @cita.save
+              
+              guardar_preguntas()
+              
+              redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
+            else
+              flash.alert="Debe diligenciar el inr"
+            end
+          end
+        else
+          redirect_to controller: "principal", action: "index"
+        end
+      else
+        redirect_to controller: "principal", action: "index"
+      end
     end
   end
 #------------------------------------------------------------------------------------------------------
@@ -323,6 +318,11 @@ private
     inrPac.fecha=@cita.fecha
     inrPac.valorInr=params[:inr].to_f
     inrPac.save
+  end
+
+  def aplicar
+
+
   end
 
 end

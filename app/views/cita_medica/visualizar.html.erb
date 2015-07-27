@@ -26,10 +26,14 @@
 			<% if @observacion%>
 				<br />Observacion objetiva: <%=@observacion.objetivo%>
 				<br />Observacion subjetiva: <%= @observacion.subjetivo%>
+				<br />Frecuenca cardiaca: <%= @observacion.frecuencia_cardiaca%>
+				<br />Hipertension sistolica: <%= @observacion.hiper_sistolica%>
+				<br />Hipertension diastolica. <%= @observacion.hiper_diastolica%>
+				<br />
 				<% if @observacion.tiempoIndefinido%>
-					<br />Tratamiento de tiempo indefinido
+					Tratamiento de tiempo indefinido
 				<% else%>
-					<br />Duracion de tratamiento: <%= @observacion.semanasTratamiento%>
+					Duracion de tratamiento: <%= @observacion.diasTratamiento%> dias
 				<% end%>
 			<% end%>
 			<br />Analisis: <%= @respuesta.analisis%>
@@ -41,7 +45,7 @@
 				Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
 				<br />
 				<% @prescripcion.prescripcion_diaria.each do |t|%>
-					Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f %> gramos
+					Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f/10 %> gramos
 					<br />
 				<% end%>
 			<% end%>
