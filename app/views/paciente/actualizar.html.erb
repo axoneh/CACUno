@@ -1,4 +1,4 @@
 <h1>Actualizacion del paciente</h1>
-<%= form_tag({controller: "paciente", action: @accion, paciente: params[:paciente]},  multipart: true , method: "post") do %>
+<%= form_tag({controller: "paciente", action: "actualizar", paciente: params[:paciente]},  multipart: true , method: "post") do %>
 	<%= render 'agregacion'%>
 <% end%>

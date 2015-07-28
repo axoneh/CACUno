@@ -1,6 +1,6 @@
 <p>Recuerde que los datos deben ser veridicos, de lo contrario puede perder su caracer de usuario dentro de la aplicacion y acarrear varios procesos legales</p>
 <br />
-<%= form_tag({controller: "usuario", action: @accion} , method: "post") do %>
+<%= form_tag({controller: "usuario", action: params[:action]} , method: "post") do %>
 	<br />
 	<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
 	<br />

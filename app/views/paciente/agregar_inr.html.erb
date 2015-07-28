@@ -4,16 +4,36 @@
 	<%= render 'vista_inr'%>
 </div>
 <br />
+<div id="laboratorios">
+	<%= render 'vista_laboratorios'%>
+</div>
+<br />
+<h3>Agregar inr previo</h3>
 <%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
 	<br />
 	<%= text_field_tag "inr", "", size: 25, maxlenght: 5, placeholder: "Valor inr del paciente", required: "required"%>
 	<br />
-	Fecha del valor: <%= date_field_tag "fecha", nil, required: "required"%>
+	Fecha del valor: <%= date_field_tag "fecha_inr", nil, required: "required"%>
 	<br />
 	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id, :nombre) %>
 	<br />
 	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
 	<br />
 <% end%>
+<h3>Agregar laboratorio</h3>
+<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+	<br />
+	<%= text_field_tag "lab", "", size: 30, maxlenght: 50, placeholder: "Estudio o laboratorio practivado", required: "required"%>
+	<br />
+	<%= text_field_tag "rep", "", size: 30, maxlenght: 20, placeholder: "Respuesta del estudio", required: "required"%>
+	<br />
+	Fecha del estudio: <%= date_field_tag "fecha_lab", nil, required: "required"%>
+	<br />
+	<%= text_area_tag "observacion", "", placeholder: "Observacion (opcional)"%>
+	<br />
+	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
+	<br />
+<% end%>
 <br />
 <%= link_to "Nueva consulta" , controller: "cita_medica", action: "efectuar", paciente: @paciente.correo%>
+<br />

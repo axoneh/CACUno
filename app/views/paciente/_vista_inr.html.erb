@@ -1,9 +1,9 @@
 <h3>Inr's del paciente</h3>
 <% if @InrPaciente%>
-	<% if @validacion%>
+	<% if params[:action]=="agregar_inr"%>
 		<% @InrPaciente.each do |t|%>
 			<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente], inr_e: t.id},  remote: true , method: "get") do %>
-				Valor del inr: <%= t.valorInr%>
+				Valor del inr: <%= t.valorInr.to_f%>
 				<br />
 				Fecha: <%= t.fecha%>
 				<br />
@@ -13,7 +13,7 @@
 		<% end%>
 	<% else%>
 		<% @InrPaciente.each do |t|%>
-			Valor del inr: <%= t.valorInr%>
+			Valor del inr: <%= t.valorInr.to_f%>
 			<br />
 			Fecha: <%= t.fecha%>
 			<br />

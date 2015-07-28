@@ -1,5 +1,5 @@
 <br />
-<% if @accion=="agregar"%>
+<% if params[:action]=="agregar"%>
 	<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required"%>
 <% else%>
 	Image previa

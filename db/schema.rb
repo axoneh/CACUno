@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722213819) do
+ActiveRecord::Schema.define(version: 20150728170953) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 50
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.boolean  "tipo"
     t.integer  "estado",      limit: 4
     t.string   "tag",         limit: 30
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "antecedente_medicos", ["nombre"], name: "index_nombre_antecedentes_medicos", unique: true, using: :btree
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   create_table "antecedente_pacientes", force: :cascade do |t|
     t.integer  "pacientes_id",           limit: 4
     t.integer  "antecedente_medicos_id", limit: 4
-    t.text     "comentario"
+    t.text     "comentario",             limit: 65535
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
@@ -39,10 +39,10 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   add_index "antecedente_pacientes", ["pacientes_id"], name: "index_antecedente_pacientes_on_pacientes_id", using: :btree
 
   create_table "anticoagulantes", force: :cascade do |t|
-    t.string   "nombre",      limit: 100
-    t.integer  "estado",      limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "nombre",     limit: 100
+    t.integer  "estado",     limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "anticoagulantes", ["nombre"], name: "index_nombre_anticoagulantes", unique: true, using: :btree
@@ -65,9 +65,9 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.string   "tipo",               limit: 20
     t.integer  "estado",             limit: 4
     t.time     "hora_ini"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.boolean  "generico",                       default: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.boolean  "generico",                      default: false
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id", "fecha", "hora_ini"], name: "index_usuario_fecha_hora_cita", unique: true, using: :btree
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.integer  "tipo_documentos_id",     limit: 4
     t.string   "nombre",                 limit: 30
     t.string   "apellido",               limit: 30
-    t.string   "email",                  limit: 50, default: "",    null: false
+    t.string   "email",                  limit: 50,  default: "",    null: false
     t.string   "encrypted_password",     limit: 255, default: "",    null: false
     t.boolean  "genero"
     t.string   "direccion",              limit: 50
@@ -142,17 +142,17 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.string   "id10",       limit: 6
     t.string   "dec10",      limit: 80
     t.string   "grp10",      limit: 10
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "inr_pacientes", force: :cascade do |t|
     t.integer  "cita_medicas_id",    limit: 4
     t.integer  "anticoagulantes_id", limit: 4
     t.date     "fecha"
-    t.decimal  "valorInr",                     precision: 10
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.decimal  "valorInr",                     precision: 4, scale: 2
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
   end
 
   add_index "inr_pacientes", ["anticoagulantes_id"], name: "index_inr_pacientes_on_anticoagulantes_id", using: :btree
@@ -163,7 +163,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.date     "fecha"
     t.string   "estudio",      limit: 50
     t.string   "resultado",    limit: 20
-    t.text     "observacion"
+    t.text     "observacion",  limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
@@ -172,10 +172,10 @@ ActiveRecord::Schema.define(version: 20150722213819) do
 
   create_table "observacion_medicas", force: :cascade do |t|
     t.integer  "respuesta_cita_id",   limit: 4
-    t.text     "subjetivo"
-    t.text     "objetivo"
+    t.text     "subjetivo",           limit: 65535
+    t.text     "objetivo",            limit: 65535
     t.boolean  "tiempoIndefinido"
-    t.integer  "diasTratamiento",  limit: 4
+    t.integer  "diasTratamiento",     limit: 4
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
     t.integer  "frecuencia_cardiaca", limit: 4
@@ -203,7 +203,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.string   "avatar_content_type", limit: 255
     t.integer  "avatar_file_size",    limit: 4
     t.datetime "avatar_updated_at"
-    t.text     "antecedente_general"
+    t.text     "antecedente_general", limit: 65535
   end
 
   add_index "pacientes", ["estado_civils_id"], name: "index_pacientes_on_estado_civils_id", using: :btree
@@ -215,8 +215,8 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.string   "nombre",      limit: 30
     t.string   "descripcion", limit: 50
     t.integer  "estado",      limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "patologia", ["nombre"], name: "index_nombre_patologias", unique: true, using: :btree
@@ -227,8 +227,8 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.integer  "estado",      limit: 4
     t.boolean  "tipo"
     t.string   "tag",         limit: 20
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "pregunta", ["pregunta"], name: "index_pregunta_preguntas", unique: true, using: :btree
@@ -237,7 +237,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   create_table "pregunta_cita", force: :cascade do |t|
     t.integer  "cita_medicas_id", limit: 4
     t.integer  "pregunta_id",     limit: 4
-    t.text     "comentario"
+    t.text     "comentario",      limit: 65535
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
@@ -249,7 +249,7 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   create_table "prescripcion_diaria", force: :cascade do |t|
     t.integer  "prescripcions_id", limit: 4
     t.integer  "dia_asociados_id", limit: 4
-    t.decimal  "cantidadGramos",             precision: 10
+    t.decimal  "cantidadGramos",             precision: 4, scale: 2
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
   end
@@ -262,9 +262,9 @@ ActiveRecord::Schema.define(version: 20150722213819) do
     t.integer  "respuesta_cita_id",  limit: 4
     t.integer  "anticoagulantes_id", limit: 4
     t.date     "fechaFin"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.string   "recomendacion"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "recomendacion",      limit: 255
   end
 
   add_index "prescripcions", ["anticoagulantes_id"], name: "index_prescripcions_on_anticoagulantes_id", using: :btree
@@ -273,8 +273,8 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   create_table "respuesta_cita", force: :cascade do |t|
     t.integer  "cita_medicas_id",    limit: 4
     t.integer  "cuenta_usuarios_id", limit: 4
-    t.text     "analisis"
-    t.text     "plan"
+    t.text     "analisis",           limit: 65535
+    t.text     "plan",               limit: 65535
     t.integer  "estado",             limit: 4
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
@@ -286,8 +286,8 @@ ActiveRecord::Schema.define(version: 20150722213819) do
   create_table "rols", force: :cascade do |t|
     t.string   "nombre",      limit: 20
     t.string   "descripcion", limit: 50
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "rols", ["nombre"], name: "index_nombre_roles", unique: true, using: :btree

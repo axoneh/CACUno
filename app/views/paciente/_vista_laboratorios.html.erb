@@ -1,0 +1,28 @@
+<h3>Laboratorios del paciente</h3>
+<%if params[:action]=="agregar_inr"%>
+	<% @paciente.laboratorios.each do |t|%>
+		<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente], lab_d: t.id},  remote: true , method: "get") do %>
+			Fecha: <%= t.fecha%>
+			<br />
+			Estudio: <%= t.estudio%>
+			<br />
+			Resultado: <%= t.resultado%>
+			<br />
+			Observacion: <%= t.observacion%>
+			<br />
+			<%= submit_tag "Borrar", disabled: false, disable_with: "Por favor espere..."%>
+			<br />
+		<% end%>
+	<% end%>
+<% else%>
+	<% @paciente.laboratorios.each do |t|%>
+		Fecha: <%= t.fecha%>
+		<br />
+		Estudio: <%= t.estudio%>
+		<br />
+		Resultado: <%= t.resultado%>
+		<br />
+		Observacion: <%= t.observacion%>
+		<br />
+	<% end%>
+<% end%>
