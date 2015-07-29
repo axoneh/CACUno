@@ -40,21 +40,28 @@
 	 		</div>
 	  	 </div>
 	  	 </div>
-	  
-	  	    <div class="container">
+	  <div class="container">
+	  	<div class="vspacer2"
+	  	
+	  </div>
+	  	    <div class="infodev">
 	  	    	<h3>Paramatros</h3>
 	  	    	<p>
 	  	    	 	<%= controllername %>
 				</p>	  	    	 	
 	  	    	 	
 	  	    </div>
-	  	 	<div id="notice" class="notice">
-				<%= notice %>
+	   <% if notice!=nil %>
+	  	 	<div id="notice" class="alert alert-info">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><%= notice %>
 		</div>
-		<div id="alert" class="alert">
-				<%= alert %>
+		<% end %>
+		
+		<% if alert!=nil %>
+		<div id="alert" class="alert alert-danger">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><%= alert %>
 		</div>
-	  	 
+	  	<% end %> 
 	  	 
 	  	    <%= yield %>
   </body>
