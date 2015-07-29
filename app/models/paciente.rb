@@ -12,10 +12,5 @@ class Paciente < ActiveRecord::Base
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   
   validates_attachment_presence :avatar
-
-  def self.ultima_cita_presencial(correo)
-    dato=Paciente.find_by(correo: correo).cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
-    return dato
-  end
   
 end

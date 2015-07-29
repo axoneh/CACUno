@@ -168,10 +168,13 @@ private
         
         @usuario.estado=1
         @usuario.save
+                
+        flash.notice="Actualizado exitosamente"
         
         sign_in(@usuario, :bypass=> true)
         
         return true
+        
       else
         if params[:nombre].present?
           @valorNombre= params[:nombre]

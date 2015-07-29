@@ -88,7 +88,10 @@ class CitaMedicaController < ApplicationController
       redirect_to controller: "principal", action: "index"
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
-        ultimaCita=Paciente.ultima_cita_presencial(params[:paciente])
+        paciente=Paciente.find_by(correo: params[:paciente])
+        
+        ultimaCita=paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
+        
         if (validacionParamedico() and ultimaCita) or validacionMedico()
           correo=params[:paciente]
           citaActual = CitaMedica.new
@@ -194,7 +197,7 @@ class CitaMedicaController < ApplicationController
           elsif validacionParamedico() and @cita.tipo=="Domiciliaria"
             @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
             @nivel=false
-            @ultimaCita=Paciente.ultima_cita_presencial(@paciente.correo)
+            @ultimaCita=@paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
             if request.post?
               if params[:inr].present?
                 guardar_inr()
