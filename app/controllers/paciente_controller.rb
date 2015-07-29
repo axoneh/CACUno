@@ -3,25 +3,31 @@ class PacienteController < ApplicationController
   def agregar
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
+    else
+      @paciente=Paciente.new
+      if agregacion()
+        if validacionMedico()
+          redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
+        else
+          redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+        end
+      end
     end
-
-    @paciente=Paciente.new
-    @accion="agregar"
-    
-    agregacion()
-    
   end
 
   def actualizar
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
+    else
+      if params[:paciente].present? and Paciente.exists?(["correo = ?, ",params[:paciente]])
+        @paciente=Paciente.find_by(correo: params[:paciente])
+        if agregacion()
+          redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+        end
+      else
+        redirect_to controller: "principal", action: "index"
+      end
     end
-    
-    @paciente=Paciente.find_by(correo: params[:paciente])
-    @accion="actualizar"
-    
-    agregacion()
-    
   end
   
   def visualizar
@@ -140,32 +146,38 @@ class PacienteController < ApplicationController
   def agregar_inr
     unless validacionAdmin() or validacionMedico()
       redirect_to controller: "principal", action: "index"
-    end
-    unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
-      redirect_to controller: "principal", action: "index"
-    end
-    
-    @paciente=Paciente.find_by(correo: params[:paciente])
-    
-    @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
-    
-    cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
-    unless cita
-      crear_cita_generica()
-      cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
-    end
-    
-    if params[:inr].present? and params[:fecha].present?
-      if cita
-        InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr], fecha: params[:fecha] )
-      end
-    end
-    
-    @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
-    
-    if cita
-      if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
-        InrPaciente.delete_all(["id = ?",params[:inr_e]])
+    else
+      unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
+        redirect_to controller: "principal", action: "index"
+      else
+        @paciente=Paciente.find_by(correo: params[:paciente])
+        @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
+        cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+        unless cita
+          crear_cita_generica()
+          cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
+        end
+        if params[:inr].present? and params[:fecha_inr].present?
+          if cita
+            InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_f, fecha: params[:fecha_inr] )
+          end
+        end
+        if cita
+          if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
+            InrPaciente.delete_all(["id = ?",params[:inr_e]])
+          end
+        end
+        
+        @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
+        
+        if params[:lab].present? and params[:rep].present? and params[:fecha_lab].present?
+          Laboratorio.create(pacientes_id: @paciente.id, fecha: params[:fecha_lab], estudio: params[:lab], resultado: params[:rep], observacion: params[:observacion])
+        end
+        
+        if params[:lab_d].present?
+          Laboratorio.find(params[:lab_d]).delete
+        end
+        
       end
     end
   end
@@ -247,15 +259,7 @@ private
             end  
           end
           flash.notice="Agregado exitoso de paciente"
-          if @accion=="actualizar"
-            flash.notice="Actualizado exitosamente"
-            redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
-          else
-            crear_cita_generica()
-            if validacionMedico()
-              redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
-            end
-          end
+          return true
         end
       else
         if params[:correo].present?

@@ -4,7 +4,7 @@ class Paciente < ActiveRecord::Base
   belongs_to :patologia, class_name: Patologia
   
   has_many :cita_medicas, class_name: CitaMedica, foreign_key: :pacientes_id
-  has_many :laboratorios,class_name: Laboratorio
+  has_many :laboratorios,class_name: Laboratorio, foreign_key: :pacientes_id
   has_many :antecedente_paciente, class_name: AntecedentePaciente, foreign_key: :pacientes_id
   
   has_attached_file :avatar, :styles => { :medium => "300x300>" }, :default_url => "/images/:style/missing.png"
@@ -14,8 +14,8 @@ class Paciente < ActiveRecord::Base
   validates_attachment_presence :avatar
 
   def self.ultima_cita_presencial(correo)
-    dato=Paciente.where(["correo = ?", correo]).first.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).order(:fecha).last
-    dato
+    dato=Paciente.find_by(correo: correo).cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
+    return dato
   end
   
 end

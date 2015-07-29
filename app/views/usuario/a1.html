@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="col-md-6">
 <form>
 
@@ -16,6 +17,17 @@
 	<div class="form-group">
 		<%= label_tag 'genero' %>
 	<select id="genero" name="genero" class="form-control">
+=======
+<p>Recuerde que los datos deben ser veridicos, de lo contrario puede perder su caracer de usuario dentro de la aplicacion y acarrear varios procesos legales</p>
+<br />
+<%= form_tag({controller: "usuario", action: params[:action]} , method: "post") do %>
+	<br />
+	<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
+	<br />
+	<%= text_field_tag "apellido", @valorApellido, size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
+	<br />
+	<select id="genero" name="genero">
+>>>>>>> 3e73526e8508f63175a2fc64f8afe45181976837
 		<option value=0>Femenino</option>
 		<option value=1>Masculino</option>
 	</select>
