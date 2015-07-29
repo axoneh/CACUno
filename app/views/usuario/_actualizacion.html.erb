@@ -2,7 +2,7 @@
 <form>
 
 
-<%= form_tag({controller: "usuario", params[:action]} , method: "post") do %>
+<%= form_tag({controller: "usuario", action: params[:action]}, method: "post") do %>
  	<div class="form-group">
 	<%= label_tag 'nombre' %>
 	<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required", class:"form-control" %>
@@ -16,13 +16,6 @@
 	<div class="form-group">
 		<%= label_tag 'genero' %>
 	<select id="genero" name="genero" class="form-control">
-<%= form_tag({controller: "usuario", action: params[:action]} , method: "post") do %>
-	<br />
-	<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
-	<br />
-	<%= text_field_tag "apellido", @valorApellido, size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
-	<br />
-	<select id="genero" name="genero">
 		<option value=0>Femenino</option>
 		<option value=1>Masculino</option>
 	</select>
