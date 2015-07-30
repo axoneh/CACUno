@@ -114,7 +114,7 @@ class UsuarioController < ApplicationController
             end
           else
             CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, email: correo, password: Devise.friendly_token[0,20], estado: 2, rols_id: rol, encargado_respuesta: encargado);
-            flash.alert="Se genero la autorizacion exitosamente";
+            flash.notice="Se genero la autorizacion exitosamente";
           end
         else
           if params[:correo].present?

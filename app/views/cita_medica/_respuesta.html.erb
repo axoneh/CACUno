@@ -7,6 +7,12 @@
 	<br />Plan
 	<br />
 	<%= text_area_tag "plan", @valorPlan%>
+	<br />
+	<br />Valor minimo de anticoagulacion: 
+	<%= text_field_tag "valor_min", @valorMin, size: 5, maxlenght: 4, required: "required"%>
+	<br />
+	<br />Valor maximo de anticoagulacion
+	<%= text_field_tag "valor_max", @valorMax, size: 4, maxlenght: 4, required: "required"%>
 </div>
 <div id="prescripcion">
 	<h3>Preinscripcion</h3>

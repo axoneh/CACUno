@@ -1,13 +1,19 @@
 class PrincipalController < ApplicationController
   
   def index
-    if validacionAdmin()
+    
+    @admin=validacionAdmin()
+    @medico=validacionMedico()
+    @paramedico=validacionParamedico()
+    @autorizado=validacionAutorizado()
+    
+    if @admin
       redirect_to controller: "administracion", action: "menu"
-    elsif validacionMedico()
+    elsif @medico
       redirect_to controller: "medico_internista", action: "menu"
-    elsif validacionParamedico()
+    elsif @paramedico
       redirect_to controller: "paramedico", action: "menu"
-    elsif validacionAutorizado()
+    elsif @autorizado
       redirect_to controller: "usuario", action: "agregar"
     else
       if cuenta_usuario_signed_in?

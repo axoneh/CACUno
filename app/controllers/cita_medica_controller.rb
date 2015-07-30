@@ -13,7 +13,7 @@ class CitaMedicaController < ApplicationController
   end
 #------------------------------------------------------------------------------------------------------ 
   def visualizar
-    @nivel=1#entero encargado de manejar que tipo de consulta sera: 3 para unica, 2 para notificaciones y 1 para general
+    @nivel=1
     @encargado=validacionEncargadoRespuesta()
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=3
@@ -44,21 +44,22 @@ class CitaMedicaController < ApplicationController
   def agregar_respuesta
     unless validacionEncargadoRespuesta() and params[:cita].present? and CitaMedica.exists?(["id = ? and estado = ?", params[:cita], 3])
       redirect_to controller: "principal", action: "index"
-    else
+    else   
       @cita=CitaMedica.find(params[:cita])
-      @paciente=@cita.pacientes
       if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
         @cita.estado=2
         @cita.save
         redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
       else
+        @paciente=@cita.pacientes
+        rango_antic()
         agregar_icd()
         @diasAsociados=DiaAsociado.where(["estado = ?", 1])
         @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
         @preguntaInr=Pregunta.where(["estado = 1 and tag = 'inr dificil'"]).first
         @inr=InrPaciente.where(["fecha = ? and cita_medicas_id = ?", @cita.fecha, @cita.id]).first
         if request.post?
-          if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present? and params[:recomendacion].present?
+          if params[:analisis].present? and params[:plan].present? and params[:fecha_fin].present? and params[:recomendacion].present? and params[:valor_min].present? and params[:valor_max].present?
             guardado_general()
             if params[@preguntaInr.id.to_s+"_p"].present?
               PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: @preguntaInr.id)
@@ -67,6 +68,12 @@ class CitaMedicaController < ApplicationController
             @cita.save
             redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
           else
+            if params[:valor_max].present?
+              @valorMax=params[:valor_max]
+            end
+            if params[:valor_min].present?
+              @valorMin=params[:valor_min]
+            end
             if params[:analisis].present? 
               @valorAnalisis=params[:analisis]
             end
@@ -89,9 +96,7 @@ class CitaMedicaController < ApplicationController
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
         paciente=Paciente.find_by(correo: params[:paciente])
-        
         ultimaCita=paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
-        
         if (validacionParamedico() and ultimaCita) or validacionMedico()
           correo=params[:paciente]
           citaActual = CitaMedica.new
@@ -118,7 +123,6 @@ class CitaMedicaController < ApplicationController
           redirect_to controller: "paciente", action: "visualizar", correo: params[:paciente]
         end
       elsif params[:cita].present? and CitaMedica.exists?(["id = ?", params[:cita]])
-        @nivel=nil
         @cita=CitaMedica.find(params[:cita])
         if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
           @cita.estado=2
@@ -130,6 +134,7 @@ class CitaMedicaController < ApplicationController
           @anticoagulantes=Anticoagulante.where(["estado = ?",1])
           if validacionMedico() and @cita.tipo=="Presencial"
             @medicoC=true
+            rango_antic()
             @preguntas=Pregunta.where(["estado = ?", 1])
             @nivel=true
             @diasAsociados=DiaAsociado.where(["estado = ?", 1])
@@ -148,7 +153,7 @@ class CitaMedicaController < ApplicationController
               end
             end
             if request.post?
-              if params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present? and params[:recomendacion].present?
+              if params[:analisis].present? and params[:plan].present? and params[:subjetiva].present? and params[:objetiva].present? and params[:fecha_fin].present? and params[:inr].present? and params[:recomendacion].present? and params[:valor_min].present? and params[:valor_max].present?
                 guardar_inr()
                 guardado_general()
                 observacion=ObservacionMedica.new#nueva observacion para la cita
@@ -168,8 +173,15 @@ class CitaMedicaController < ApplicationController
                 guardar_preguntas()
                 @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
                 @cita.save()
+                flash.alert="Cita concluida exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
+                if params[:valor_max].present?
+                  @valorMax=params[:valor_max]
+                end
+                if params[:valor_min].present?
+                  @valorMin=params[:valor_min]
+                end
                 if params[:analisis].present?
                   @valorAnalisis=params[:analisis]
                 end  
@@ -201,9 +213,10 @@ class CitaMedicaController < ApplicationController
             if request.post?
               if params[:inr].present?
                 guardar_inr()
+                guardar_preguntas()
                 @cita.estado=3;
                 @cita.save
-                guardar_preguntas()
+                flash.notice="Cita concluida exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
                 flash.alert="Debe diligenciar el inr"
@@ -251,6 +264,8 @@ private
     @respuesta.analisis=params[:analisis]
     @respuesta.plan=params[:plan]
     @respuesta.estado=1
+    @respuesta.valor_min=params[:valor_min]
+    @respuesta.valor_max=params[:valor_max]
     @respuesta.save
     
     prescripcion=Prescripcion.new
@@ -275,6 +290,16 @@ private
     inrPac.fecha=@cita.fecha
     inrPac.valorInr=params[:inr].to_f
     inrPac.save
+  end
+
+  def rango_antic
+    @valorMax=3
+    @valorMin=2
+    @ultimaCita=@paciente.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last
+    if @ultimaCita
+      @valorMax=@ultimaCita.respuesta_cita.valor_max
+      @valorMin=@ultimaCita.respuesta_cita.valor_min
+    end
   end
 
 end

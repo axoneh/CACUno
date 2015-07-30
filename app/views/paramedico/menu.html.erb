@@ -14,7 +14,7 @@
 	  		<br />
 			Direccion: <%= t.pacientes.direccion%>
 	  		<br />
-	  		<%fecha=t.respuesta_cita.first.prescripcions.first.fechaFin%>
+	  		<%fecha=t.respuesta_cita.prescripcions.fechaFin%>
 	  		Fecha de vencimiento de la prescripcion: <%= fecha%>
 	  		<br />
 	  		<% if fecha.to_date<=Date.current%>

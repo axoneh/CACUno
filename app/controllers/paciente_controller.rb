@@ -53,18 +53,12 @@ class PacienteController < ApplicationController
 
       @edad=edad(@paciente.fecha_nacimiento.to_date)
       
-      if CitaMedica.exists?(["pacientes_id = ? and estado= ?", @paciente.id,2])
-        @fechaPrimera=CitaMedica.where(["pacientes_id = ? and estado= ?", @paciente.id,2]).order(:fecha).first.fecha
+      @promedioINR=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and cita_medicas.generico = ? ", @paciente.id, false]).average(:valorInr)                                          
+      cantidadInr=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and cita_medicas.generico = ? ", @paciente.id, false]).count
+      if cantidadInr>0
+        cantidadInrBien=InrPaciente.joins(:cita_medicas, :respuesta_cita).where(["cita_medicas.generico = ? and cita_medicas.pacientes_id = ? and inr_pacientes.valorInr>= respuesta_cita.valor_min and inr_pacientes.valorInr<= respuesta_cita.valor_max ",false ,@paciente.id]).count
+        @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
       end
-      
-      if @fechaPrimera
-          @promedioINR=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", @paciente.id, @fechaPrimera]).average(:valorInr)                                          
-          cantidadInr=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ?", @paciente.id, @fechaPrimera]).count
-          if cantidadInr>0
-            cantidadInrBien=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and inr_pacientes.fecha >= ? and inr_pacientes.valorInr>= 2.5 and inr_pacientes.valorInr<=3.5", @paciente.id, @fechaPrimera]).count
-            @porcentajeINR=(cantidadInrBien * 100)/cantidadInr
-          end
-        end
       
       cita=CitaMedica.where(["pacientes_id = ? and estado = ? and generico = ?", @paciente.id, 2, false]).order("fecha").last
       

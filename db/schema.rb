@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150728170953) do
+ActiveRecord::Schema.define(version: 20150729220229) do
 
   create_table "antecedente_medicos", force: :cascade do |t|
     t.string   "nombre",      limit: 50
@@ -250,8 +250,8 @@ ActiveRecord::Schema.define(version: 20150728170953) do
     t.integer  "prescripcions_id", limit: 4
     t.integer  "dia_asociados_id", limit: 4
     t.decimal  "cantidadGramos",             precision: 4, scale: 2
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
   end
 
   add_index "prescripcion_diaria", ["dia_asociados_id"], name: "index_prescripcion_diaria_on_dia_asociados_id", using: :btree
@@ -276,8 +276,10 @@ ActiveRecord::Schema.define(version: 20150728170953) do
     t.text     "analisis",           limit: 65535
     t.text     "plan",               limit: 65535
     t.integer  "estado",             limit: 4
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.decimal  "valor_min",                        precision: 4, scale: 2
+    t.decimal  "valor_max",                        precision: 4, scale: 2
   end
 
   add_index "respuesta_cita", ["cita_medicas_id"], name: "index_respuesta_cita_on_cita_medicas_id", unique: true, using: :btree

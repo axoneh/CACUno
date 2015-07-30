@@ -21,7 +21,7 @@
 		<div class="form-group">
 			<%= label_tag 'Fecha de Nacimiento' %>
 			<div class='input-group date' id='datetimepicker1'>
-				<%= date_field_tag "fecha", @valorFecha, required:"required", class:"form-control" %>
+				<%= date_field_tag "fecha", @valorFecha, class:"form-control" %>
 				<span class="input-group-addon">
 	            <span class="glyphicon glyphicon-calendar"></span></span>
 			</div>
@@ -44,7 +44,7 @@
 	<script type="text/javascript">
 		$(function () {
 		    $('#datetimepicker1').datetimepicker({ 
-		    	format: "YYYYMMDD"
+		    	format: "YYYY-MM-DD"
 		    });
 		});
 	</script>

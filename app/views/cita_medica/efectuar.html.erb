@@ -1,7 +1,7 @@
 <h2>Cita</h2>
+<%= render 'datos_paciente'%>
+<br />
 <% if @nivel%>
-	<%= render 'datos_paciente'%>
-	<br />
 	<h2>Cita presencial</h2>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
 		<br />
@@ -31,10 +31,10 @@
 			Hora: <%= @ultimaCita.hora_ini%>
 			<br />
 			Tiempo de tratamiento:
-			<% if @ultimaCia.respuesta_cita.observacion_medicas.tienpoIndefinido%>
+			<% if @ultimaCita.respuesta_cita.observacion_medicas.tiempoIndefinido%>
 				Indefinido
 			<% else%>
-				<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCia.respuesta_cita.observacion_medicas.diasTratamiento%>
+				<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCita.respuesta_cita.observacion_medicas.diasTratamiento%> dias
 			<% end%>
 		<% end%>
 	</div>
