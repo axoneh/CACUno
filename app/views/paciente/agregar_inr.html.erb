@@ -15,8 +15,6 @@
 	<br />
 	Fecha del valor: <%= date_field_tag "fecha_inr", nil, required: "required"%>
 	<br />
-	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id, :nombre) %>
-	<br />
 	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
 	<br />
 <% end%>

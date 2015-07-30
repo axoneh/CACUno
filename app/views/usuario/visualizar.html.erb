@@ -27,12 +27,8 @@
 	<br />
 	<% if @modificar%>
 		<br />
-		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario"%>
+		<%= link_to "Modificar datos", action: "actualizar", controller: "usuario", usuario: @usuario.email%>
 	<% end%>
-	<% if @horario%>
-		<br />
-		<%= link_to "Horario", action: "cargar", controller: "horario", correo: @correo%>
-	<%end%>
 	<% if @desactivar%>
 		<br />
 		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", correo: @correo%>
@@ -41,11 +37,8 @@
 	<br />
 	<%= link_to "Ir a la lista", action: "visualizar", controller: "usuario"%>
 <% else%>
-	<% @usuarios.each do |d|%>
-	<div>
-		<br />
-		<%= link_to d.email, action: "visualizar", controller: "usuario", correo: d.email %>
+	<div id="usuarios">
+		<%= render 'vista_usuarios'%>
 	</div>
-	<%end%>
 <%end%>
 <br />

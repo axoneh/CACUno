@@ -1,0 +1,13 @@
+<div>
+	<h3>Mis citas</h3>
+	<% @misCitas.each do |t|%>
+		Fecha: <%= t.fecha%>
+		<br />
+		Hora: <%= t.hora_ini%>
+		<br />
+		Paciente. <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+		<br />
+		<%= link_to "Efectuar cita", controller: "cita_medica", action: "efectuar", cita: t.id%>
+		<br />
+	<%end%>
+</div>

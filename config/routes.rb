@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'paramedico/menu'
-
   get 'cita_medica/crear'
   post 'cita_medica/crear'
 
@@ -48,13 +46,15 @@ Rails.application.routes.draw do
 
   devise_for :cuenta_usuarios, :controllers => { :omniauth_callbacks => "callbacks" }
 
-  get 'medico_internista/menu'
+  get 'medico_internista/contenido'
 
-  get 'administracion/menu'
-
-  get 'principal/index'
+  get 'administracion/contenido'
   
-  root :to => 'principal#index'
+  get 'paramedico/contenido'
+  
+  get 'principal/contenido'
+  
+  root :to => 'principal#contenido'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

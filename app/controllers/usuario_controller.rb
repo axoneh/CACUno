@@ -1,25 +1,30 @@
 class UsuarioController < ApplicationController
   
   def agregar
-    unless validacionAutorizado()
-      redirect_to controller: "principal", action: "index"
+    unless @autorizado
+      redirect_to controller: "principal", action: "contenido"
     else
       if current_cuenta_usuario.rols.nombre=="Medico Especialista"
         @medico=true
       end
+      @usuario=current_cuenta_usuario
       if actualizacion()
-        redirect_to controller: "principal", action: "index"
+        redirect_to controller: "principal", action: "contenido"
       end
     end
   end
 
   def actualizar
-    unless validacionUsuario()
-      redirect_to controller: "principal", action: "index"
+    unless @medico and @admin
+      redirect_to controller: "principal", action: "contenido"
     else
-      @medico=validacionMedico()
-      if actualizacion()
-        redirect_to controller: "principal", action: "index"
+      if params[:usuario] and Usuario.exists?(["email = ?",params[:usuario]])
+        @usuario=CuentaUsuario.find_by(email: params[:usuario])
+        if actualizacion()
+          redirect_to controller: "principal", action: "contenido"
+        end
+      else
+        redirect_to controller: "principal", action: "contenido"
       end
     end
   end
@@ -51,32 +56,26 @@ class UsuarioController < ApplicationController
         if current_cuenta_usuario.id==@usuario.id
           @modificar=true
           @desactivar=true
-          @horario=false
         else
           if @usuario.rols.nombre=="Administrador"
             @modificar=false
             @desactivar=false
-            @horario=false
           else
             @modificar=false
             @desactivar=true
-            @horario=true
           end
         end
       elsif cuenta_usuario_signed_in?
         if current_cuenta_usuario.id==@usuario.id
           @modificar=true
           @desactivar=false
-          @horario=false
         else
           @modificar=false
-          @desactivar=false
-          @horario=false          
+          @desactivar=false         
         end
       else
         @modificar=false
         @desactivar=false
-        @horario=false
       end
       
     else
@@ -87,7 +86,7 @@ class UsuarioController < ApplicationController
 
   def autorizar
     unless validacionAdmin()
-      redirect_to controller: "principal", action: "index"
+      redirect_to controller: "principal", action: "contenido"
     else
       @documentos=TipoDocumento.where(["estado = ?", 1])
       @roles=Rol.all
@@ -135,9 +134,7 @@ class UsuarioController < ApplicationController
   
 private
 
-  def actualizacion
-    @usuario=current_cuenta_usuario
-    
+  def actualizacion    
     @valorNombre= @usuario.nombre
     @valorApellido= @usuario.apellido
     @valorDireccion= @usuario.direccion

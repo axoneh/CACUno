@@ -89,7 +89,7 @@
 	<% end%>
 	<% if @medico or @paramedico%>
 		<br />
-		<% if @prescripcion and (@fechaActual < @prescripcion.fechaFin.to_date)%>
+		<% if @prescripcion and (Date.current < @prescripcion.fechaFin.to_date)%>
 			Es recomendable no hacer la consulta ahora.
 			<br />
 		<% end%>
@@ -104,13 +104,12 @@
 		<%= link_to "Agregar inr's", controller: "paciente", action: "agregar_inr", paciente: @paciente.correo%>
 	<% end%>
 <%else%>
-	<% @pacientes.each do |t|%>
-		<li>
-			<%= link_to t.nombre+" "+t.apellido, controller: "paciente", action: "visualizar", correo: t.correo%>
-			<% if @medico or @paramedico%>
-				- (<%= link_to "Nueva consulta", controller: "cita_medica", action: "efectuar", paciente: t.correo%>)
-			<% end%>
-		</li>
-	<%end%>
+	<% form_tag({controller: "paciente", action: "visualizar"},  remote: true , method: "get"%>
+		<%= text_field_tag "busqueda", "", size: 20, placeholder: "Nombre de paciente"%>
+		<%= submit_tag "buscar", disabled: false, disable_with: "Por favor espere..."%>
+	<% end%>
+	<div id="pacientes">
+		<%= render 'vista_pacientes'%>
+	</div>
 <%end%>
 <br />

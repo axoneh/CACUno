@@ -2,10 +2,21 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_action :authenticate_cuenta_usuario! , :except=>[:index]
+  before_action :authenticate_cuenta_usuario!
+  before_action :tipoUsuario
   #before_action :authenticate_cuenta_usuario!
   #^para pedir autentificacion antes de entrar al controlador
+
 protected
+
+  def tipoUsuario
+    @admin=validacionAdmin()
+    @medico=validacionMedico()
+    @paramedico=validacionParamedico()
+    @autorizado=validacionAutorizado()
+    @encargado=validacionEncargadoRespuesta()
+  end
+
   def validacionMedico #validacion para saber si fue un medico quien entro al sistema
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==1

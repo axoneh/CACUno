@@ -1,12 +1,12 @@
 class PacienteController < ApplicationController
   
   def agregar
-    unless validacionAdmin() or validacionMedico()
-      redirect_to controller: "principal", action: "index"
+    unless @admin or @medico
+      redirect_to controller: "principal", action: "contenido"
     else
       @paciente=Paciente.new
       if agregacion()
-        if validacionMedico()
+        if @medico
           redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
         else
           redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
@@ -16,8 +16,8 @@ class PacienteController < ApplicationController
   end
 
   def actualizar
-    unless validacionAdmin() or validacionMedico()
-      redirect_to controller: "principal", action: "index"
+    unless @admin or @medico
+      redirect_to controller: "principal", action: "contenido"
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ?, ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
@@ -25,7 +25,7 @@ class PacienteController < ApplicationController
           redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
         end
       else
-        redirect_to controller: "principal", action: "index"
+        redirect_to controller: "principal", action: "contenido"
       end
     end
   end
@@ -33,17 +33,12 @@ class PacienteController < ApplicationController
   def visualizar
     
     @especifico=false
-    @medico=validacionMedico()
-    @paramedico=validacionParamedico()
-    @admin=validacionAdmin()
     
     if params[:correo].present? and Paciente.exists?(["correo = ?", params[:correo]])
       
       @especifico=true
       
       @paciente=Paciente.find_by(correo: params[:correo])
-      
-      @fechaActual=Date.current
       
       if @paciente.genero
         @genero="Masculino"
@@ -134,15 +129,18 @@ class PacienteController < ApplicationController
     else
       @especifico=false
       @pacientes=Paciente.all
+      if params[:busqueda].present?
+        @paciente=Paciente.where(["CONCAT(nombre,'',apellido) like ?", '%'+params[:busqueda]+'%'])
+      end
     end
   end 
 
   def agregar_inr
     unless validacionAdmin() or validacionMedico()
-      redirect_to controller: "principal", action: "index"
+      redirect_to controller: "principal", action: "contenido"
     else
       unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
-        redirect_to controller: "principal", action: "index"
+        redirect_to controller: "principal", action: "contenido"
       else
         @paciente=Paciente.find_by(correo: params[:paciente])
         @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
@@ -153,7 +151,7 @@ class PacienteController < ApplicationController
         end
         if params[:inr].present? and params[:fecha_inr].present?
           if cita
-            InrPaciente.create(cita_medicas_id: cita.id, anticoagulantes_id: params[:antic], valorInr: params[:inr].to_f, fecha: params[:fecha_inr] )
+            InrPaciente.create(cita_medicas_id: cita.id, valorInr: params[:inr].to_f, fecha: params[:fecha_inr] )
           end
         end
         if cita
@@ -238,9 +236,7 @@ private
             @paciente.avatar=params[:avatar]
           end
           @paciente.save
-          
 
-          
           AntecedentePaciente.delete_all(["pacientes_id = ?", @paciente.id])
           
           @antecedentes.each do |a|

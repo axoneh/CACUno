@@ -148,14 +148,12 @@ ActiveRecord::Schema.define(version: 20150729220229) do
 
   create_table "inr_pacientes", force: :cascade do |t|
     t.integer  "cita_medicas_id",    limit: 4
-    t.integer  "anticoagulantes_id", limit: 4
     t.date     "fecha"
     t.decimal  "valorInr",                     precision: 4, scale: 2
     t.datetime "created_at",                                           null: false
     t.datetime "updated_at",                                           null: false
   end
 
-  add_index "inr_pacientes", ["anticoagulantes_id"], name: "index_inr_pacientes_on_anticoagulantes_id", using: :btree
   add_index "inr_pacientes", ["cita_medicas_id"], name: "index_inr_pacientes_on_cita_medicas_id", using: :btree
 
   create_table "laboratorios", force: :cascade do |t|

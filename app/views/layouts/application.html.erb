@@ -31,11 +31,11 @@
 	        		</li>
 	      		</ul>
 	 		<% else %>
-	 		<!--
-	 		<%  linkg = "<i class=\"fa fa-google\"></i> Ingresar con Google" %>
-	 			<%= link_to linkg.html_safe, "/auth/google_oauth2", id: "sign_in", class:'btn btn-sm btn-social btn-google navbar-btn navbar-right' %>
-	 		-->
-	 			<% end %>
+		 		<!--
+		 		<%  linkg = "<i class=\"fa fa-google\"></i> Ingresar con Google" %>
+		 			<%= link_to linkg.html_safe, "/auth/google_oauth2", id: "sign_in", class:'btn btn-sm btn-social btn-google navbar-btn navbar-right' %>
+		 		-->
+	 		<% end %>
 	 
 	 		</div>
 	  	 </div>
@@ -51,46 +51,50 @@
 				</p>	  	    	 	
 	  	    	 	
 	  	    </div>
-	   <% if notice!=nil	 %>
+	   <% if notice%>
 	  	 	<div id="notice" class="alert alert-info">
 				<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><%= notice %>
 		</div>
 		<% end %>
 		
-		<% if alert!=nil %>
+		<% if alert%>
 		<div id="alert" class="alert alert-danger">
 				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span><%= alert %>
 		</div>
-	  	<% end %> 
-	  	 
-	  	    <%= yield %>
+	  	<% end %>
+	  	<div id="menu">
+	  		<% unless controllername=="inicio"%>
+	  			<%= render 'layouts/menu'%>
+	  		<% end%>
+	  	</div>
+	  	<%= yield %>
   </body>
 	
 	
 	
 <!--
-	<body<%= " id=#{@body_id}" if @body_id %>>
-		<br />
-		<% if cuenta_usuario_signed_in?%>
-			<%if current_cuenta_usuario.estado==2%>
-				Correo: <%= current_cuenta_usuario.email%>
-				<br />
-				Usuario por autenticar
-			<% else%>
-				Usuario Actual: <%= current_cuenta_usuario.nombre+' '+current_cuenta_usuario.apellido%>
-			<% end%>
+<body<%= " id=#{@body_id}" if @body_id %>>
+	<br />
+	<% if cuenta_usuario_signed_in?%>
+		<%if current_cuenta_usuario.estado==2%>
+			Correo: <%= current_cuenta_usuario.email%>
+			<br />
+			Usuario por autenticar
+		<% else%>
+			Usuario Actual: <%= current_cuenta_usuario.nombre+' '+current_cuenta_usuario.apellido%>
 		<% end%>
-		<p id="notice" class="notice">
-			<%= notice %>
-		</p>
-		<p id="alert" class="alert">
-			<%= alert %>
-		</p>
-		<%= yield %>
+	<% end%>
+	<p id="notice" class="notice">
+		<%= notice %>
+	</p>
+	<p id="alert" class="alert">
+		<%= alert %>
+	</p>
+	<%= yield %>
 
-		<% if cuenta_usuario_signed_in? and current_cuenta_usuario.estado==1%>
-			<%= link_to "Ir al menu", controller: "principal", action: "index"%>
-		<% end%>
-	</body>
+	<% if cuenta_usuario_signed_in? and current_cuenta_usuario.estado==1%>
+		<%= link_to "Ir al menu", controller: "principal", action: "contenido"%>
+	<% end%>
+</body>
 -->
 </html>

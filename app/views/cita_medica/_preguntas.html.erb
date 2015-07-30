@@ -11,6 +11,4 @@
 	<% end%>
 	<br />
 	<%= text_field_tag "inr", @valorInr , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
-	<br />
-	Anticoagulante: <%= select_tag "antic_inr", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
 </div>

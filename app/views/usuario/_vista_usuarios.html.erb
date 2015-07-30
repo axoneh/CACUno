@@ -1,0 +1,16 @@
+<% @usuarios.each do |d|%>
+	<div>
+		<%= link_to d.email, action: "visualizar", controller: "usuario", correo: d.email %>
+		<br />
+		Especialidad: <%= d.especialidad%>
+		<br />
+		<% if @admin and d.rols.nombre!="Administrador"%>
+			<%= link_to "Desactivar usuario"%>
+			<br />
+			<%= link_to "Modificar usuario", controller: "usuario", action: "actualizar", usuario: d.email%>
+			<br />
+		<%end %>
+	</div>
+	<br />
+	<br />
+<%end%>
