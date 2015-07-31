@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_cuenta_usuario!
   before_action :tipoUsuario
-  #before_action :authenticate_cuenta_usuario!
-  #^para pedir autentificacion antes de entrar al controlador
 
 protected
 
@@ -15,14 +13,21 @@ protected
     @paramedico=validacionParamedico()
     @autorizado=validacionAutorizado()
     @encargado=validacionEncargadoRespuesta()
+    @autenticado=usuarioAutenticado()
+  end
+
+  def usuarioAutenticado
+    if cuenta_usuario_signed_in?
+      if current_cuenta_usuario.estado==1
+        return true
+      end
+    end
   end
 
   def validacionMedico #validacion para saber si fue un medico quien entro al sistema
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-        if current_cuenta_usuario.rols.nombre=="Medico Especialista"
-          return true
-        end
+    if usuarioAutenticado
+      if current_cuenta_usuario.rols.nombre=="Medico Especialista"
+        return true
       end
     end
   end 
@@ -36,21 +41,17 @@ protected
   end
 
   def validacionAdmin #validacion para saber si fue un admin quien entro al sistema
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-          if current_cuenta_usuario.rols.nombre=="Administrador"
-            return true
-          end
+    if usuarioAutenticado
+      if current_cuenta_usuario.rols.nombre=="Administrador"
+        return true
       end
     end
   end
 
   def validacionParamedico #validacion para saber si fue un paramedico quien entro al sistema
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
-        if current_cuenta_usuario.rols.nombre=="Paramedico"
-          return true
-        end
+    if usuarioAutenticado
+      if current_cuenta_usuario.rols.nombre=="Paramedico"
+        return true
       end
     end
   end
@@ -58,14 +59,6 @@ protected
   def validacionAutorizado #validacion para saber si quien entro al sistema esta por validar datos
     if cuenta_usuario_signed_in?
       if current_cuenta_usuario.estado==2
-        return true
-      end
-    end
-  end
-
-  def validacionUsuario
-    if cuenta_usuario_signed_in?
-      if current_cuenta_usuario.estado==1
         return true
       end
     end

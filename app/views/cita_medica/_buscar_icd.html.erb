@@ -1,15 +1,25 @@
-<h3>Buscar ICD</h3>
-<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, remote: true , method: "get") do %>
-	<%= text_field_tag "icd_b", "", size: 30,placeholder: "Codigo o nombre del diagnostico"%>
-	<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere..."%>
-<% end%>
-<%if @icd_b%>
-	<h3>Resultados de la busqueda</h3>
-	<% @icd_b.each do |t|%>
-		<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id}, remote: true , method: "get") do %>
-			Enfermedad: <%= t.dec10%>
-			<br />
-			<%= submit_tag "Agregar", disabled: false, disable_with: "Por favor espere..."%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Buscar ICD</h3>
+	</div>
+	<div class="panel-body">
+		<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, class: "form-inline", remote: true , method: "get") do %>
+			<div class="form-group">
+				<%= text_field_tag "icd_b", "", size: 30,placeholder: "Codigo o nombre del diagnostico", class: "form-control", id: "exampleInputName2"%>
+			</div>
+			<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere...", class: "btn btn-default"%>
 		<% end%>
-	<% end%>
-<% end%>
+	</div>
+	<div class="panel-footer">
+		<%if @icd_b%>
+			<% @icd_b.each do |t|%>
+				<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id}, class: "form-inline", remote: true , method: "get") do %>
+					Enfermedad: <%= t.dec10%>
+					<br />
+					Codigo: <%= t.id10%>
+					<%= submit_tag "Agregar", disabled: false, disable_with: "Por favor espere..."%>
+				<% end%>
+			<% end%>
+		<% end%>
+	</div>
+</div>

@@ -15,7 +15,7 @@ class UsuarioController < ApplicationController
   end
 
   def actualizar
-    if @medico or @admin or @paramedico
+    if @autenticado
       @usuario=current_cuenta_usuario
       if actualizacion()
         redirect_to controller: "principal", action: "contenido"
@@ -137,11 +137,11 @@ class UsuarioController < ApplicationController
         if usuario and usuario.rols.nombre!="Administrador"
           usuario.estado=3
           usuario.save
-          flah.notice="Se realizado correctamente la desactivacion"
-          redirec_to controller: "usuario", action: "visualizar"
+          flash.notice="Se realizado correctamente la desactivacion"
+          redirect_to controller: "usuario", action: "visualizar"
         else
           flash.notice="No se puede desautorizar a este usuario"
-          redirec_to controller: "usuario", action: "visualizar"
+          redirect_to controller: "usuario", action: "visualizar"
         end
       else
         redirect_to controller: "principal", action: "contenido"

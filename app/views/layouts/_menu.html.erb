@@ -1,11 +1,13 @@
-<%if @autorizado%>
-	<%= render 'medico_internista/menu_at'%>
-<% elsif @admin%>
-	<%= render 'administracion/menu'%>
-<% elsif @medico%>
-	<%= render 'medico_internista/menu'%>
-<% elsif @paramedico%>
-	<%= render 'paramedico/menu'%>
-<% else%>
-	<%= render 'principal/menu'%>
-<% end%>
+<ul class="list-group">
+	<%if @autorizado%>
+		<%= render 'medico_internista/menu_at'%>
+	<% elsif @admin%>
+		<%= render 'administracion/menu'%>
+	<% elsif @medico%>
+		<%= render 'medico_internista/menu'%>
+	<% elsif @paramedico%>
+		<%= render 'paramedico/menu'%>
+	<% else%>
+		<%= render 'principal/menu'%>
+	<% end%>
+</ul>

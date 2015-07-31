@@ -1,1 +1,2 @@
-<%= link_to "Pacientes", controller: "paciente", action: "visualizar"%>
+<%= link_to "Pacientes", {controller: "paciente", action: "visualizar"}, class: "list-group-item"%>
+<%= link_to "Cerrar Sesion", destroy_cuenta_usuario_session_path, method: :delete, id: "sign_out" ,class: "list-group-item list-group-item-danger"%>
