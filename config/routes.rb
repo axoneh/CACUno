@@ -43,6 +43,9 @@ Rails.application.routes.draw do
   post 'usuario/autorizar'
   
   get 'usuario/desactivar'
+  
+  get 'usuario/cambiar'
+  post 'usuario/cambiar'
 
   devise_for :cuenta_usuarios, :controllers => { :omniauth_callbacks => "callbacks" }
 

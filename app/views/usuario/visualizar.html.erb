@@ -1,4 +1,3 @@
-<h1>Usuarios en el sistema</h1>
 <%if @especifico%>
 	<h3>Usuario especificado</h3>
 	<% if @usuario.link_foto%>
@@ -31,12 +30,19 @@
 	<% end%>
 	<% if @desactivar%>
 		<br />
-		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", correo: @correo%>
+		<%= link_to "Desactivar", action: "desactivar", controller: "usuario", usuario: @correo%>
+	<% end%>
+<% else%>
+	<%= form_tag({controller: "usuario", action: "visualizar"},  remote: true , method: "get") do%>
+		<%= text_field_tag "busqueda", "", size: 20, placeholder: "Nombre del usuario"%>
+		<%= submit_tag "buscar", disabled: false, disable_with: "Por favor espere..."%>
 	<% end%>
 	<br />
+	<% if @admin%>
+		<%= link_to "Autorizar nuevo usuario", controller: "usuario", action: "autorizar"%>
+		<br />
+	<% end%>
 	<br />
-	<%= link_to "Ir a la lista", action: "visualizar", controller: "usuario"%>
-<% else%>
 	<div id="usuarios">
 		<%= render 'vista_usuarios'%>
 	</div>

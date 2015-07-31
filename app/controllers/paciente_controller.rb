@@ -19,7 +19,7 @@ class PacienteController < ApplicationController
     unless @admin or @medico
       redirect_to controller: "principal", action: "contenido"
     else
-      if params[:paciente].present? and Paciente.exists?(["correo = ?, ",params[:paciente]])
+      if params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
         if agregacion()
           redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
@@ -76,7 +76,7 @@ class PacienteController < ApplicationController
       @riesgoEmbolia+=buscar_antecedente('enfermedad vascular');
       
       if cita
-        sumaRiesgo=cita.respuesta_cita.first.observacion_medicas.first
+        sumaRiesgo=cita.respuesta_cita.observacion_medicas
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -106,7 +106,7 @@ class PacienteController < ApplicationController
       @riesgoHemorragia+=buscar_antecedente('alcohol')
       
       if cita
-        sumaRiesgo=cita.respuesta_cita.first.observacion_medicas.first
+        sumaRiesgo=cita.respuesta_cita.observacion_medicas
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -130,7 +130,7 @@ class PacienteController < ApplicationController
       @especifico=false
       @pacientes=Paciente.all
       if params[:busqueda].present?
-        @paciente=Paciente.where(["CONCAT(nombre,'',apellido) like ?", '%'+params[:busqueda]+'%'])
+        @pacientes=@pacientes.where(["CONCAT(nombre,' ',apellido) like ?", '%'+params[:busqueda]+'%'])
       end
     end
   end 

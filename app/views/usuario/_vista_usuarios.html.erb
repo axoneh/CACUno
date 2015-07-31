@@ -1,15 +1,32 @@
 <% @usuarios.each do |d|%>
 	<div>
 		<%= link_to d.email, action: "visualizar", controller: "usuario", correo: d.email %>
+		<% if d.estado==2%>
+			- Sin autenticarse
+		<% elsif d.estado==3%>
+			- Desactivado
+		<% end%>
+		<br />
+		Nombre. <%= d.nombre%> <%= d.apellido%>
 		<br />
 		Especialidad: <%= d.especialidad%>
 		<br />
-		<% if @admin and d.rols.nombre!="Administrador"%>
-			<%= link_to "Desactivar usuario"%>
+		Documento de identificacion: <%= d.identificacion%> - <%= d.tipo_documentos.nombre%> 
+		<br />
+		<% if @admin and d.rols.nombre!="Administrador" and d.estado==1%>
+			<%= link_to "Desautorizar usuario", controller: "usuario", action: "desactivar", usuario: d.email%>
 			<br />
-			<%= link_to "Modificar usuario", controller: "usuario", action: "actualizar", usuario: d.email%>
+			<%= link_to "Cambiar datos", controller: "usuario", action: "cambiar", usuario: d.id%>
 			<br />
 		<%end %>
+		<% if @admin and d.estado==3%>
+			<%= link_to "Autorizar usuario", controller: "usuario", action: "autorizar", usuario: d.email%>
+			<br />
+		<% end%>
+		<% if current_cuenta_usuario.id==d.id%>
+			<%= link_to "Modificar usuario", controller: "usuario", action: "actualizar"%>
+			<br />
+		<% end%>
 	</div>
 	<br />
 	<br />

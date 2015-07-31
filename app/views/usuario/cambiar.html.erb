@@ -1,0 +1,4 @@
+<h3>Cambio de datos principales</h3>
+<%= form_tag({controller: "usuario", action: "cambiar", usuario: params[:usuario]} , method: "post") do %>
+	<%= render 'cambio_datos'%>
+<% end%>

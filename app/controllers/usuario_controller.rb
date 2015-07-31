@@ -15,17 +15,13 @@ class UsuarioController < ApplicationController
   end
 
   def actualizar
-    unless @medico and @admin
-      redirect_to controller: "principal", action: "contenido"
-    else
-      if params[:usuario] and Usuario.exists?(["email = ?",params[:usuario]])
-        @usuario=CuentaUsuario.find_by(email: params[:usuario])
-        if actualizacion()
-          redirect_to controller: "principal", action: "contenido"
-        end
-      else
+    if @medico or @admin or @paramedico
+      @usuario=current_cuenta_usuario
+      if actualizacion()
         redirect_to controller: "principal", action: "contenido"
       end
+    else
+      redirect_to controller: "principal", action: "contenido"
     end
   end
 
@@ -80,12 +76,15 @@ class UsuarioController < ApplicationController
       
     else
       @especifico=false;  
-      @usuarios=CuentaUsuario.all    
+      @usuarios=CuentaUsuario.all
+      if params[:busqueda].present?
+        @usuarios=@usuarios.where(["CONCAT(nombre,' ',apellido) like ?", '%'+params[:busqueda]+'%'])
+      end    
     end
   end
 
   def autorizar
-    unless validacionAdmin()
+    unless @admin
       redirect_to controller: "principal", action: "contenido"
     else
       @documentos=TipoDocumento.where(["estado = ?", 1])
@@ -122,6 +121,7 @@ class UsuarioController < ApplicationController
           if params[:identificacion].present?
             @valorIdentificacion=params[:identificacion]
           end
+          flash.alert="Debe diligenciar todos los campos"
         end
       end
       
@@ -129,7 +129,73 @@ class UsuarioController < ApplicationController
   end
 
   def desactivar
-
+    unless @admin
+      redirect_to controller: "principal", action: "contenido"
+    else
+      if params[:usuario].present?
+        usuario=CuentaUsuario.find_by(email: params[:usuario])
+        if usuario and usuario.rols.nombre!="Administrador"
+          usuario.estado=3
+          usuario.save
+          flah.notice="Se realizado correctamente la desactivacion"
+          redirec_to controller: "usuario", action: "visualizar"
+        else
+          flash.notice="No se puede desautorizar a este usuario"
+          redirec_to controller: "usuario", action: "visualizar"
+        end
+      else
+        redirect_to controller: "principal", action: "contenido"
+      end
+    end
+  end
+  
+  def cambiar
+    unless @admin
+      redirec_to controller: "usuario", action: "visualizar"
+    else
+      if params[:usuario].present? and CuentaUsuario.exists?(["id = ?", params[:usuario]])
+        @documentos=TipoDocumento.where(["estado = ?", 1])
+        @roles=Rol.all
+        usuario=CuentaUsuario.find(params[:usuario])
+        if usuario and usuario.rols.nombre!="Administrador"
+          @valorCorreo=usuario.email
+          @valorIdentificacion=usuario.identificacion
+          if request.post?
+            if params[:correo].present? and params[:identificacion].present?
+              encargado=params[:encr].present?
+              correo=params[:correo]
+              ident=params[:identificacion]
+              tipoDoc=params[:documento]
+              rol=params[:rol]
+              if CuentaUsuario.exists?(["((identificacion = ? and tipo_documentos_id = ?) or email = ?) and id <> ? ", ident, tipoDoc, correo, usuario.id])
+                flash.notice="Ya existe un usuario con esos datos, por favor verifique";
+              else
+                usuario.encargado_respuesta=encargado
+                usuario.email=correo
+                usuario.identificacion=ident
+                usuario.tipo_documentos_id=tipoDoc
+                usuario.rols_id=rol
+                usuario.save
+                redirect_to controller: "usuario", action: "visualizar", correo: usuario.email 
+              end
+            else
+              if params[:correo].present?
+                @valorCorreo=params[:correo]
+              end
+              if params[:identificacion].present?
+                @valorIdentificacion=params[:identificacion]
+              end
+              flash.alert="Debe diligenciar todos los campos"
+            end
+          end
+        else
+          flash.alert="No puede modificar los datos de un administrador"
+          redirect_to controller: "usuario", action: "visualizar"
+        end
+      else
+        redirec_to controller: "usuario", action: "visualizar"
+      end
+    end
   end
   
 private
@@ -147,6 +213,8 @@ private
         fechaN=params[:fecha]
         if params[:especialidad].present?
           especial=params[:especialidad]
+        else
+          especial=@usuario.rols.nombre
         end 
         nombre=params[:nombre]
         apellido=params[:apellido]
@@ -158,9 +226,7 @@ private
         @usuario.genero=genero
         @usuario.direccion=direccion
         @usuario.fecha_nacimiento=fechaN
-        if validacionMedico
-          @usuario.especialidad=especial
-        end
+        @usuario.especialidad=especial
         @usuario.password= Devise.friendly_token[0,20]
         
         @usuario.estado=1

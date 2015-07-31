@@ -4,10 +4,15 @@
 		<br />
 		Patologia: <%= t.patologia.nombre%>
 		<br />
-		Ultima Cita realizada: <%= t.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last%>
+		Ultima Cita realizada: <%= t.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last.fecha%>
 		<br />
 		<% if @medico or @paramedico%>
 			<%= link_to "Nueva consulta", controller: "cita_medica", action: "efectuar", paciente: t.correo%>
+			<br />
+		<% end%>
+		<% if @medico or @admin%>
+			<%= link_to "Modificar datos", controller: "paciente", action: "actualizar", paciente: t.correo%>
+			<br />
 		<% end%>
 	</div>
 	<br />

@@ -1,6 +1,5 @@
 <%= link_to "Pacientes", controller: "paciente", action: "visualizar"%>
-<br />
 <% if @encargado%>
 	<%= link_to "Notificaciones", controller: "cita_medica", action: "visualizar", notificacion: true%>
-	<br />
+
 <% end%>

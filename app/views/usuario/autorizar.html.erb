@@ -1,16 +1,4 @@
 <h1>Autorizar nuevo usuario</h1>
 <%= form_tag({controller: "usuario", action: "autorizar"} , method: "post") do %>
-	<%= text_field_tag "identificacion", @valorIdenticiacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
-	<br />
-	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
-	<br />
-	<%= email_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %>
-	<br />
-	<p>Recuerde que si asigna como cargo "Administrador", no podra desactivar la cuenta en un futuro</p>
-	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
-	<br />
-	<%= check_box_tag "encr", "encr"%> Encargado de responder citas domiciliarias
-	<br />
-	<%= submit_tag "Enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
+	<%= render 'cambio_datos'%>
 <% end%>
-<br />

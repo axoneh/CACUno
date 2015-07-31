@@ -11,7 +11,7 @@
 <br />
 <%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
 <br />
-<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
+<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, @paciente.tipo_documentos_id)%>
 <br />
 <%= text_field_tag "nombre", @valorNombre , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
 <br />
