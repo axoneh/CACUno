@@ -1,16 +1,27 @@
-<h3>Antecedentes clinicos</h3>
-<% if @antecedentes%>
-	<%@antecedentes.each do |a|%>
-		<% seleccion = @antecedentesPaciente.exists?(["antecedente_medicos_id = ?", a.id])%>
-		<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%> ¿<%= a.nombre%>?
-		<% if a.tipo%>
-			<br />
-			<% if seleccion%>
-				<%= text_area_tag a.id.to_s+'_comentario', @antecedentesPaciente.find_by(antecedente_medicos_id: a.id).comentario, placeholder: a.descripcion %>
-			<% else%>
-				<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion %>
-			<% end%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Antecedentes clinicos</h3>
+	</div>
+	<div class="panel-body">
+		<% if @antecedentes%>
+			<%@antecedentes.each do |a|%>
+				<% seleccion = @antecedentesPaciente.exists?(["antecedente_medicos_id = ?", a.id])%>
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%>
+						</span>
+						<%= text_field_tag "texto", a.nombre, readonly: "readonly", class: "form-control"%>
+					</div>
+					<% if a.tipo%>
+						<% if seleccion%>
+							<%= text_area_tag a.id.to_s+'_comentario', @antecedentesPaciente.find_by(antecedente_medicos_id: a.id).comentario, placeholder: a.descripcion, class: "form-control"%>
+						<% else%>
+							<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion,class: "form-control" %>
+						<% end%>
+					<% end%>
+				</div>
+			<%end%>
 		<% end%>
-		<br />
-	<%end%>
-<% end%>
+	</div>
+</div>

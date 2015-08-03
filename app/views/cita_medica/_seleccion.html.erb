@@ -1,5 +1,8 @@
 <% if @cambio%>
-	<%= render 'guardar_antecedente' %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_t: true}, remote: true , method: "get") do %>
+		<%= render 'paciente/guardar_antecedente' %>
+		<%= submit_tag "Actualizar antecedentes", class: "btn btn-primary"%>
+	<% end%>
 <% else%>
 	<%= render 'paciente/antecedente_paciente' %>
 <% end%>

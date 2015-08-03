@@ -1,17 +1,21 @@
-<h3>Antecedentes clinicos del paciente</h3>
-<% @paciente.antecedente_paciente.each do |a|%>
-	<li>
-		<%= a.antecedente_medicos.nombre%>
-		<% if a.antecedente_medicos.tipo%>
-			<br />
-			<%=a.antecedente_medicos.descripcion%>: <%=a.comentario%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Antecedentes del paciente</h3>
+	</div>
+	<ul class="list-group">
+		<% @paciente.antecedente_paciente.each do |a|%>
+			<li class="list-group-item">
+				<%= a.antecedente_medicos.tag.upcase%>
+				<% if a.antecedente_medicos.tipo%>
+					<br />
+					<strong><%=a.antecedente_medicos.descripcion%>:</strong> <%=a.comentario%>
+				<% end%>
+			</li>
 		<% end%>
-		<br />
-	</li>
-<% end%>
+	</ul>
+</div>
 <% if @medicoC%>
-	<br />
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_i: true}, remote: true, method: "post") do %>
-		<%= submit_tag "Actualizar antecedentes", disabled: false, disable_with: "Por favor espere..."%>
+		<%= submit_tag "Actualizar antecedentes", class: "btn btn-primary"%>
 	<% end%>
 <% end%>

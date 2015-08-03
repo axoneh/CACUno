@@ -1,13 +1,30 @@
-<div>
-	<h3>Mis citas</h3>
-	<% @misCitas.each do |t|%>
-		Fecha: <%= t.fecha%>
-		<br />
-		Hora: <%= t.hora_ini%>
-		<br />
-		Paciente. <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
-		<br />
-		<%= link_to "Efectuar cita", controller: "cita_medica", action: "efectuar", cita: t.id%>
-		<br />
-	<%end%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Mis citas</h3>
+	</div>
+	<div class="panel-body">
+		<% @misCitas.each do |t|%>
+			<div class="row">
+				<div class="col-md-10">
+					<strong>Fecha: </strong> <%= t.fecha%> - <%= t.hora_ini%>
+					<% if t.fecha>Date.current%>
+						<span class="label label-info">Proximamente</span>
+					<% elsif t.fecha<Date.current%>
+						<span class="label label-danger">Vencida</span>
+					<% else%>
+						<span class="label label-warning">Hoy</span>
+					<% end%>
+					<br />
+					<strong>Paciente:</strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+				</div>
+				<div class="col-md-2">
+					<div class="btn-group btn-group-justified" role="group">
+						<div class="btn-group" role="group">
+							<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-success"%>
+						</div>
+					</div>
+				</div>
+			</div>
+		<% end%>
+	</div>
 </div>

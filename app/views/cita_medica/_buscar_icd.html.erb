@@ -1,24 +1,37 @@
+<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, remote: true , method: "get") do %>
+	<div class="form-group">
+		<%= label_tag "Buscar diagnostico"%>
+		<div class="input-group">
+			<%= text_field_tag "icd_b", params[:icd_b] ,placeholder: "Codigo o nombre del diagnostico", class: "form-control"%>
+			<span class="input-group-btn">
+				<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere...", class: "btn btn-primary"%>
+			</span>
+		</div>
+	</div>
+<% end%>
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<h3 class="panel-title">Buscar ICD</h3>
+		<h3 class="panel-title">Diagnosticos</h3>
 	</div>
 	<div class="panel-body">
-		<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, class: "form-inline", remote: true , method: "get") do %>
-			<div class="form-group">
-				<%= text_field_tag "icd_b", "", size: 30,placeholder: "Codigo o nombre del diagnostico", class: "form-control", id: "exampleInputName2"%>
-			</div>
-			<%= submit_tag "Buscar", disabled: false, disable_with: "Por favor espere...", class: "btn btn-default"%>
-		<% end%>
-	</div>
-	<div class="panel-footer">
 		<%if @icd_b%>
 			<% @icd_b.each do |t|%>
-				<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id}, class: "form-inline", remote: true , method: "get") do %>
-					Enfermedad: <%= t.dec10%>
-					<br />
-					Codigo: <%= t.id10%>
-					<%= submit_tag "Agregar", disabled: false, disable_with: "Por favor espere..."%>
-				<% end%>
+				<div class="row">
+					<div class="col-md-10">
+						<strong><%= t.id10%></strong>
+						<br />
+						<%= t.dec10%>
+					</div>
+					<div class="col-md-2">
+						<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id, icd_b: params[:icd_b]}, remote: true , method: "get") do %>
+							<div class="btn-group btn-group-justified" role="group">
+								<div class="btn-group" role="group">
+									<%= submit_tag "Agregar", disabled: false, disable_with: "Por favor espere...", class: "btn btn-success"%>
+								</div>
+							</div>
+						<% end%>
+					</div>		
+				</div>
 			<% end%>
 		<% end%>
 	</div>

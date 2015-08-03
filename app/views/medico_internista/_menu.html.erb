@@ -1,4 +1,5 @@
 <%= link_to "Pacientes", {controller: "paciente", action: "visualizar"}, class: "list-group-item"%>
+<%= link_to "Mis citas", {controller: "cita_medica", action: "visualizar", usuario: current_cuenta_usuario.email}, class: "list-group-item"%>
 <% if @encargado%>
 	<%= link_to "Notificaciones", {controller: "cita_medica", action: "visualizar", notificacion: true}, class: "list-group-item"%>
 <% end%>

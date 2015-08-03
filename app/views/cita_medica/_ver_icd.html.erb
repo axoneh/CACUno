@@ -1,5 +1,35 @@
-<h3>Diagnostico de la cita</h3>
-<%@cita.cita_icds.each do |t|%>
-	Enfermedad: <%= t.icds.dec10%>
-	<br />
-<% end%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Diagnostico de la cita</h3>
+	</div>
+	<% if @medicoC%>
+		<div class="panel-body">
+			<% @cita.cita_icds.each do |t|%>
+				<div class="row">
+					<div class="col-md-10">
+						<strong><%=t.icds.id10%></strong>
+						<br />
+						<%= t.icds.dec10%>
+					</div>
+					<div class="col-md-2">
+						<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_e: t.id, icd_b: params[:icd_b]}, remote: true, method: "get") do%>
+							<div class="btn-group btn-group-justified" role="group">
+								<div class="btn-group" role="group">
+									<%= submit_tag "Quitar", class: "btn btn-danger"%>
+								</div>
+							</div>
+						<% end%>
+					</div>
+				</div>
+			<% end%>
+		</div>
+	<% else%>
+		<ul class="list-group">
+			<% @cita.cita_icds.each do |t|%>
+				<li class="list-group-item">
+					<strong><%= t.icds.id10%>: </strong><%= t.icds.dec10%>
+				</li>
+			<% end%>
+		</ul>
+	<% end%>
+</div>

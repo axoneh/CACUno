@@ -1,14 +1,24 @@
-<div id="preguntas">
-	<h3>Preguntas</h3>
-	<br />
-	<% @preguntas.each do |t|%>
-		<br />
-		<%= check_box_tag t.id.to_s+"_p", t.id.to_s+"_p"%> ¿<%= t.pregunta%>?
-		<% if t.tipo%>
-			<br />
-			<%= text_area_tag t.id.to_s+"_comentario", "", placeholder: t.descripcion%>
+<div id="preguntas" class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Preguntas</h3>
+	</div>
+	<div class="panel-body">
+		<% @preguntas.each do |t|%>
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">
+						<%= check_box_tag t.id.to_s+"_p", t.id.to_s+"_p"%>
+					</span>
+					<%= text_field_tag "texto", '¿'+t.pregunta+'?', readonly: "readonly", class: "form-control"%>
+				</div>
+				<% if t.tipo%>
+					<%= text_area_tag t.id.to_s+"_comentario", "", placeholder: t.descripcion.upcase, class: "form-control"%>
+				<% end%>
+			</div>
 		<% end%>
-	<% end%>
-	<br />
-	<%= text_field_tag "inr", @valorInr , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required"%>
+		<div class="form-group">
+			<%= label_tag "INR actual del paciente"%>
+			<%= text_field_tag "inr", @valorInr , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required", class: "form-control"%>
+		</div>
+	</div>
 </div>

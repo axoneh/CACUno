@@ -1,15 +1,19 @@
-<div id="vista_preguntas">
-	<h3>Encuesta medica</h3>
-	<% @cita.pregunta_cita.each do |t|%>
-		<li>
-			<%= t.pregunta.pregunta%>
-			<% if t.pregunta.tipo%>
-				<br />
-				<%= t.pregunta.descripcion%>: <%= t.comentario%>
-			<% end%>
-		</li>
-	<% end%>
-	<br />
-	Valor INR: <%= (@inr.valorInr) if @inr%>
-	<br />
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Encuesta Medica</h3>
+	</div>
+	<div class="panel-body">
+		<strong>Valor INR:</strong><%= (@inr.valorInr) if @inr%>
+	</div>
+	<ul class="list-group">
+		<% @cita.pregunta_cita.each do |t|%>
+			<li class="list-group-item">
+				<strong><%= t.pregunta.pregunta%></strong>
+				<% if t.pregunta.tipo%>
+					<br />
+					<%= t.pregunta.descripcion%> <%= t.comentario%>
+				<% end%>
+			</li>
+		<% end%>
+	</ul>
 </div>

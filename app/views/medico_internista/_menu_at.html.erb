@@ -1,1 +1,2 @@
 <%=link_to "Agregar datos", {controller: "usuario", action: "agregar"}, class: "list-group-item"%>
+<%= link_to "Cerrar Sesion", destroy_cuenta_usuario_session_path, method: :delete, id: "sign_out" ,class: "list-group-item list-group-item-danger"%>

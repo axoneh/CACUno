@@ -1,18 +1,47 @@
-<div id="datos_paciente">
-	<% if @paciente%>
-		<h3>Datos del paciente</h3>
-		<%= image_tag(@paciente.avatar.url(:medium))%>
-		<br />
-		Paciente: <%= @paciente.nombre+' '+@paciente.apellido%>
-		<br />
-		Patologia: <%= @paciente.patologia.nombre%>
-		<br />
-		Descripcion patologica: <%= @paciente.patologia.descripcion%>
-		<br />
-		Antecedentes generales: <%= @paciente.antecedente_general%>
-		<br />
-		<div id="antecedente_paciente">
-			<%= render 'paciente/antecedente_paciente'%>
-		</div>
-	<% end%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Datos del paciente</h3>
+	</div>
+	<div class="panel-body">
+		<% if @paciente%>
+			<div class="form-group">
+				<%= image_tag(@paciente.avatar.url(:medium), class: "img-rounded")%>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Nombre</strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.nombre+' '+@paciente.apellido%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Patologia del paciente</strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.patologia.nombre%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Descripcion patologica</strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.patologia.descripcion%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Antecedentes generales</strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.antecedente_general%>
+				</div>
+			</div>
+		<% end%>
+	</div>
+</div>
+<div id="antecedente_paciente">
+	<%= render 'paciente/antecedente_paciente'%>
 </div>

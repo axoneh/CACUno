@@ -1,43 +1,51 @@
-<div id="respuesta">
-	<h3>Respuesta Medica</h3>
-	<br />Analisis
-	<br />
-	<%= text_area_tag "analisis", @valorAnalisis%>
-	<br />
-	<br />Plan
-	<br />
-	<%= text_area_tag "plan", @valorPlan%>
-	<br />
-	<br />Valor minimo de anticoagulacion: 
-	<%= text_field_tag "valor_min", @valorMin, size: 5, maxlenght: 4, required: "required"%>
-	<br />
-	<br />Valor maximo de anticoagulacion
-	<%= text_field_tag "valor_max", @valorMax, size: 4, maxlenght: 4, required: "required"%>
-</div>
-<div id="prescripcion">
-	<h3>Preinscripcion</h3>
-	<br />
-	Anticoagulante: <%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre)%>
-	<br />
-	Dias de tratamiento: 
-	<%= text_field_tag "fecha_fin", @valorFechaFin%>
-	<br />
-	Dosis diaria
-	<br />
-	<% @diasAsociados.each do |t|%>
-		<div id=<%= t.nombre%>>
-			<%= t.nombre%>
-			<br />
-			<%= radio_button_tag t.id.to_s+"_cantidad", "0"%> Ninguna medida
-			<br />
-			<%= radio_button_tag t.id.to_s+"_cantidad", "5"%> Media pastilla
-			<br />
-			<%= radio_button_tag t.id.to_s+"_cantidad", "10"%> Pastilla completa
-			<br />
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Respuesta Medica</h3>
+	</div>
+	<div class="panel-body">
+		<div class="form-group">
+			<%= label_tag "Analisis"%>
+			<%= text_area_tag "analisis", @valorAnalisis, placeholder: "Analisis", rows: 3, class: "form-control", required: "required"%>
 		</div>
-	<% end%>
-	<br />
-	Recomendaciones de tratamiento:
-	<br />
-	<%= text_area_tag "recomendacion", @valorRecomendacion%>
+		<div class="form-group">
+			<%= label_tag "Plan"%>
+			<%= text_area_tag "plan", @valorPlan, placeholder: "Plan", rows: 3, class: "form-control", required: "required"%>
+		</div>
+		<div class="form-group">
+			<%= label_tag "Valor minimo de inr saludable"%>
+			<%= text_field_tag "valor_min", @valorMin, size: 10, maxlenght: 4, required: "required", class: "form-control"%>
+		</div>
+		<div class="form-group">
+			<%= label_tag "Valor maximo de inr saludable"%>
+			<%= text_field_tag "valor_max", @valorMax, size: 10, maxlenght: 4, required: "required", class: "form-control"%>
+		</div>
+	</div>
+</div>
+<div id="prescripcion" class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Prescripcion medica</h3>
+	</div>
+	<div class="panel-body">
+		<div class="form-group">
+			<%= label_tag "Anticoagulante"%>
+			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre), class: "form-control", required: "required"%>
+		</div>
+		<div class="form-group">
+			<%= label_tag "Dias de tratamiento"%>
+			<%= text_field_tag "fecha_fin", @valorFechaFin, placeholder: "Dias de tratamiento", class: "form-control", required: "required"%>
+		</div>
+		<% @diasAsociados.each do |t|%>
+			<div id=<%= t.nombre%>, class="form-group">
+				<%= label_tag t.nombre%>
+				<br />
+				<%= radio_button_tag t.id.to_s+"_cantidad", "0"%> Ninguna medida
+				<%= radio_button_tag t.id.to_s+"_cantidad", "5.0"%> Media pastilla
+				<%= radio_button_tag t.id.to_s+"_cantidad", "1"%> Pastilla completa
+			</div>
+		<% end%>
+		<div class="form-group">
+			<%= label_tag "Recomendaciones para la prescripcion"%>
+			<%= text_area_tag "recomendacion", @valorRecomendacion, placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control", required: "required"%>
+		</div>
+	</div>
 </div>

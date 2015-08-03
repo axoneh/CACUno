@@ -1,47 +1,72 @@
-<br />
 <% if params[:action]=="agregar"%>
-	<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required"%>
+	<div class="form-group">
+		<%= label_tag "Imagen de perfil"%>
+		<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required", class: "form-control"%>		
+	</div>
 <% else%>
-	Image previa
-	<br />
-	<%= image_tag(@paciente.avatar.url(:medium))%>
-	<br />
-	<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg'%>
+	<div class="form-group">
+		<%= image_tag(@paciente.avatar.url(:medium), class: "img-rounded")%>
+		<%= label_tag "Imagen previa"%>
+		<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', class: "form-control"%>
+	</div>
 <% end%>
-<br />
-<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
-<br />
-<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, @paciente.tipo_documentos_id)%>
-<br />
-<%= text_field_tag "nombre", @valorNombre , size: 30, maxlenght: 30, placeholder: "Nombre", required:"required"%>
-<br />
-<%= text_field_tag "apellido", @valorApellido , size: 30, maxlenght: 30, placeholder: "Apellido", required:"required"%>
-<br />
-<%= text_field_tag "correo", @valorCorreo , size: 30, maxlenght: 30, placeholder: "Correo electronico", required:"required"%>
-<br />
-<select id="genero" name="genero">
-	<% if @paciente.genero%>
-		<option value=0>Femenino</option>
-		<option value=1 selected="selected">Masculino</option>
-	<% else %>
-		<option value=0 selected="selected">Femenino</option>
-		<option value=1>Masculino</option>
-	<% end%>
-</select>
-<br />
-<%= text_field_tag "direccion", @valorDireccion , size: 30, maxlenght: 30, placeholder: "Direccion", required:"required"%>
-<br />
-<%= date_field_tag "fecha_n", @valorFechaN , required:"required"%>
-<br />
-<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre, @paciente.estado_civils_id)%>
-<br />
-<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre, @paciente.patologia_id)%>
-<br />
+<div class="form-group">
+	<%= label_tag "Numero de identificacion"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion ,maxlenght: 15, placeholder: "Numero de identificacion", required:"required", class: "form-control"%>
+</div>
+<div class="form-group">
+	<%= label_tag "Tipo de documento"%>
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, @paciente.tipo_documentos_id), class: "form-control"%>	
+</div>
+<div class="form-group">
+	<%= label_tag "Nombres"%>
+	<%= text_field_tag "nombre", @valorNombre , maxlenght: 30, placeholder: "Nombre", required:"required", class: "form-control"%>
+</div>
+<div class="form-group">
+	<%= label_tag "Apellidos"%>
+	<%= text_field_tag "apellido", @valorApellido , maxlenght: 30, placeholder: "Apellido", required:"required", class: "form-control"%>
+</div>
+<div class="form-group">
+	<%= label_tag "Correo electronico"%>
+	<%= text_field_tag "correo", @valorCorreo , maxlenght: 30, placeholder: "Correo electronico", required:"required", class: "form-control"%>
+</div>
+<div class="form-group">
+	<%= label_tag "Genero"%>
+	<select id="genero" name="genero" class="form-control">
+		<% if @paciente.genero%>
+			<option value=0>Femenino</option>
+			<option value=1 selected="selected">Masculino</option>
+		<% else %>
+			<option value=0 selected="selected">Femenino</option>
+			<option value=1>Masculino</option>
+		<% end%>
+	</select>
+</div>
+<div class="form-group">
+	<%= label_tag "Direccion"%>
+	<%= text_field_tag "direccion", @valorDireccion, maxlenght: 30, placeholder: "Direccion", required:"required", class: "form-control"%>	
+</div>
+<div class="form-group">
+	<%= label_tag "Fecha de nacimiento"%>
+	<div class='input-group date' id='datetimepicker1'>
+		<%= date_field_tag "fecha_n", @valorFechaN , required:"required", class:"form-control" %>
+		<span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+<div class="form-group">
+	<%= label_tag "Estado civil"%>
+	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre, @paciente.estado_civils_id), class: "form-control"%>	
+</div>
+<div class="form-group">
+	<%= label_tag "Patologia del paciente"%>
+	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre, @paciente.patologia_id) ,class: "form-control"%>
+</div>
 <div id="antecedente_paciente">
 	<%= render 'guardar_antecedente'%>
 </div>
-Antecedentes generales del paciente
-<br />
-<%= text_area_tag "antecedentes", @valorAntecedentes%>
-<br />
-<%= submit_tag "Guardar datos", disabled: false, disable_with: "Por favor espere..."%>
+<div class="form-group">
+	<%= label_tag "Antecedentes generales del paciente"%>
+	<%= text_area_tag "antecedentes", @valorAntecedentes, placeholder: "Antecedentes generales", required: "required", rows: 3, class: "form-control"%>
+</div>
+<%= submit_tag "Guardar datos", class:"btn btn-primary"%>

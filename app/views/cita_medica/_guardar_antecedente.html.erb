@@ -1,5 +1,0 @@
-<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_t: true}, remote: true , method: "get") do %>
-	<%= render 'paciente/guardar_antecedente' %>
-	<br />
-	<%= submit_tag "Actualizar antecedentes", disabled: false, disable_with: "Por favor espere..."%>
-<% end%>

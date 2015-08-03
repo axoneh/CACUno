@@ -1,22 +1,39 @@
-<h3>Inr's del paciente</h3>
-<% if @InrPaciente%>
-	<% if params[:action]=="agregar_inr"%>
-		<% @InrPaciente.each do |t|%>
-			<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente], inr_e: t.id},  remote: true , method: "get") do %>
-				Valor del inr: <%= t.valorInr.to_f%>
-				<br />
-				Fecha: <%= t.fecha%>
-				<br />
-				<%= submit_tag "Borrar", disabled: false, disable_with: "Por favor espere..."%>
-				<br />
-			<% end%>
-		<% end%>
-	<% else%>
-		<% @InrPaciente.each do |t|%>
-			Valor del inr: <%= t.valorInr.to_f%>
-			<br />
-			Fecha: <%= t.fecha%>
-			<br />
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Inr's del paciente</h3>
+	</div>
+	<% if @InrPaciente%>
+		<% if params[:action]=="agregar_inr"%>
+			<div class="panel-body">
+				<% @InrPaciente.each do |t|%>
+					<div class="row">
+						<div class="col-md-10">
+							<strong>INR:</strong><%= t.valorInr.to_f%>
+							<br />
+							<strong>Fecha:</strong><%= t.fecha%>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente], inr_e: t.id},  remote: true , method: "get") do %>
+							<div class="btn-group btn-group-justified" role="group">
+								<div class="btn-group" role="group">
+									<%= submit_tag "Borrar", class: "btn btn-danger"%>
+								</div>
+							</div>
+						<% end%>
+					</div>
+				<% end%>				
+			</div>
+		<% else%>
+			<ul class="list-group">
+				<% @InrPaciente.each do |t|%>
+					<li class="list-group-item">
+						<strong>INR:</strong><%= t.valorInr.to_f%>
+						<br />
+						<strong>Fecha:</strong><%= t.fecha%>
+					</li>
+				<% end%>
+			</ul>
 		<% end%>
 	<% end%>
-<% end%>
+</div>>

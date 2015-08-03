@@ -1,89 +1,209 @@
-<h1>Citas</h1>
-<% if @nivel==3%>
-	<h3>Cita especifica</h3>
-	Fecha: <%= @cita.fecha%>
-	<br />
-	Hora: <%= @cita.hora_ini%>
-	<br />
-	Tipo de cita: <%= @cita.tipo%>
-	<br />
-	Paciente: <%= @cita.pacientes.nombre+' '+@cita.pacientes.apellido%>
-	<br />
-	Patologia del paciente: <%= @cita.pacientes.patologia.nombre%>
-	<br />
+<% if @nivel==4%>
+	<h3>Cita especificada<small><%= @cita.tipo%></small></h3>
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<strong>Fecha: </strong><%= @cita.fecha%>
+			<br />
+			<strong>Hora: </strong><%= @cita.hora_ini%>
+		</div>
+	</div>
+	<%= render 'datos_paciente'%>
 	<%= render 'ver_preguntas'%>
-	<br />
 	<%= render 'ver_icd' %>
-	<br />
-	<div>
-		<h3>Respuesta medica</h3>
+	<div class="panel panel-primary">
 		<% unless @respuesta%>
-			<h4>(En espera)</h4>
+			<div class="panel-heading">
+				<h3 class="panel-title">Respuesta<small>(En espera)</small></h3>
+			</div>
 			<% if @encargado%>
-				<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: @cita.id%>
+				<div class="panel-body">
+					<% if @cita.estado ==3 and @encargado%>
+						<%= link_to "Concluir", {controller: "cita_medica", action: "agregar_respuesta", cita: @cita.id}, class: "btn btn-success"%>
+					<% elsif @cita.estado ==1 and @medico and @cita.cuenta_usuarios_id==current_cuenta_usuario.id%>
+						<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: @cita.id}, class: "btn btn-danger"%>
+					<% end%>
+				</div>
 			<% end%>
 		<% else%>
-			<% if @observacion%>
-				<br />Observacion objetiva: <%=@observacion.objetivo%>
-				<br />Observacion subjetiva: <%= @observacion.subjetivo%>
-				<br />Frecuenca cardiaca: <%= @observacion.frecuencia_cardiaca%>
-				<br />Hipertension sistolica: <%= @observacion.hiper_sistolica%>
-				<br />Hipertension diastolica. <%= @observacion.hiper_diastolica%>
-				<br />
-				<% if @observacion.tiempoIndefinido%>
-					Tratamiento de tiempo indefinido
-				<% else%>
-					Duracion de tratamiento: <%= @observacion.diasTratamiento%> dias
+			<div class="panel-heading">
+				<h3 class="panel-title">Respuesta</h3>
+			</div>
+			<div class="panel-body">
+				<% if @observacion%>
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Observacion objetiva</strong>
+						</div>
+						<div class="col-md-8">
+							<%=@observacion.objetivo%>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Observacion subjetiva</strong>
+						</div>
+						<div class="col-md-8">
+							<%=@observacion.subjetivo%>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Frecuencia cardiaca</strong>
+						</div>
+						<div class="col-md-8">
+							<%=@observacion.frecuencia_cardiaca%>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Hipertension sistolica</strong>
+						</div>
+						<div class="col-md-8">
+							<%=@observacion.hiper_sistolica%>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Hipertension diastolica</strong>
+						</div>
+						<div class="col-md-8">
+							<%=@observacion.hiper_diastolica%>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Duracion del tratamiento</strong>
+						</div>
+						<div class="col-md-8">
+							<% if @observacion.tiempoIndefinido%>
+								Tratamiento de tiempo indefinido
+							<% else%>
+								Duracion de tratamiento: <%= @observacion.diasTratamiento%> dias
+							<% end%>
+						</div>
+					</div>
 				<% end%>
-			<% end%>
-			<br />Analisis: <%= @respuesta.analisis%>
-			<br />Plan: <%= @respuesta.plan%>
-			<% if @prescripcion%>
-				<h3>Prescripcion medica</h3>
-				Fecha de vencimiento: <%= @prescripcion.fechaFin%>
-				<br />
-				Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
-				<br />
-				<% @prescripcion.prescripcion_diaria.each do |t|%>
-					Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f/10 %> gramos
-					<br />
+				<div class="row">
+					<div class="col-md-4">
+						<strong>Analisis</strong>
+					</div>
+					<div class="col-md-8">
+						<%= @respuesta.analisis%>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<strong>Plan</strong>
+					</div>
+					<div class="col-md-8">
+						<%= @respuesta.plan%>
+					</div>
+				</div>
+				<% if @prescripcion%>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Prescripcion</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-4">
+									<strong>Fecha de vencimiento</strong>
+								</div>
+								<div class="col-md-8">
+									<%= @prescripcion.fechaFin%>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<strong>Anticoagulante</strong>
+								</div>
+								<div class="col-md-8">
+									<%= @prescripcion.anticoagulantes.nombre%>
+								</div>
+							</div>
+						</div>
+						<ul class="list-group">
+							<% @prescripcion.prescripcion_diaria.each do |t|%>
+								<li class="list-group-item">
+									Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f %>
+								</li>
+							<% end%>
+						</ul>
+					</div>
 				<% end%>
-			<% end%>
+			</div>
 		<% end%>
 	</div>
-<% elsif @nivel==2%>
-	<h3>Notifiaciones</h3>
-	<br />
-	<% @citasRegistradas.each do |t|%>
-		<br />
-		Fecha: <%= t.fecha%>
-		<br />
-		Hora: <%= t.hora_ini%>
-		<br />
-		Paciente: <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
-		<br />
-		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
-		<br />
-		<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: t.id%>
-		<br />
-	<% end%>
-<% elsif @nivel==1%>
-	<h3>Cita registradas</h3>
-	<br />
-	<% @citasRegistradas.each do |t|%>
-		<br />
-		Fecha: <%= t.fecha%>
-		<br />
-		Hora: <%= t.hora_ini%>
-		<br />
-		Paciente: <%= t.pacientes.nombre+' '+t.pacientes.apellido%>
-		<br />
-		<%= link_to "Ver Cita" , controller: "cita_medica", action: "visualizar", cita: t.id%>
-		<% if t.estado ==3 and @encargado%>
-			<br />
-			<%= link_to "Agregar respuesta", controller: "cita_medica", action: "agregar_respuesta", cita: t.id%>
-		<% end%>
-		<br />
-	<% end%>
+<% elsif @nivel==3%>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Notificaciones</h3>
+		</div>
+		<div class="panel-body">
+			<div class="list-group">
+				<% @citasRegistradas.each do |t|%>
+					<li class="list-group-item">
+						<div class="col-md-9">
+							<strong>Fecha: </strong> <%= t.fecha%>
+							<strong>Hora: </strong><%= t.hora_ini%><br />
+							<strong>Paciente:</strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+						</div>
+						<div class="col-md-2">
+							<div class="btn-group" role="group">
+								<%= link_to "Ver Cita" , {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-info"%>
+								<%= link_to "Respuesta", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
+							</div>
+						</div>
+					</li>
+				<% end%>
+			</div>
+		</div>
+	</div>
+<% else%>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Citas Registradas</h3>
+		</div>
+		<div class="panel-body">
+			<% @citasRegistradas.each do |t|%>
+				<div class="row">
+					<div class="col-md-9">
+						<strong>Fecha: </strong> <%= t.fecha%> - <%= t.hora_ini%>
+						<% if t.estado==1%>
+							<% if t.fecha.to_date>Date.current%>
+								<span class="label label-info">Proximamente</span>
+							<% elsif t.fecha.to_date<Date.current%>
+								<span class="label label-danger">Vencida</span>
+							<% else%>
+								<span class="label label-warning">Hoy</span>
+							<% end%>
+						<% elsif t.estado==2%>
+							<span class="label label-success">Realizada</span>
+						<% else%>
+							<span class="label label-default">Inconclusa</span>
+						<% end%>
+						<br />
+						<strong>Paciente: </strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+					</div>
+					<div class="col-md-3">
+						<div class="btn-group" role="group">
+							<div class="btn-group" role="group">
+								<%= link_to "Ver", {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+								<% if t.estado ==3 and @encargado%>
+									<%= link_to "Responder", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
+								<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
+									<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-danger"%>
+								<% end%>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end%>
+		</div>
+	</div>
 <% end%>
-<br />
