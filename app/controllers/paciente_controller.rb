@@ -160,7 +160,7 @@ class PacienteController < ApplicationController
           end
         end
         
-        @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
+        @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha desc")
         
         if params[:lab].present? and params[:rep].present? and params[:fecha_lab].present?
           Laboratorio.create(pacientes_id: @paciente.id, fecha: params[:fecha_lab], estudio: params[:lab], resultado: params[:rep], observacion: params[:observacion])

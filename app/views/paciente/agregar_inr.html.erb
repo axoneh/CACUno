@@ -1,37 +1,74 @@
 <%= render 'cita_medica/datos_paciente'%>
-<br />
-<div id="inr_paciente">
-	<%= render 'vista_inr'%>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Agregar Inr</h3>
+			</div>
+			<div class="panel-body">
+				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+					<div class="form-group">
+						<%= label_tag "Valor del INR"%>
+						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", required: "required", class: "form-control"%>
+					</div>
+					<div class="form-group">
+						<%= label_tag "Fecha en la que fue tomado el valor"%>
+						<div class='input-group date' id='datetimepicker1'>
+							<%= date_field_tag "fecha_inr", nil, required: "required", class: "form-control"%>
+							<span class="input-group-addon">
+					        	<span class="glyphicon glyphicon-calendar"></span>
+					        </span>
+					    </div>
+					</div>
+					<%= submit_tag "Guardar", class: "btn btn-success"%>
+				<% end%>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div id="inr_paciente">
+			<%= render 'vista_inr'%>
+		</div>
+	</div>
 </div>
-<br />
-<div id="laboratorios">
-	<%= render 'vista_laboratorios'%>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Pacientes registrados</h3>
+			</div>
+			<div class="panel-body">
+				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+					<div class="form-group">
+						<%= label_tag "Estudio o laboratorio practicado"%>
+						<%= text_field_tag "lab", "", maxlenght: 50, placeholder: "Laboratorio", required: "required", class: "form-control"%>
+					</div>
+					<div class="form-group">
+						<%= label_tag "Resultado del estudio"%>
+						<%= text_field_tag "rep", "", maxlenght: 20, placeholder: "Resultado", required: "required", class: "form-control"%>
+					</div>
+					<div class="form-group">
+						<%= label_tag "Fecha de realizacion del laboratorio"%>
+						<div class='input-group date' id='datetimepicker1'>
+							<%= date_field_tag "fecha_lab", nil, required: "required", class: "form-control"%>
+							<span class="input-group-addon">
+					        	<span class="glyphicon glyphicon-calendar"></span>
+					        </span>
+					    </div>
+					</div>
+					<div class="form-group">
+						<%= label_tag "Observacion para el laboratorio (opcional)"%>
+						<%= text_area_tag "observacion", "", placeholder: "Observacion", class: "form-control"%>
+					</div>
+					<%= submit_tag "Guardar", class: "btn btn-success"%>
+				<% end%>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div id="laboratorios">
+			<%= render 'vista_laboratorios'%>
+		</div>
+	</div>
 </div>
-<br />
-<h3>Agregar inr previo</h3>
-<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
-	<br />
-	<%= text_field_tag "inr", "", size: 25, maxlenght: 5, placeholder: "Valor inr del paciente", required: "required"%>
-	<br />
-	Fecha del valor: <%= date_field_tag "fecha_inr", nil, required: "required"%>
-	<br />
-	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
-	<br />
-<% end%>
-<h3>Agregar laboratorio</h3>
-<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
-	<br />
-	<%= text_field_tag "lab", "", size: 30, maxlenght: 50, placeholder: "Estudio o laboratorio practivado", required: "required"%>
-	<br />
-	<%= text_field_tag "rep", "", size: 30, maxlenght: 20, placeholder: "Respuesta del estudio", required: "required"%>
-	<br />
-	Fecha del estudio: <%= date_field_tag "fecha_lab", nil, required: "required"%>
-	<br />
-	<%= text_area_tag "observacion", "", placeholder: "Observacion (opcional)"%>
-	<br />
-	<%= submit_tag "Guardar", disabled: false, disable_with: "Por favor espere..."%>
-	<br />
-<% end%>
-<br />
-<%= link_to "Nueva consulta" , controller: "cita_medica", action: "efectuar", paciente: @paciente.correo%>
-<br />
+<%= link_to "Nueva consulta", {controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>

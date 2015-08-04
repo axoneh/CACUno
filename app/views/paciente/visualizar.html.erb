@@ -1,56 +1,135 @@
-<h1>Ver pacientes</h1>
 <% if @especifico%>
-	<h3>Paciente especificado</h3>
-	<br />
-	<%= image_tag(@paciente.avatar.url(:medium))%>
-	<br />
-	Nombre: <%= @paciente.nombre%>
-	<br />
-	Apellido: <%= @paciente.apellido%>
-	<br />
-	Numero de identificacion: <%= @paciente.identificacion%>
-	<br />
-	Documento: <%= @paciente.tipo_documentos.nombre%>
-	<br />
-	Direccion: <%= @paciente.direccion%>
-	<br />
-	Correo: <%= @paciente.correo%>
-	<br />
-	Estado Civil: <%= @paciente.estado_civils.nombre%>
-	<br />
-	Genero: <%= @genero%>
-	<br />
-	Fecha de nacimiento: <%= @paciente.fecha_nacimiento%> (<%= @edad%> años)
-	<br />
-	<br />
-	Patologia: <%= @paciente.patologia.nombre%>
-	<br />
-	Decripcion: <%= @paciente.patologia.descripcion%>
-	<br />
-	<br />
-	Ultimo INR registrado: <%= (@inr.valorInr) if @inr%>
-	<br />
-	tomado el <%= (@inr.fecha) if @inr%>
-	<br />
-	<br />
-	Empezando a calcular desde: <%= @fechaPrimera%>
-	<br />
-	Promedio INR: <%= @promedioINR%>
-	<br />
-	Porcentaje INR: <%= @porcentajeINR%> %
-	<br />
-	Porcentaje de riesgo de hemorragia: <%= @riesgoHemorragia%> %
-	<br />
-	Porcentaje de riesgo de embolia: <%= @riesgoEmbolia%> %
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Datos del paciente</h3>
+		</div>
+		<div class="panel-body">
+			<%= image_tag(@paciente.avatar.url(:medium), class: "img-rounded")%>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Nombre</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.nombre%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Apellido</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.apellido%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Documento de identidad</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.identificacion%>, <%= @paciente.tipo_documentos.nombre%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Direccion</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.direccion%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Correo</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.correo%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Estado civil</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.estado_civils.nombre%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Genero</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @genero%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Fecha de nacimiento</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.fecha_nacimiento%> (<%= @edad%> años)
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Patologia</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.patologia.nombre%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Descripcion patologica</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%=@paciente.patologia.descripcion%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Ultimo INR de tratamiento</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= (@inr.valorInr) if @inr%> tomado el <%= (@inr.fecha) if @inr%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Promedio INR</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @promedioINR%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Porcentaje INR</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @porcentajeINR%> %
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Porcentaje de riesgo de hemorragia</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @riesgoHemorragia%> %
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">Porcentaje de riesgo de embolia</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @riesgoEmbolia%> %
+				</div>
+			</div>
+		</div>
+	</div>
 	<%= render 'antecedente_paciente'%>
-	<div id="vista_inr">
-		<%= render 'vista_inr'%>
-	</div>
-	<br />
-	<div id="vista_laboratorios">
-		<%= render 'vista_laboratorios'%>
-	</div>
-	<br />
+	<%= render 'vista_inr'%>
+	<%= render 'vista_laboratorios'%>
 	<% if @prescripcion%>
 		<h2>Ultima prescripcion</h2>
 		<br />

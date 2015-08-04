@@ -1,4 +1,10 @@
-<h1>Agregar paciente</h1>
-<%= form_tag({controller: "paciente", action: "agregar"},  multipart: true , method: "post") do %>
-	<%= render 'agregacion'%>
-<% end%>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Agregar paciente</h3>
+	</div>
+	<div class="panel-body">
+		<%= form_tag({controller: "paciente", action: "agregar"},  multipart: true , method: "post") do %>
+			<%= render 'agregacion'%>
+		<% end%>
+	</div>
+</div>
