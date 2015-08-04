@@ -70,5 +70,12 @@
 			<%= render 'vista_laboratorios'%>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$(function () {
+		    $('#datetimepicker1').datetimepicker({ 
+		    	format: "YYYY-MM-DD"
+		    });
+		});
+	</script>
 </div>
 <%= link_to "Nueva consulta", {controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>

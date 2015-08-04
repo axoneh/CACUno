@@ -70,3 +70,10 @@
 	<%= text_area_tag "antecedentes", @valorAntecedentes, placeholder: "Antecedentes generales", required: "required", rows: 3, class: "form-control"%>
 </div>
 <%= submit_tag "Guardar datos", class:"btn btn-primary"%>
+<script type="text/javascript">
+	$(function () {
+	    $('#datetimepicker1').datetimepicker({ 
+	    	format: "YYYY-MM-DD"
+	    });
+	});
+</script>

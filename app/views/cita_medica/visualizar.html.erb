@@ -8,10 +8,8 @@
 		</div>
 	</div>
 	<%= render 'datos_paciente'%>
-	<%= render 'ver_preguntas'%>
-	<%= render 'ver_icd' %>
-	<div class="panel panel-primary">
-		<% unless @respuesta%>
+	<% unless @respuesta%>
+		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">Respuesta<small>(En espera)</small></h3>
 			</div>
@@ -24,7 +22,10 @@
 					<% end%>
 				</div>
 			<% end%>
-		<% else%>
+		</div>
+	<% else%>
+		<%= render 'ver_preguntas'%>
+		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">Respuesta</h3>
 			</div>
@@ -137,31 +138,37 @@
 					</div>
 				<% end%>
 			</div>
+		</div>
+		<div id="ver_icd">
+			<%= render 'ver_icd'%>
+		</div>
+		<% if @cita.cuenta_usuarios_id==current_cuenta_usuario.id%>
+			<div id="buscar_icd">
+				<%= render 'buscar_icd'%>
+			</div>
 		<% end%>
-	</div>
+	<% end%>
 <% elsif @nivel==3%>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">Notificaciones</h3>
 		</div>
 		<div class="panel-body">
-			<div class="list-group">
-				<% @citasRegistradas.each do |t|%>
-					<li class="list-group-item">
-						<div class="col-md-9">
-							<strong>Fecha: </strong> <%= t.fecha%>
-							<strong>Hora: </strong><%= t.hora_ini%><br />
-							<strong>Paciente:</strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
-						</div>
-						<div class="col-md-2">
-							<div class="btn-group" role="group">
-								<%= link_to "Ver Cita" , {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-info"%>
-								<%= link_to "Respuesta", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
-							</div>
-						</div>
-					</li>
-				<% end%>
+			<% @citasRegistradas.each do |t|%>
+			<div class="row">
+				<div class="col-md-9">
+					<strong>Fecha: </strong> <%= t.fecha%>
+					<strong>Hora: </strong><%= t.hora_ini%><br />
+					<strong>Paciente:</strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+				</div>
+				<div class="col-md-3">
+					<div class="btn-group" role="group">
+						<%= link_to "Ver Cita" , {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+						<%= link_to "Respuesta", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
+					</div>
+				</div>
 			</div>
+			<% end%>
 		</div>
 	</div>
 <% else%>

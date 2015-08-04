@@ -14,7 +14,7 @@
 		<% end%>
 	</ul>
 </div>
-<% if @medicoC%>
+<% if @medicoC and params[:action]=="efectuar"%>
 	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_i: true}, remote: true, method: "post") do %>
 		<%= submit_tag "Actualizar antecedentes", class: "btn btn-primary"%>
 	<% end%>

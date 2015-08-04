@@ -1,12 +1,27 @@
-<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Numero de identificacion", required:"required"%>
-<br />
-<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
-<br />
-<%= email_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %>
-<br />
-<p>Recuerde que si asigna como cargo "Administrador", no podra desactivar la cuenta en un futuro</p>
-<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
-<br />
-<%= check_box_tag "encr", "encr"%> Encargado de responder citas domiciliarias
-<br />
-<%= submit_tag "Enviar", id: "enviar", name: "enviar", disabled: false, disable_with: "Por favor espere..."%>
+<div class="form-group">
+	<%= label_tag "Numero de identificacion"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Identificacion", required:"required", class: "form-control"%>
+</div>
+<div class="form-group">
+	<%= label_tag "Tipo de documento"%>
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
+</div>
+<div class="form-group">
+	<%= label_tag "Correo electronico"%>
+	<%= email_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %>
+</div>
+<div class="form-group">
+	<%= label_tag "Rol del usuario"%>
+	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
+</div>
+<div class="form-group" id="encargado">
+	<div class="form-group">
+		<div class="input-group">
+			<span class="input-group-addon">
+				<%= check_box_tag "encr", "encr"%>
+			</span>
+			<%= text_field_tag "texto", 'Encargado de responder las citas presenciales', readonly: "readonly", class: "form-control"%>
+		</div>
+	</div>
+</div>
+<%= submit_tag "Enviar", class: "btn btn-primary"%>

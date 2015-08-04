@@ -17,8 +17,12 @@ class CitaMedicaController < ApplicationController
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
       @nivel=4
       @cita=CitaMedica.find(params[:cita])
+      agregar_icd()
       if @cita.generico
         redirect_to controller: "principal", action: "index"
+      end
+      if @cita.cuenta_usuarios_id==current_cuenta_usuario.id
+        @medicoC=true        
       end
       @paciente=@cita.pacientes
       @preguntas=PreguntaCita.joins(:pregunta).where(["cita_medicas_id= ?", @cita.id])
@@ -33,19 +37,22 @@ class CitaMedicaController < ApplicationController
         redirect_to controller: "principal", action: "index"
       else
         @nivel=3
-        @citasRegistradas=CitaMedica.where(["estado = ?", 3])
+        @citasRegistradas=CitaMedica.where(["estado = ?", 3]).order(fecha: :desc).group("pacientes_id")
       end
     elsif params[:usuario].present?
       @nivel=2
       if CuentaUsuario.exists?(["email = ?", params[:usuario]])
         usuario=CuentaUsuario.find_by(email: params[:usuario])
-        @citasRegistradas=CitaMedica.where(["cuenta_usuarios_id = ?", usuario.id]).order(:estado).order(fecha: :desc)
+        @citasRegistradas=CitaMedica.where(["cuenta_usuarios_id = ? and generico = ?", usuario.id, false]).order(:estado, fecha: :desc)
+        if params[:paramedico].present?
+          @citasRegistradas=@citasRegistradas.group("pacientes_id")
+        end
       else
         redirect_to controller: "principal", action: "contenido"
       end
     else
       @nivel=1
-      @citasRegistradas=CitaMedica.all.order(:estado).order(fecha: :desc)
+      @citasRegistradas=CitaMedica.where(["generico = ?", false]).order(:estado).order(fecha: :desc)
     end
   end
 #------------------------------------------------------------------------------------------------------
@@ -133,12 +140,12 @@ class CitaMedicaController < ApplicationController
         end
       elsif params[:cita].present? and CitaMedica.exists?(["id = ?", params[:cita]])
         @cita=CitaMedica.find(params[:cita])
-        if RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
+        if current_cuenta_usuario.id!=@cita.cuenta_usuarios_id
+          redirect_to controller: "cita_medica", action: "visualizar"
+        elsif RespuestaCita.exists?(["cita_medicas_id = ?",@cita.id])
           @cita.estado=2
           @cita.save
           redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
-        elsif current_cuenta_usuario.id!=@cita.cuenta_usuarios_id
-          redirect_to controller: "cita_medica", action: "visualizar"
         else
           agregar_icd()
           @paciente=@cita.pacientes

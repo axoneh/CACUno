@@ -53,8 +53,6 @@ Rails.application.routes.draw do
 
   get 'administracion/contenido'
   
-  get 'paramedico/contenido'
-  
   get 'principal/contenido'
   
   root :to => 'principal#contenido'
