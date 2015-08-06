@@ -128,13 +128,22 @@
 								</div>
 							</div>
 						</div>
-						<ul class="list-group">
-							<% @prescripcion.prescripcion_diaria.each do |t|%>
-								<li class="list-group-item">
-									Dia: <%=t.dia_asociados.nombre%> - <%= t.cantidadGramos.to_f %>
-								</li>
-							<% end%>
-						</ul>
+						<table class="table table-bordered">
+							<tr>
+								<% @prescripcion.prescripcion_diaria.each do |t|%>
+									<td>
+										<%= t.dia_asociados.nombre%>
+									</td>
+								<% end%>
+							</tr>	
+							<tr>
+								<% @prescripcion.prescripcion_diaria.each do |t|%>
+									<td>
+										<%= t.cantidadGramos/10%> Pastilla(s)
+									</td>
+								<% end%>
+							</tr>
+						</table>
 					</div>
 				<% end%>
 			</div>

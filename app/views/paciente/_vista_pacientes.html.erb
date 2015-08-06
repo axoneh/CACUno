@@ -5,8 +5,13 @@
 	<div class="panel-body">
 		<% @pacientes.each do |t|%>
 			<div class="row">
-				<div class="col-md-8">
+				<div class="col-md-9">
 					<strong>Paciente:</strong><%=  t.nombre+" "+t.apellido%>
+					<% if t.estado==1%>
+						<span class="label label-success">En tratamiento</span>
+					<% else%>
+						<span class="label label-danger">Retirado</span>
+					<% end%>
 					<br />
 					<strong>Patologia:</strong> <%= t.patologia.nombre%>
 					<br />
@@ -17,7 +22,7 @@
 						Sin realizar
 					<% end%>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="btn-group" role="group">
 						<%= link_to "Ver",{controller: "paciente", action: "visualizar", correo: t.correo}, class: "btn btn-default"%>
 						<% if @medico or @paramedico%>
@@ -29,6 +34,7 @@
 					</div>
 				</div>
 			</div>
+			<br />
 		<%end%>
 	</div>
 </div>

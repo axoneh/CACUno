@@ -123,7 +123,7 @@ class PacienteController < ApplicationController
       
       @riesgoHemorragia=@riesgoHemorragia*100/9
       
-      @citasMedicas=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, false])
+      @citasMedicas=@paciente.cita_medicas.where(["generico = ?", false])
       @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
       
     else

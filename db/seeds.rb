@@ -68,8 +68,8 @@ Sucursal.create(nombre: 'Principal', direccion: '(Sin agregar)' , estado: 1)
 
 #-----------------------------------------------------------------------
 CuentaUsuario.delete_all
-CuentaUsuario.create(identificacion: "1032485940", especialidad: nil, tipo_documentos_id: 1, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , email: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', genero: true, estado: 1, rols_id: Rol.find_by(nombre: 'Administrador').id)
-CuentaUsuario.create(identificacion: "3432", especialidad: nil, tipo_documentos_id: 1, email: 'carlos@axoneh.com', estado: 2, rols_id: Rol.find_by(nombre: 'Administrador').id)
+CuentaUsuario.create(identificacion: "1032485940", especialidad: "Administrador", tipo_documentos_id: TipoDocumento.find_by(nombre: "Cedula de ciudadania").id, nombre: 'Diego Alejandro', apellido: 'Correa Ramirez' , email: 'alejandro@axoneh.com', password: 'MARIObros12', direccion: 'Cll 35b Sur #73a 81', genero: true, estado: 1, rols_id: Rol.find_by(nombre: 'Administrador').id)
+CuentaUsuario.create(identificacion: "3432", especialidad: "Administrador", tipo_documentos_id: TipoDocumento.find_by(nombre: "Cedula de ciudadania").id, email: 'carlos@axoneh.com', estado: 2, rols_id: Rol.find_by(nombre: 'Administrador').id)
 
 Paciente.delete_all
 #-----------------------------------------------------------------------

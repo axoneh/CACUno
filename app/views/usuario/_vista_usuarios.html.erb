@@ -4,35 +4,45 @@
 	</div>
 	<div class="panel-body">
 		<% @usuarios.each do |d|%>
-			<div class="row">
-				<%= link_to d.email, action: "visualizar", controller: "usuario", correo: d.email %>
-				<% if d.estado==2%>
-					- Sin autenticarse
-				<% elsif d.estado==3%>
-					- Desactivado
-				<% end%>
-				<br />
-				Nombre. <%= d.nombre%> <%= d.apellido%>
-				<br />
-				Especialidad: <%= d.especialidad%>
-				<br />
-				Documento de identificacion: <%= d.identificacion%> - <%= d.tipo_documentos.nombre%> 
-				<br />
-				<% if @admin and d.rols.nombre!="Administrador" and d.estado==1%>
-					<%= link_to "Desautorizar usuario", controller: "usuario", action: "desactivar", usuario: d.email%>
-					<br />
-					<%= link_to "Cambiar datos", controller: "usuario", action: "cambiar", usuario: d.id%>
-					<br />
-				<%end %>
-				<% if @admin and d.estado==3%>
-					<%= link_to "Autorizar usuario", controller: "usuario", action: "autorizar", usuario: d.email%>
-					<br />
-				<% end%>
-				<% if current_cuenta_usuario.id==d.id%>
-					<%= link_to "Modificar usuario", controller: "usuario", action: "actualizar"%>
-					<br />
-				<% end%>
+			<div class="media">
+				<div class="media-left">
+					<%= link_to image_tag(d.link_foto, size: "64x64", class: "img-rounded"),{controller: "usuario", action: "visualizar", correo: d.email}%>
+				</div>
+				<div class="media-body">
+					<div class="col-md-7">
+						<strong>Correo: </strong><%= d.email%>
+						<% if d.estado==1%>
+							<span class="label label-success">Vinculado</span>
+						<% elsif d.estado==2%>
+							<span class="label label-warning">Sin Autenticar</span>
+						<% elsif d.estado==3%>
+							<span class="label label-danger">Desvinculado</span>
+						<% else%>
+							<span class="label label-default">Sin Especificar</span>
+						<% end%>
+						<br />
+						<strong>Nombre: </strong><%= d.nombre%> <%=d.apellido%>
+						<br />
+						<strong>Documento de identificacion: </strong><%= d.identificacion+", "+d.tipo_documentos.nombre%> 
+						<br />
+						<strong>Especialidad: </strong><%= d.especialidad%>
+					</div>
+					<div class="col-md-5">
+						<div class="btn-group" role="group">
+							<%= link_to "Ver",{controller: "usuario", action: "visualizar", correo: d.email}, class: "btn btn-default"%>
+							<% if @admin%>
+								<% if d.estado==3%>
+									<%= link_to "Autorizar", {controller: "usuario", action: "autorizar", usuario: d.email}, class: "btn btn-primary"%>
+								<% elsif (current_cuenta_usuario.id==d.id) or (d.estado==2) or (d.rols.nombre!="Administrador")%>
+									<%= link_to "Reautorizar",{controller: "usuario", action: "cambiar", usuario: d.id}, class: "btn btn-success"%>
+									<%= link_to "Desautorizar",{controller: "usuario", action: "desactivar", usuario: d.email}, class: "btn btn-danger"%>
+								<%end %>
+							<% end%>
+						</div>
+					</div>			
+				</div>
 			</div>
+			<br />
 		<%end%>
 	</div>
 </div>

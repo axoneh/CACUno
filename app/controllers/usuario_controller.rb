@@ -38,42 +38,6 @@ class UsuarioController < ApplicationController
         @genero="Femenino"
       end
       
-      estado=@usuario.estado;
-      @estado="(Sin cargar)"
-      if estado==1
-        @estado="Activo"
-      elsif estado==2
-        @estado="Por autenticar"
-      else 
-        @estado="Inactivo"
-      end
-      
-      if validacionAdmin()
-        if current_cuenta_usuario.id==@usuario.id
-          @modificar=true
-          @desactivar=true
-        else
-          if @usuario.rols.nombre=="Administrador"
-            @modificar=false
-            @desactivar=false
-          else
-            @modificar=false
-            @desactivar=true
-          end
-        end
-      elsif cuenta_usuario_signed_in?
-        if current_cuenta_usuario.id==@usuario.id
-          @modificar=true
-          @desactivar=false
-        else
-          @modificar=false
-          @desactivar=false         
-        end
-      else
-        @modificar=false
-        @desactivar=false
-      end
-      
     else
       @especifico=false;  
       @usuarios=CuentaUsuario.all

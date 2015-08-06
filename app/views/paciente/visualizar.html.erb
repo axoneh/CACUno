@@ -131,64 +131,102 @@
 	<%= render 'vista_inr'%>
 	<%= render 'vista_laboratorios'%>
 	<% if @prescripcion%>
-		<h2>Ultima prescripcion</h2>
-		<br />
-		Fecha de creacion: <%= @prescripcion.created_at%>
-		<br />
-		Fecha de vencimiento: <%= @prescripcion.fechaFin%>
-		<br />
-		Anticoagulante: <%= @prescripcion.anticoagulantes.nombre%>
-		<br />
-		Prescripcion diaria
-		<br />
-		<% @prescripcion.prescripcion_diaria.each do |d|%>
-			<li>
-				Dia <%= d.dia_asociados.nombre%> - cantidad <%= d.cantidadGramos%> gramos.
-			</li>
-		<% end%>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Ultima prescripcion</h3>
+			</div>
+			<div class="panel-body">
+				<strong>Fecha de creacion: </strong> <%= @prescripcion.created_at.to_date%>
+				<br />
+				<strong>Fecha de vencimiento: </strong> <%= @prescripcion.fechaFin.to_date%>
+				<br />
+				<strong>Anticoagulante: </strong> <%= @prescripcion.anticoagulantes.nombre%>
+			</div>
+			<table class="table table-bordered">
+				<tr>
+					<% @prescripcion.prescripcion_diaria.each do |t|%>
+						<td>
+							<%= t.dia_asociados.nombre%>
+						</td>
+					<% end%>
+				</tr>	
+				<tr>
+					<% @prescripcion.prescripcion_diaria.each do |t|%>
+						<td>
+							<%= t.cantidadGramos/10%> Pastilla(s)
+						</td>
+					<% end%>
+				</tr>
+			</table>
+		</div>
 	<% end%>
-	<br />
-	<h2>Citas medicas del paciente</h2>
-	<% @citasMedicas.each do |t| %>
-		Fecha: <%= t.fecha %> - Tipo: <%= t.tipo%>
-		<br />
-		INR: 
-		<% if t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first %>
-			<%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
-		<% else%>
-			(Sin encontrar)
-		<% end%>
-		<br />
-		<%= link_to "Ver cita", controller: "cita_medica", action: "visualizar", cita: t.id%>
-		<br />
-	<% end%>
-	<% if @medico or @paramedico%>
-		<br />
-		<% if @prescripcion and (Date.current < @prescripcion.fechaFin.to_date)%>
-			Es recomendable no hacer la consulta ahora.
-			<br />
-		<% end%>
-		<%= link_to "Nueva consulta", controller: "cita_medica", action: "efectuar", paciente: @paciente.correo%>
-	<% end%>
-	<% if @medico or @admin%>
-		<br />
-		<%= link_to "Modificar paciente", controller: "paciente", action: "actualizar", paciente: @paciente.correo%>
-	<% end%>
-	<% if @medico%>
-		<br />
-		<%= link_to "Agregar inr's", controller: "paciente", action: "agregar_inr", paciente: @paciente.correo%>
-	<% end%>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Citas medicas</h3>
+		</div>
+		<div class="panel-body">
+			<% @citasMedicas.each do |t| %>
+				<div class="row">
+					<div class="col-md-9">
+						<strong><%= t.tipo%></strong>
+						<% if t.estado==1%>
+							<% if t.fecha.to_date>Date.current%>
+								<span class="label label-info">Proximamente</span>
+							<% elsif t.fecha.to_date<Date.current%>
+								<span class="label label-danger">Vencida</span>
+							<% else%>
+								<span class="label label-warning">Hoy</span>
+							<% end%>
+						<% elsif t.estado==2%>
+							<span class="label label-success">Realizada</span>
+						<% else%>
+							<span class="label label-default">Inconclusa</span>
+						<% end%>
+						<br />
+						<strong>Fecha: </strong><%= t.fecha %>
+						<br />
+						<strong>INR: </strong>
+						<% if t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first %>
+							<%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
+						<% else%>
+							(Sin encontrar)
+						<% end%>					
+					</div>
+					<div class="col-md-3">
+						<%= link_to "Ver cita",{controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+						<% if t.estado==3 and @encargado%>
+							<%= link_to "Responder", {controller: "cita_medica", action: "agregar_espuesta", cita: t.id}, class: "btn btn-success"%>
+						<% elsif t.estado==1 and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
+							<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-primary"%>
+						<% end%>
+					</div>
+				</div>
+				<br />
+			<% end%>
+		</div>
+	</div>
+	<center>
+		<div class="btn-group btn-group-lg" role="group">
+			<%= link_to "Pacientes", {controller: "paciente", action: "visualizar"}, class: "btn btn-default"%>
+			<% if @medico or @paramedico%>
+					<%= link_to "Nueva consulta",{controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>
+			<% end%>
+			<% if @medico or @admin%>
+				<%= link_to "Modificar paciente",{controller: "paciente", action: "actualizar", paciente: @paciente.correo}, class: "btn btn-success"%>
+			<% end%>
+			<% if @medico%>
+				<%= link_to "+", {controller: "paciente", action: "agregar_inr", paciente: @paciente.correo}, class: "btn btn-info"%>
+			<% end%>
+		</div>
+	</center>
 <%else%>
 	<%= form_tag({controller: "paciente", action: "visualizar"},  remote: true , method: "get") do%>
 		<%= text_field_tag "busqueda", "", size: 20, placeholder: "Nombre de paciente"%>
 		<%= submit_tag "buscar", disabled: false, disable_with: "Por favor espere..."%>
 	<% end%>
-	<br />
 	<% if @medico or @admin%>
 		<%= link_to "Agregar paciente", controller: "paciente", action: "agregar"%>
-		<br />
 	<% end%>
-	<br />
 	<div id="pacientes">
 		<%= render 'vista_pacientes'%>
 	</div>

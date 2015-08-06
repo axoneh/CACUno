@@ -1,4 +1,8 @@
-<h1>Autorizar nuevo usuario</h1>
-<%= form_tag({controller: "usuario", action: "autorizar"} , method: "post") do %>
-	<%= render 'cambio_datos'%>
-<% end%>
+<div class="container">
+	<div class="page-header">
+	  <h2>Autorizar nuevo usuario</h2>
+	</div>
+	<%= form_tag({controller: "usuario", action: "autorizar"} , method: "post") do %>
+		<%= render 'cambio_datos'%>
+	<% end%>
+</div>
