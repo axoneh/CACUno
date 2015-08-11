@@ -4,7 +4,6 @@
 		<div class="panel-body">
 			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, method: "post") do %>
 				<%= render 'observacion'%>
-				<%= render 'preguntas'%>
 				<%= render 'respuesta'%>
 				<%= submit_tag "Guardar datos", class: "btn btn-primary"%>
 			<% end%>

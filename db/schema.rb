@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
     t.boolean  "generico",                      default: false
+    t.text     "observacion",        limit: 6554
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id", "fecha", "hora_ini"], name: "index_usuario_fecha_hora_cita", unique: true, using: :btree
@@ -93,9 +94,9 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.boolean  "encargado_respuesta",                default: false
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
-    t.string   "link_foto",              limit: 200
-    t.string   "provider",               limit: 100
-    t.string   "uid",                    limit: 100
+    t.string   "link_foto",              limit: 100
+    t.string   "provider",               limit: 50
+    t.string   "uid",                    limit: 50           
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true, using: :btree

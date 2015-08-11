@@ -4,11 +4,13 @@ class CallbacksController < Devise::OmniauthCallbacksController
     x=request.env["omniauth.auth"]
     @user = CuentaUsuario.from_omniauth(x)
     if @user
-      @user.provider = x.provider
-      @user.uid = x.uid
+      if @user.estado==2
+        @user.provider = x.provider
+        @user.uid = x.uid
+        @user.nombre=x.info.first_name
+        @user.apellido=x.info.last_name
+      end
       @user.link_foto=x.info.image
-      @user.nombre=x.info.first_name
-      @user.apellido=x.info.last_name
       @user.save
       sign_in_and_redirect @user
     else

@@ -10,7 +10,7 @@
 				</div>
 				<div class="media-body">
 					<div class="col-md-7">
-						<strong>Correo: </strong><%= d.email%>
+						<strong>Nombre: </strong><%= d.nombre%> <%=d.apellido%>
 						<% if d.estado==1%>
 							<span class="label label-success">Vinculado</span>
 						<% elsif d.estado==2%>
@@ -21,11 +21,9 @@
 							<span class="label label-default">Sin Especificar</span>
 						<% end%>
 						<br />
-						<strong>Nombre: </strong><%= d.nombre%> <%=d.apellido%>
+						<strong>Cargo: </strong><%= d.rols.nombre%>
 						<br />
-						<strong>Documento de identificacion: </strong><%= d.identificacion+", "+d.tipo_documentos.nombre%> 
-						<br />
-						<strong>Especialidad: </strong><%= d.especialidad%>
+						<strong>Ultimo loguin: </strong><%= d.updated_at%>
 					</div>
 					<div class="col-md-5">
 						<div class="btn-group" role="group">

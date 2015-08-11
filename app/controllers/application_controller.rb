@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_action :authenticate_cuenta_usuario!
   before_action :tipoUsuario
 
 protected
@@ -14,6 +13,10 @@ protected
     @autorizado=validacionAutorizado()
     @encargado=validacionEncargadoRespuesta()
     @autenticado=usuarioAutenticado()
+    unless cuenta_usuario_signed_in?
+      flash.notice="Debe loguearse primero para acceder a las funciones de la plataforma"
+      redirect to controller:"principal", action: "contenido"
+    end
   end
 
   def usuarioAutenticado
