@@ -6,15 +6,15 @@
 				<h3 class="panel-title">Agregar Inr</h3>
 			</div>
 			<div class="panel-body">
-				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_inr",  remote: true , method: "get", onsubmit: "return validacionAgregacionInr()") do %>
 					<div class="form-group">
 						<%= label_tag "Valor del INR"%>
-						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", required: "required", class: "form-control"%>
+						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", class: "form-control"%>
 					</div>
 					<div class="form-group">
 						<%= label_tag "Fecha en la que fue tomado el valor"%>
 						<div class='input-group date' id='datetimepicker1'>
-							<%= date_field_tag "fecha_inr", nil, required: "required", class: "form-control"%>
+							<%= date_field_tag "fecha_inr", nil, class: "form-control"%>
 							<span class="input-group-addon">
 					        	<span class="glyphicon glyphicon-calendar"></span>
 					        </span>
@@ -38,19 +38,19 @@
 				<h3 class="panel-title">Pacientes registrados</h3>
 			</div>
 			<div class="panel-body">
-				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]},  remote: true , method: "get") do %>
+				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_lab",  remote: true , method: "get") do %>
 					<div class="form-group">
 						<%= label_tag "Estudio o laboratorio practicado"%>
-						<%= text_field_tag "lab", "", maxlenght: 50, placeholder: "Laboratorio", required: "required", class: "form-control"%>
+						<%= text_field_tag "lab", "", maxlenght: 50, placeholder: "Laboratorio", class: "form-control"%>
 					</div>
 					<div class="form-group">
 						<%= label_tag "Resultado del estudio"%>
-						<%= text_field_tag "rep", "", maxlenght: 20, placeholder: "Resultado", required: "required", class: "form-control"%>
+						<%= text_field_tag "rep", "", maxlenght: 20, placeholder: "Resultado", class: "form-control"%>
 					</div>
 					<div class="form-group">
 						<%= label_tag "Fecha de realizacion del laboratorio"%>
 						<div class='input-group date' id='datetimepicker1'>
-							<%= date_field_tag "fecha_lab", nil, required: "required", class: "form-control"%>
+							<%= date_field_tag "fecha_lab", nil, class: "form-control"%>
 							<span class="input-group-addon">
 					        	<span class="glyphicon glyphicon-calendar"></span>
 					        </span>

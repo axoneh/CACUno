@@ -1,36 +1,36 @@
 <% if params[:action]=="agregar"%>
-	<div class="form-group">
+	<div class="form-group" id="divFotoPaciente">
 		<%= label_tag "Imagen de perfil"%>
-		<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', required: "required", class: "form-control"%>		
+		<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', class: "form-control"%>		
 	</div>
 <% else%>
-	<div class="form-group">
+	<div class="form-group" id="divFotoPaciente">
 		<%= image_tag(@paciente.avatar.url(:medium), class: "img-rounded")%>
 		<%= label_tag "Imagen previa"%>
 		<%= file_field_tag "avatar", accept: 'image/png,image/gif,image/jpeg', class: "form-control"%>
 	</div>
 <% end%>
-<div class="form-group">
+<div class="form-group" id="divIdPaciente">
 	<%= label_tag "Numero de identificacion"%>
-	<%= text_field_tag "identificacion", @valorIdentificacion ,maxlenght: 15, placeholder: "Numero de identificacion", required:"required", class: "form-control"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion ,maxlenght: 15, placeholder: "Numero de identificacion", class: "form-control"%>
 </div>
-<div class="form-group">
+<div class="form-group" id="divDocPaciente">
 	<%= label_tag "Tipo de documento"%>
 	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, @paciente.tipo_documentos_id), class: "form-control"%>	
 </div>
-<div class="form-group">
+<div class="form-group" id="divNombrePaciente">
 	<%= label_tag "Nombres"%>
-	<%= text_field_tag "nombre", @valorNombre , maxlenght: 30, placeholder: "Nombre", required:"required", class: "form-control"%>
+	<%= text_field_tag "nombre", @valorNombre , maxlenght: 30, placeholder: "Nombre", class: "form-control"%>
 </div>
-<div class="form-group">
+<div class="form-group" id="divApellidoPaciente">
 	<%= label_tag "Apellidos"%>
-	<%= text_field_tag "apellido", @valorApellido , maxlenght: 30, placeholder: "Apellido", required:"required", class: "form-control"%>
+	<%= text_field_tag "apellido", @valorApellido , maxlenght: 30, placeholder: "Apellido", class: "form-control"%>
 </div>
-<div class="form-group">
+<div class="form-group" id="divCorreoPaciente">
 	<%= label_tag "Correo electronico"%>
-	<%= text_field_tag "correo", @valorCorreo , maxlenght: 30, placeholder: "Correo electronico", required:"required", class: "form-control"%>
+	<%= text_field_tag "correo", @valorCorreo , maxlenght: 30, placeholder: "Correo electronico", class: "form-control"%>
 </div>
-<div class="form-group">
+<div class="form-group" id="divGeneroPaciente">
 	<%= label_tag "Genero"%>
 	<select id="genero" name="genero" class="form-control">
 		<% if @paciente.genero%>
@@ -42,32 +42,32 @@
 		<% end%>
 	</select>
 </div>
-<div class="form-group">
+<div class="form-group" id="divDireccionPaciente">
 	<%= label_tag "Direccion"%>
-	<%= text_field_tag "direccion", @valorDireccion, maxlenght: 30, placeholder: "Direccion", required:"required", class: "form-control"%>	
+	<%= text_field_tag "direccion", @valorDireccion, maxlenght: 30, placeholder: "Direccion", class: "form-control"%>	
 </div>
-<div class="form-group">
+<div class="form-group" id="divNacPaciente">
 	<%= label_tag "Fecha de nacimiento"%>
 	<div class='input-group date' id='datetimepicker1'>
-		<%= date_field_tag "fecha_n", @valorFechaN , required:"required", class:"form-control" %>
+		<%= date_field_tag "fecha_n", @valorFechaN, class:"form-control" %>
 		<span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span></span>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group" id="divCivilPaciente">
 	<%= label_tag "Estado civil"%>
 	<%= select_tag "estadoC", options_from_collection_for_select(@estadosC, :id,:nombre, @paciente.estado_civils_id), class: "form-control"%>	
 </div>
-<div class="form-group">
+<div class="form-group" id="divPatologiaPaciente">
 	<%= label_tag "Patologia del paciente"%>
 	<%= select_tag "patologia", options_from_collection_for_select(@patologias, :id,:nombre, @paciente.patologia_id) ,class: "form-control"%>
 </div>
 <div id="antecedente_paciente">
 	<%= render 'guardar_antecedente'%>
 </div>
-<div class="form-group">
+<div class="form-group" id="divAnteGPaciente">
 	<%= label_tag "Antecedentes generales del paciente"%>
-	<%= text_area_tag "antecedentes", @valorAntecedentes, placeholder: "Antecedentes generales", required: "required", rows: 3, class: "form-control"%>
+	<%= text_area_tag "antecedentes", @valorAntecedentes, placeholder: "Antecedentes generales", rows: 3, class: "form-control"%>
 </div>
 <%= submit_tag "Guardar datos", class:"btn btn-primary"%>
 <script type="text/javascript">

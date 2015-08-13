@@ -7,18 +7,17 @@
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
-						<%= check_box_tag t.id.to_s+"_p", t.id.to_s+"_p"%>
+						<%= check_box_tag t.id.to_s, t.id.to_s, onclick: "preguntaDescripcion('"+t.id.to_s+"')"%>
 					</span>
-					<%= text_field_tag "texto", '¿'+t.pregunta+'?', readonly: "readonly", class: "form-control"%>
+					<%= text_field_tag "texto", '¿'+t.pregunta.upcase+'?', readonly: "readonly", class: "form-control"%>
 				</div>
-				<% if t.tipo%>
-					<%= text_area_tag t.id.to_s+"_comentario", "", placeholder: t.descripcion.upcase, class: "form-control"%>
-				<% end%>
+				<div id=<%= "c_"+t.id.to_s%>>
+				</div>
 			</div>
 		<% end%>
-		<div class="form-group">
+		<div class="form-group" id="divInrCita">
 			<%= label_tag "INR actual del paciente"%>
-			<%= text_field_tag "inr", @valorInr , size: 30, maxlenght: 30, placeholder: "INR del paciente", required:"required", class: "form-control"%>
+			<%= text_field_tag "inr", @valorInr , maxlenght: 4, placeholder: "INR del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 	</div>
 </div>

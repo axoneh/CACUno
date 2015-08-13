@@ -13,9 +13,9 @@ class CitaMedicaController < ApplicationController
   end
 #------------------------------------------------------------------------------------------------------ 
   def visualizar
-    @nivel=1
+    @nivel=true
     if params[:cita].present? and CitaMedica.exists?(["id = ? ",params[:cita]])
-      @nivel=4
+      @nivel=true
       @cita=CitaMedica.find(params[:cita])
       agregar_icd()
       if @cita.generico
@@ -32,26 +32,12 @@ class CitaMedicaController < ApplicationController
         @observacion=ObservacionMedica.find_by(respuesta_cita_id: @respuesta.id)#consulta de la observacion medica
         @prescripcion=Prescripcion.find_by(respuesta_cita_id: @respuesta.id)#consulta de la prescripcion
       end
-    elsif params[:notificacion].present?
-      unless @encargado
-        redirect_to controller: "principal", action: "index"
-      else
-        @nivel=3
-        @citasRegistradas=CitaMedica.where(["estado = ?", 3]).order(fecha: :desc).group("pacientes_id")
-      end
-    elsif params[:usuario].present?
-      @nivel=2
-      if CuentaUsuario.exists?(["email = ?", params[:usuario]])
-        usuario=CuentaUsuario.find_by(email: params[:usuario])
-        @citasRegistradas=CitaMedica.where(["cuenta_usuarios_id = ? and generico = ?", usuario.id, false]).order(:estado, fecha: :desc)
-        if params[:paramedico].present?
-          @citasRegistradas=@citasRegistradas.group("pacientes_id")
-        end
-      else
-        redirect_to controller: "principal", action: "contenido"
-      end
+    elsif params[:usuario].present? and CuentaUsuario.exists?(["email = ?", params[:usuario]])
+      @nivel=false
+      usuario=CuentaUsuario.find_by(email: params[:usuario])
+      @citasRegistradas=CitaMedica.where(["cuenta_usuarios_id = ? and generico = ?", usuario.id, false]).order(:estado, fecha: :desc).group("pacientes_id")
     else
-      @nivel=1
+      @nivel=false
       @citasRegistradas=CitaMedica.where(["generico = ?", false]).order(:estado).order(fecha: :desc)
     end
   end
@@ -129,7 +115,7 @@ class CitaMedicaController < ApplicationController
           if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and hora_ini= ? ",citaActual.pacientes_id, citaActual.fecha, citaActual.hora_ini])
             flash.alert="El paciente tiene una cita para esta misma hora, verifique los datos"
           elsif CitaMedica.exists?(["cuenta_usuarios_id = ? and fecha = ? and hora_ini= ? ",citaActual.cuenta_usuarios_id, citaActual.fecha, citaActual.hora_ini])
-            flash.alert="Usted no deberia guardar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
+            flash.alert="Usted no puede efectuar una cita para hoy a esa hora ya que tiene una cita con esas caracteristicas"
           else
             citaActual.save
             redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
@@ -188,7 +174,6 @@ class CitaMedicaController < ApplicationController
                   observacion.tiempoIndefinido=true
                 end
                 observacion.save
-                guardar_preguntas()
                 @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
                 @cita.save()
                 flash.notice="Cita concluida exitosamente"
@@ -233,8 +218,9 @@ class CitaMedicaController < ApplicationController
                 guardar_inr()
                 guardar_preguntas()
                 @cita.estado=3;
+                @cita.observacion=params[:observacion]
                 @cita.save
-                flash.notice="Cita concluida exitosamente"
+                flash.notice="Cita realizada exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
                 flash.alert="Debe diligenciar el inr"
@@ -254,12 +240,8 @@ private
 
   def guardar_preguntas
     @preguntas.each do |t|#guardando las respuestas de la encuesta del paciente
-      if params[t.id.to_s+"_p"].present?
-        if t.tipo
-          PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
-        else
-          PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id)
-        end
+      if params[t.id.to_s].present?
+        PreguntaCita.create(cita_medicas_id: @cita.id, pregunta_id: t.id, comentario: params[t.id.to_s+"_comentario"])
       end
     end
   end
@@ -297,7 +279,7 @@ private
     prescripcion.save
     
     @diasAsociados.each do |t|
-      if params[t.id.to_s+"_cantidad"].present?
+      if params[t.id.to_s].present?
         PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"].to_f)
       end
     end

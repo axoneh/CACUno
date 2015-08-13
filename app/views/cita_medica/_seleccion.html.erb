@@ -1,5 +1,5 @@
 <% if @cambio%>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_t: true}, remote: true , method: "get") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita], cambio_t: true}, id: "actualizar_antecedente", remote: true , method: "get") do %>
 		<%= render 'paciente/guardar_antecedente' %>
 		<%= submit_tag "Actualizar antecedentes", class: "btn btn-primary"%>
 	<% end%>

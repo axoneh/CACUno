@@ -8,12 +8,12 @@
 				<% @InrPaciente.each do |t|%>
 					<div class="form-group">
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-8">
 								<strong>INR:</strong><%= t.valorInr.to_f%>
 								<br />
 								<strong>Fecha:</strong><%= t.fecha%>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente], inr_e: t.id},  remote: true , method: "get") do %>
 									<div class="btn-group btn-group-justified" role="group">
 										<div class="btn-group" role="group">

@@ -19,7 +19,12 @@ class PacienteController < ApplicationController
     unless @admin or @medico
       redirect_to controller: "principal", action: "contenido"
     else
-      if params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
+      if params[:activar].present? and params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
+        @paciente=Paciente.find_by(correo: params[:paciente])
+        @paciente.estado=1
+        @paciente.save
+        redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+      elsif params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
         if agregacion()
           redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo

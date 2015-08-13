@@ -1,4 +1,4 @@
-<% if @nivel==4%>
+<% if @nivel%>
 	<h3>Cita especificada<small><%= @cita.tipo%></small></h3>
 	<div class="panel panel-primary">
 		<div class="panel-body">
@@ -139,7 +139,7 @@
 							<tr>
 								<% @prescripcion.prescripcion_diaria.each do |t|%>
 									<td>
-										<%= t.cantidadGramos/10%> Pastilla(s)
+										<%= t.cantidadGramos%> Pastilla(s)
 									</td>
 								<% end%>
 							</tr>
@@ -157,29 +157,6 @@
 			</div>
 		<% end%>
 	<% end%>
-<% elsif @nivel==3%>
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">Notificaciones</h3>
-		</div>
-		<div class="panel-body">
-			<% @citasRegistradas.each do |t|%>
-			<div class="row">
-				<div class="col-md-9">
-					<strong>Fecha: </strong> <%= t.fecha%>
-					<strong>Hora: </strong><%= t.hora_ini%><br />
-					<strong>Paciente:</strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
-				</div>
-				<div class="col-md-3">
-					<div class="btn-group" role="group">
-						<%= link_to "Ver Cita" , {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
-						<%= link_to "Respuesta", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
-					</div>
-				</div>
-			</div>
-			<% end%>
-		</div>
-	</div>
 <% else%>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
@@ -205,17 +182,19 @@
 						<% end%>
 						<br />
 						<strong>Paciente: </strong><%= t.pacientes.nombre+' '+t.pacientes.apellido%>
+						<br />
+						<strong>Encargado: </strong><%= t.cuenta_usuarios.nombre+' '+t.cuenta_usuario.apellido%>
 					</div>
 					<div class="col-md-3">
 						<div class="btn-group" role="group">
-							<div class="btn-group" role="group">
+							<% unless t.estado==1%>
 								<%= link_to "Ver", {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
-								<% if t.estado ==3 and @encargado%>
-									<%= link_to "Responder", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
-								<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
-									<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-danger"%>
-								<% end%>
-							</div>
+							<% end%>
+							<% if t.estado ==3 and @encargado%>
+								<%= link_to "Responder", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
+							<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
+								<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-danger"%>
+							<% end%>
 						</div>
 					</div>
 				</div>

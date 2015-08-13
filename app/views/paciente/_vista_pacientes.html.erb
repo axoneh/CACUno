@@ -30,6 +30,9 @@
 						<% end%>
 						<% if @medico or @admin%>
 							<%= link_to "Modificar",{controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success"%>
+							<% if t.estado==2%>
+								<%= link_to "Activar", {controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger"%>
+							<% end%>
 						<% end%>
 					</div>
 				</div>

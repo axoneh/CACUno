@@ -1,6 +1,6 @@
 <%= render 'datos_paciente'%>
 <%= render 'ver_preguntas'%>
-<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]} , method: "post") do %>
+<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, id: "agregar_respuesta" , method: "post", onsubmit: "return validacionRespuesta()") do %>
 	<div class="panel-default">
 		<div class="panel-body">
 			<% if @preguntaInr%>

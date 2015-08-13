@@ -5,15 +5,17 @@
 	<div class="panel-body">
 		<strong>Valor INR:</strong><%= (@inr.valorInr) if @inr%>
 	</div>
-	<ul class="list-group">
-		<% @cita.pregunta_cita.each do |t|%>
-			<li class="list-group-item">
-				<strong><%= t.pregunta.pregunta%></strong>
-				<% if t.pregunta.tipo%>
-					<br />
-					<%= t.pregunta.descripcion%> <%= t.comentario%>
-				<% end%>
-			</li>
-		<% end%>
-	</ul>
+	<% if @cita.pregunta_cita%>
+		<ul class="list-group">
+			<% @cita.pregunta_cita.each do |t|%>
+				<li class="list-group-item">
+					<strong><%= t.pregunta.pregunta%></strong>
+					<% if t.pregunta.tipo%>
+						<br />
+						<%= t.pregunta.descripcion%> <%= t.comentario%>
+					<% end%>
+				</li>
+			<% end%>
+		</ul>
+	<% end%>
 </div>

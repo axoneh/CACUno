@@ -2,7 +2,11 @@
 <% if @nivel%>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, method: "post") do %>
+			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_medico", method: "post", onsubmit: "return validacionCitaMedica()") do %>
+				<div class="form-group" id="divInrCita">
+					<%= label_tag "INR actual del paciente"%>
+					<%= text_field_tag "inr", @valorInr , maxlenght: 4, placeholder: "INR del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
+				</div>
 				<%= render 'observacion'%>
 				<%= render 'respuesta'%>
 				<%= submit_tag "Guardar datos", class: "btn btn-primary"%>
@@ -20,29 +24,31 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Ultima cita presencial</h3>
 		</div>
-		<div class="panel-body">
-			<% if @ultimaCita%>
-				<ul class="list-group">
-					<li class="list-group-item">
-						<strong>Fecha: </strong><%= @ultimaCita.fecha%>
-					</li>
-					<li class="list-group-item">
-						<strong>Hora: </strong><%= @ultimaCita.hora_ini%>
-					</li>
-					<li class="list-group-item">
-						<strong>Tiempo de tratamiento: </strong>
-						<% if @ultimaCita.respuesta_cita.observacion_medicas.tiempoIndefinido%>
-							Indefinido
-						<% else%>
-							<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCita.respuesta_cita.observacion_medicas.diasTratamiento%> dias
-						<% end%>
-					</li>
-				</ul>
-			<% end%>
-		</div>
+		<% if @ultimaCita%>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<strong>Fecha: </strong><%= @ultimaCita.fecha%>
+				</li>
+				<li class="list-group-item">
+					<strong>Hora: </strong><%= @ultimaCita.hora_ini%>
+				</li>
+				<li class="list-group-item">
+					<strong>Tiempo de tratamiento: </strong>
+					<% if @ultimaCita.respuesta_cita.observacion_medicas.tiempoIndefinido%>
+						Indefinido
+					<% else%>
+						<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCita.respuesta_cita.observacion_medicas.diasTratamiento%> dias
+					<% end%>
+				</li>
+			</ul>
+		<% end%>
 	</div>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]} , method: "post") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post", onsubmit: "return validacionCitaParamedico()") do %>
 		<%= render 'preguntas'%>
+		<div class="form-group" id="divObservacion">
+			<%= label_tag "Observacion de visita domiciliaria"%>
+			<%= text_area_tag "observacion", "", placeholder: "Observacion domiciliaria", rows: 3, class: "form-control"%>
+		</div>
 		<%= submit_tag "Enviar para respuesta", class: "btn btn-primary"%>
 	<% end%>
 <% end%>

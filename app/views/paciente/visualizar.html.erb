@@ -193,7 +193,9 @@
 						<% end%>					
 					</div>
 					<div class="col-md-3">
-						<%= link_to "Ver cita",{controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+						<% unless t.estado==1%>
+							<%= link_to "Ver cita",{controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+						<% end%>
 						<% if t.estado==3 and @encargado%>
 							<%= link_to "Responder", {controller: "cita_medica", action: "agregar_espuesta", cita: t.id}, class: "btn btn-success"%>
 						<% elsif t.estado==1 and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
@@ -209,23 +211,30 @@
 		<div class="btn-group btn-group-lg" role="group">
 			<%= link_to "Pacientes", {controller: "paciente", action: "visualizar"}, class: "btn btn-default"%>
 			<% if @medico or @paramedico%>
-					<%= link_to "Nueva consulta",{controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>
+					<%= link_to "Consulta",{controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>
 			<% end%>
 			<% if @medico or @admin%>
-				<%= link_to "Modificar paciente",{controller: "paciente", action: "actualizar", paciente: @paciente.correo}, class: "btn btn-success"%>
+				<%= link_to "Modificar",{controller: "paciente", action: "actualizar", paciente: @paciente.correo}, class: "btn btn-success"%>
 			<% end%>
 			<% if @medico%>
-				<%= link_to "+", {controller: "paciente", action: "agregar_inr", paciente: @paciente.correo}, class: "btn btn-info"%>
+				<%= link_to "INR/LAB", {controller: "paciente", action: "agregar_inr", paciente: @paciente.correo}, class: "btn btn-info"%>
 			<% end%>
 		</div>
 	</center>
 <%else%>
-	<%= form_tag({controller: "paciente", action: "visualizar"},  remote: true , method: "get") do%>
-		<%= text_field_tag "busqueda", "", size: 20, placeholder: "Nombre de paciente"%>
-		<%= submit_tag "buscar", disabled: false, disable_with: "Por favor espere..."%>
-	<% end%>
-	<% if @medico or @admin%>
-		<%= link_to "Agregar paciente", controller: "paciente", action: "agregar"%>
+	<%= form_tag({controller: "paciente", action: "visualizar"}, id: "buscar_paciente",  remote: true , method: "get") do%>
+		<div class="form-group">
+			<%= label_tag "buscar paciente por nombre"%>
+			<div class="input-group">
+				<%= text_field_tag "busqueda", "", placeholder: "Nombre de paciente", class: "form-control", onkeypress: "buscar_paciente.submit()"%>
+				<span class="input-group-btn">
+					<%= submit_tag "Buscar", class: "btn btn-primary"%>
+					<% if @medico or @admin%>
+						<%= link_to "Agregar paciente", {controller: "paciente", action: "agregar"}, class: "btn btn-success"%>
+					<% end%>
+				</span>
+			</div>
+		</div>
 	<% end%>
 	<div id="pacientes">
 		<%= render 'vista_pacientes'%>

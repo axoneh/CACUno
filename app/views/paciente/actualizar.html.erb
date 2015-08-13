@@ -3,7 +3,7 @@
 		<h3 class="panel-title">Actualizar paciente</h3>
 	</div>
 	<div class="panel-body">
-		<%= form_tag({controller: "paciente", action: "actualizar", paciente: params[:paciente]},  multipart: true , method: "post") do %>
+		<%= form_tag({controller: "paciente", action: "actualizar", paciente: params[:paciente]}, id: "paciente_actualizar",  multipart: true , method: "post") do %>
 			<%= render 'agregacion'%>
 		<% end%>
 	</div>

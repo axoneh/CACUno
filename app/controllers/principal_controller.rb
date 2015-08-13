@@ -13,6 +13,7 @@ class PrincipalController < ApplicationController
     else
       if cuenta_usuario_signed_in?
         flash.alert="No tiene modulo asignado aun"
+        redirect_to new_cuenta_usuario_session_path
       end
     end  
   end
