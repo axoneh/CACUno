@@ -11,10 +11,8 @@ class PrincipalController < ApplicationController
     elsif @autorizado
       redirect_to controller: "usuario", action: "agregar"
     else
-      if cuenta_usuario_signed_in?
-        flash.alert="No tiene modulo asignado aun"
-        redirect_to new_cuenta_usuario_session_path
-      end
+      flash.notice="Debe loguearse primero para entrar a la plataforma"
+      redirect_to new_cuenta_usuario_session_path
     end  
   end
 

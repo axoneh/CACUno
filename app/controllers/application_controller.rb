@@ -13,10 +13,6 @@ protected
     @autorizado=validacionAutorizado()
     @encargado=validacionEncargadoRespuesta()
     @autenticado=usuarioAutenticado()
-    unless cuenta_usuario_signed_in?
-      flash.notice="Debe loguearse primero para acceder a las funciones de la plataforma"
-      redirect to controller:"principal", action: "contenido"
-    end
   end
 
   def usuarioAutenticado
