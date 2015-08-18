@@ -19,20 +19,20 @@ class PacienteController < ApplicationController
     unless @admin or @medico
       redirect_to controller: "principal", action: "contenido"
     else
-      if params[:activar].present? and params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
+      if params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
-        @paciente.estado=1
-        @paciente.save
-        redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
-      elsif params[:desactivar].present? and params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
-        @paciente=Paciente.find_by(correo: params[:paciente])
-        @paciente.estado=1
-        @paciente.save
-        redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
-      elsif params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
-        @paciente=Paciente.find_by(correo: params[:paciente])
-        if agregacion()
-          redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+        if params[:activar].present?
+          @paciente.estado=1
+          @paciente.save
+          redirect_to controller: "paciente", action: "visualizar"
+        elsif params[:desactivar].present?
+          @paciente.estado=2
+          @paciente.save
+          redirect_to controller: "paciente", action: "visualizar"
+        else
+          if agregacion()
+            redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+          end
         end
       else
         redirect_to controller: "principal", action: "contenido"
@@ -103,8 +103,6 @@ class PacienteController < ApplicationController
         end
       end
       
-      @riesgoEmbolia=@riesgoEmbolia * 10
-      
       #riesgo hemorragico
       @riesgoHemorragia=0
       
@@ -131,16 +129,15 @@ class PacienteController < ApplicationController
         @riesgoHemorragia+=1
       end
       
-      @riesgoHemorragia=@riesgoHemorragia*100/9
-      
-      @citasMedicas=@paciente.cita_medicas.where(["generico = ?", false])
+      @citasMedicas=@paciente.cita_medicas.where(["generico = ? and estado > ?", false, 1])
       @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
       
     else
       @especifico=false
-      @pacientes=Paciente.all
+      @pacientesN=Paciente.joins("LEFT JOIN cita_medicas ON cita_medicas.pacientes_id=pacientes.id WHERE cita_medicas.pacientes_id IS NULL")
+      @pacientes=Paciente.all.joins(:prescripcions).order("estado", "prescripcions.fechaFin desc")
       if params[:busqueda].present?
-        @pacientes=@pacientes.where(["CONCAT(nombre,' ',apellido) like ?", '%'+params[:busqueda]+'%'])
+        @pacientes=@pacientes.where(["CONCAT(pacientes.nombre,' ',pacientes.apellido) like ?", '%'+params[:busqueda]+'%'])
       end
     end
   end 
@@ -227,7 +224,7 @@ private
         if Paciente.exists?(["correo = ? and id <> ?",correo, @paciente.id])
           flash.alert="Ya existe ese correo registrado, por favor verifique los datos"
         elsif Paciente.exists?(["identificacion = ? and tipo_documentos_id = ? and id <> ?", ident, documento, @paciente.id])
-          flash.alert="Ya existe un usuario con ese documento, verifique los datos"
+          flash.alert="Ya existe un usuario con ese numero de identificacion y documento, verifique los datos"
         else
           
           @paciente.correo=correo

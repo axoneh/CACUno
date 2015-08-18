@@ -9,7 +9,11 @@
 				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-addon">
-							<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%>
+							<% if a.tipo%>
+								<%= check_box_tag a.id.to_s, a.id.to_s, seleccion, onclick: "habilitarDescripcionAntecedente('"+a.id.to_s+"')"%>
+							<% else%>
+								<%= check_box_tag a.id.to_s, a.id.to_s, seleccion%>
+							<% end%>
 						</span>
 						<%= text_field_tag "texto", a.nombre, readonly: "readonly", class: "form-control"%>
 					</div>
@@ -17,7 +21,7 @@
 						<% if seleccion%>
 							<%= text_area_tag a.id.to_s+'_comentario', @antecedentesPaciente.find_by(antecedente_medicos_id: a.id).comentario, placeholder: a.descripcion, class: "form-control"%>
 						<% else%>
-							<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion,class: "form-control" %>
+							<%= text_area_tag a.id.to_s+'_comentario', "", placeholder: a.descripcion,class: "form-control", readonly: "readonly" %>
 						<% end%>
 					<% end%>
 				</div>

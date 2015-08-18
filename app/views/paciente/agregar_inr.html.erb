@@ -7,12 +7,12 @@
 			</div>
 			<div class="panel-body">
 				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_inr",  remote: true , method: "get", onsubmit: "return validacionAgregacionInr()") do %>
-					<div class="form-group">
-						<%= label_tag "Valor del INR"%>
-						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", class: "form-control"%>
+					<div class="form-group" id="divAgregarValorInr">
+						<%= label_tag "Valor del INR", nil , class: "control-label"%>
+						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
 					</div>
-					<div class="form-group">
-						<%= label_tag "Fecha en la que fue tomado el valor"%>
+					<div class="form-group" id="divAgregarFechaInr">
+						<%= label_tag "Fecha en la que fue tomado el valor", nil, class: "control-label"%>
 						<div class='input-group date' id='datetimepicker1'>
 							<%= date_field_tag "fecha_inr", nil, class: "form-control"%>
 							<span class="input-group-addon">
@@ -38,17 +38,17 @@
 				<h3 class="panel-title">Pacientes registrados</h3>
 			</div>
 			<div class="panel-body">
-				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_lab",  remote: true , method: "get") do %>
-					<div class="form-group">
-						<%= label_tag "Estudio o laboratorio practicado"%>
+				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_lab",  remote: true , method: "get", onsubmit: "return validacionAgregacionLab()") do %>
+					<div class="form-group" id="divLab">
+						<%= label_tag "Estudio o laboratorio practicado", nil, class: "control-label"%>
 						<%= text_field_tag "lab", "", maxlenght: 50, placeholder: "Laboratorio", class: "form-control"%>
 					</div>
-					<div class="form-group">
-						<%= label_tag "Resultado del estudio"%>
+					<div class="form-group" id="divRep">
+						<%= label_tag "Resultado del estudio", nil, class: "control-label"%>
 						<%= text_field_tag "rep", "", maxlenght: 20, placeholder: "Resultado", class: "form-control"%>
 					</div>
-					<div class="form-group">
-						<%= label_tag "Fecha de realizacion del laboratorio"%>
+					<div class="form-group" id="divFechaLab">
+						<%= label_tag "Fecha de realizacion del laboratorio", nil, class: "control-label"%>
 						<div class='input-group date' id='datetimepicker1'>
 							<%= date_field_tag "fecha_lab", nil, class: "form-control"%>
 							<span class="input-group-addon">
@@ -56,8 +56,8 @@
 					        </span>
 					    </div>
 					</div>
-					<div class="form-group">
-						<%= label_tag "Observacion para el laboratorio (opcional)"%>
+					<div class="form-group" id="divObservacionLab">
+						<%= label_tag "Observacion para el laboratorio (opcional)", nil, control: "control-label"%>
 						<%= text_area_tag "observacion", "", placeholder: "Observacion", class: "form-control"%>
 					</div>
 					<%= submit_tag "Guardar", class: "btn btn-success"%>
