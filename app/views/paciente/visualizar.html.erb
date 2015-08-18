@@ -167,35 +167,34 @@
 		<div class="panel-body">
 			<% @citasMedicas.each do |t| %>
 				<div class="row">
-					<div class="col-md-9">
-						<strong><%= t.tipo%></strong>
-						<% if t.estado==1%>
-							<% if t.fecha.to_date>Date.current%>
-								<span class="label label-info">Proximamente</span>
-							<% elsif t.fecha.to_date<Date.current%>
-								<span class="label label-danger">Vencida</span>
+					<%= link_to controller: "cita_medica", action: "visualizar", cita: t.id do%>
+						<div class="col-md-9">
+							<strong><%= t.tipo%></strong>
+							<% if t.estado==1%>
+								<% if t.fecha.to_date>Date.current%>
+									<span class="label label-info">Proximamente</span>
+								<% elsif t.fecha.to_date<Date.current%>
+									<span class="label label-danger">Vencida</span>
+								<% else%>
+									<span class="label label-warning">Hoy</span>
+								<% end%>
+							<% elsif t.estado==2%>
+								<span class="label label-success">Realizada</span>
 							<% else%>
-								<span class="label label-warning">Hoy</span>
+								<span class="label label-default">Inconclusa</span>
 							<% end%>
-						<% elsif t.estado==2%>
-							<span class="label label-success">Realizada</span>
-						<% else%>
-							<span class="label label-default">Inconclusa</span>
-						<% end%>
-						<br />
-						<strong>Fecha: </strong><%= t.fecha %>
-						<br />
-						<strong>INR: </strong>
-						<% if t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first %>
-							<%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
-						<% else%>
-							(Sin encontrar)
-						<% end%>					
-					</div>
+							<br />
+							<strong>Fecha: </strong><%= t.fecha %>
+							<br />
+							<strong>INR: </strong>
+							<% if t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first %>
+								<%= t.inr_pacientes.where(["fecha = ? and cita_medicas_id = ?",t.fecha,t.id]).first.valorInr%>
+							<% else%>
+								(Sin encontrar)
+							<% end%>					
+						</div>
+					<% end%>
 					<div class="col-md-3">
-						<% unless t.estado==1%>
-							<%= link_to "Ver cita",{controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
-						<% end%>
 						<% if t.estado==3 and @encargado%>
 							<%= link_to "Responder", {controller: "cita_medica", action: "agregar_espuesta", cita: t.id}, class: "btn btn-success"%>
 						<% elsif t.estado==1 and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
@@ -222,15 +221,19 @@
 		</div>
 	</center>
 <%else%>
-	<%= form_tag({controller: "paciente", action: "visualizar"}, id: "buscar_paciente",  remote: true , method: "get") do%>
+	<%= form_tag({controller: "paciente", action: "visualizar"}, id: "buscar_paciente",remote: true , method: "get") do%>
 		<div class="form-group">
 			<%= label_tag "buscar paciente por nombre"%>
 			<div class="input-group">
-				<%= text_field_tag "busqueda", "", placeholder: "Nombre de paciente", class: "form-control", onkeypress: "buscar_paciente.submit()"%>
+				<%= text_field_tag "busqueda",params[:busqueda], placeholder: "Nombre de paciente", class: "form-control"%>
 				<span class="input-group-btn">
-					<%= submit_tag "Buscar", class: "btn btn-primary"%>
+					<%= content_tag :button, :type => :submit, :class => "btn btn-primary" do%>
+						<span class="glyphicon glyphicon-search"></span>
+					<% end%>
 					<% if @medico or @admin%>
-						<%= link_to "Agregar paciente", {controller: "paciente", action: "agregar"}, class: "btn btn-success"%>
+						<%= link_to({controller: "paciente", action: "agregar"}, class: "btn btn-success") do%>
+							<span class="glyphicon glyphicon-plus"></span>
+						<% end%>
 					<% end%>
 				</span>
 			</div>

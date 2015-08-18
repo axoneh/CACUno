@@ -1,43 +1,88 @@
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">Pacientes registrados</h3>
-	</div>
-	<div class="panel-body">
+<div class="panel panel-default">
+	<table class="table table-condensed">
+		<tr>
+			<td><strong>Foto</strong></td>
+			<td><strong>Nombre</strong></td>
+			<td><strong>Ultima consulta</strong></td>
+			<td><strong>Ultima visita</strong></td>
+			<td><strong>Proxima visita</strong></td>
+			<td><strong>Estado</strong></td>
+			<td><strong>Opciones</strong></td>
+		</tr>
 		<% @pacientes.each do |t|%>
-			<div class="row">
-				<div class="col-md-9">
-					<strong>Paciente:</strong><%=  t.nombre+" "+t.apellido%>
+			<tr>
+				<td>
+					<%=image_tag(t.avatar.url(:medium), size: "30x30", class: "img-rounded")%>
+				</td>
+				<td>
+					<%=  t.nombre+" "+t.apellido%>
 					<% if t.estado==1%>
-						<span class="label label-success">En tratamiento</span>
+						<span class="label label-success">Activo</span>
 					<% else%>
 						<span class="label label-danger">Retirado</span>
 					<% end%>
-					<br />
-					<strong>Patologia:</strong> <%= t.patologia.nombre%>
-					<br />
-					<strong>Ultima Cita realizada:</strong>
-					<%if t.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last%>
-						 <%= t.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last.fecha%>
+				</td>
+				<td>
+					<%if t.ultimaCita%>
+						 <%= t.ultimaCita.fecha%>
 					<% else%>
 						Sin realizar
 					<% end%>
-				</div>
-				<div class="col-md-3">
+				</td>
+				<td>
+					<%if t.ultimaVisita%>
+						 <%= t.citaVisita.fecha%>
+					<% else%>
+						Sin realizar
+					<% end%>
+				</td>
+				<td>
+					<%if t.ultimaVisita%>
+						 <%= t.citaVisita.prescripcions.fechaFin%>
+					<% else%>
+						Sin realizar
+					<% end%>
+				</td>
+				<td>
+					<% if @medico or @admin%>
+						<% if t.estado==1%>
+							<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, desactivar: true}, class: "btn btn-primary") do%>
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							<% end%>
+						<% else%>
+							<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger") do%>
+								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+							<% end%>
+						<% end%>
+					<% else%>
+						<% if t.estado==1%>
+							<a class="btn btn-primary">
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							</a>
+						<% else%>
+							<a class="btn btn-danger">
+								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+							</a>
+						<% end%>
+					<% end%>
+				</td>
+				<td>
 					<div class="btn-group" role="group">
-						<%= link_to "Ver",{controller: "paciente", action: "visualizar", correo: t.correo}, class: "btn btn-default"%>
-						<% if @medico or @paramedico%>
-							<%= link_to "Consultar",{controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-primary"%>
+						<% if (@medico or @paramedico) and t.estado==1%>
+							<%= link_to({controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-default") do%>
+								<span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+							<% end%>
 						<% end%>
 						<% if @medico or @admin%>
-							<%= link_to "Modificar",{controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success"%>
-							<% if t.estado==2%>
-								<%= link_to "Activar", {controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger"%>
+							<% if t.estado==1%>
+								<%= link_to({controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success") do%>
+									<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+								<% end%>
 							<% end%>
 						<% end%>
 					</div>
-				</div>
-			</div>
-			<br />
+				</td>
+			</tr>
 		<%end%>
-	</div>
+	</table>
 </div>

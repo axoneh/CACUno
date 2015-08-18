@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.datetime "updated_at",                                    null: false
     t.boolean  "generico",                      default: false
     t.text     "observacion",        limit: 6554
+    t.date     "fecha_realizacion"
   end
 
   add_index "cita_medicas", ["cuenta_usuarios_id", "fecha", "hora_ini"], name: "index_usuario_fecha_hora_cita", unique: true, using: :btree

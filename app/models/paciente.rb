@@ -13,4 +13,12 @@ class Paciente < ActiveRecord::Base
   
   validates_attachment_presence :avatar
   
+  def ultimaCita
+    cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, "Presencial"]).last
+  end
+  
+  def ultimaVisita
+    cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, "Domiciliaria"]).last
+  end
+  
 end

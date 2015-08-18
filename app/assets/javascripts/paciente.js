@@ -4,92 +4,120 @@
 
 function validacionAgregacion(){
 	if(document.getElementById('paciente_agregar')){
-		var validacion=true;
-		if(!document.getElementById('avatar').value){
-			document.getElementById('divFotoPaciente').className="form-group has-error";
-			validacion=false;
+		var val=0;
+		val+=validacion('antecedentes','divAnteGPaciente');
+		val+=validacion('fecha_n','divNacPaciente');
+		val+=validacion('direccion','divDireccionPaciente');
+		val+=validacion('correo','divCorreoPaciente');
+		val+=validacion('apellido','divApellidoPaciente');
+		val+=validacion('identificacion','divIdPaciente');
+		val+=validacion('nombre','divNombrePaciente');
+		val+=validacion('avatar','divFotoPaciente');
+		if(val==0){
+			return true;
 		}
-		if(document.getElementById('identificacion').value.legth==0){
-			document.getElementById('divIdPaciente').className="form-group has-error";
-			validacion=false;
+		else{
+			return false;
 		}
-		if(document.getElementById('nombre').value.legth==0){
-			document.getElementById('divNombrePaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('apellido').value.legth==0){
-			document.getElementById('divApellidoPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('correo').value.legth==0){
-			document.getElementById('divCorreoPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('direccion').value.legth==0){
-			document.getElementById('divDireccionPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(!document.getElementById('fecha_n').value){
-			document.getElementById('divNacPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('antecedentes').value.legth==0){
-			document.getElementById('divAnteGPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		return validacion;
 	}
 	else{
 		return false;
+	}
+}
+
+function validacion(control,divContenedor){
+	input=document.getElementById(control);
+	if(!input.value | input.value.legth==0){
+		document.getElementById(divContenedor).className="form-group has-error";
+		input.focus();
+		return 1;
+	}
+	else{
+		document.getElementById(divContenedor).className="form-group has-success";
+		return 0;
 	}
 }
 
 function validacionActualizacion(){
-	if(document.getElementById('paciente_agregar')){
-		var validacion=true;
-		if(document.getElementById('identificacion').value.legth==0){
-			document.getElementById('divIdPaciente').className="form-group has-error";
-			validacion=false;
+	if(document.getElementById('paciente_actualizar')){
+		var val=0;
+		val+=validacion('antecedentes','divAnteGPaciente');
+		val+=validacion('fecha_n','divNacPaciente');
+		val+=validacion('direccion','divDireccionPaciente');
+		val+=validacion('correo','divCorreoPaciente');
+		val+=validacion('apellido','divApellidoPaciente');
+		val+=validacion('identificacion','divIdPaciente');
+		val+=validacion('nombre','divNombrePaciente');
+		if(val==0){
+			return true;
 		}
-		if(document.getElementById('nombre').value.legth==0){
-			document.getElementById('divNombrePaciente').className="form-group has-error";
-			validacion=false;
+		else{
+			return false;
 		}
-		if(document.getElementById('apellido').value.legth==0){
-			document.getElementById('divApellidoPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('correo').value.legth==0){
-			document.getElementById('divCorreoPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('direccion').value.legth==0){
-			document.getElementById('divDireccionPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(!document.getElementById('fecha_n').value){
-			document.getElementById('divNacPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		if(document.getElementById('antecedentes').value.legth==0){
-			document.getElementById('divAnteGPaciente').className="form-group has-error";
-			validacion=false;
-		}
-		return validacion;
 	}
 	else{
 		return false;
 	}
 }
 
-function validacionAgrecacionInr(){
+function validacionAgregacionInr(){
 	if(document.getElementById('agregar_inr')){
-		var validacion=true;
-		return validacion;
+		var val=0;
+		val+=validacion('inr','divAgregarValorInr');
+		val+=validacion('fecha_inr','divAgregarFechaInr');
+		if(val==0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	else{
 		return false;
 	}
+}
+
+function validacionAgregacionLab(){
+	if(document.getElementById('agregar_lab')){
+		var val=0;
+		val+=validacion('observacion','divObservacionLab');
+		val+=validacion('fecha_lab','divFechaLab');
+		val+=validacion('rep','divRep');
+		val+=validacion('lab','divLab');
+		if(val==0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	else{
+		return false;
+	}
+}
+
+function habilitarDescripcionAntecedente(antec){
+	var input=document.getElementById(antec);
+	var ayuda=antec+'_comentario';
+	var desc=document.getElementById(ayuda);
+	if(input.checked==true){
+		desc.readOnly=false;
+		desc.focus();
+	}
+	else{
+		desc.readOnly=true;
+	}
+}
+
+function buscarPaciente(){
+	if(document.getElementById('buscar_paciente')){
+		var texto=document.getElementById('busqueda').value;
+		console.log(texto);
+		if(texto.length>2){
+			return true;
+		}
+	}
+	return false;
 }
 
 

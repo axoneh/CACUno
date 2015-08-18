@@ -1,6 +1,6 @@
 <%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]},id: "buscar_icd", remote: true , method: "get", onsubmit: "return validacionBusquedaICD()") do %>
-	<div class="form-group" id="busqueda_idc">
-		<%= label_tag "Buscar diagnostico"%>
+	<div class="form-group" id="divBusquedaIdc">
+		<%= label_tag "Buscar diagnostico",nil, class: "control-label"%>
 		<div class="input-group">
 			<%= text_field_tag "icd_b", params[:icd_b] ,placeholder: "Codigo o nombre del diagnostico", class: "form-control", onkeypress: "buscar_icd.submit();"%>
 			<span class="input-group-btn">

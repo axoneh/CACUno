@@ -175,6 +175,7 @@ class CitaMedicaController < ApplicationController
                 end
                 observacion.save
                 @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
+                @cita.fecha_realizacion=Date.current
                 @cita.save()
                 flash.notice="Cita concluida exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
@@ -219,6 +220,7 @@ class CitaMedicaController < ApplicationController
                 guardar_preguntas()
                 @cita.estado=3;
                 @cita.observacion=params[:observacion]
+                @cita.fecha_realizacion=Date.current
                 @cita.save
                 flash.notice="Cita realizada exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
