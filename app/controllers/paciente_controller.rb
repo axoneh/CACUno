@@ -24,6 +24,11 @@ class PacienteController < ApplicationController
         @paciente.estado=1
         @paciente.save
         redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
+      elsif params[:desactivar].present? and params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
+        @paciente=Paciente.find_by(correo: params[:paciente])
+        @paciente.estado=1
+        @paciente.save
+        redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
       elsif params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
         if agregacion()
