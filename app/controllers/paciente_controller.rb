@@ -6,6 +6,7 @@ class PacienteController < ApplicationController
     else
       @paciente=Paciente.new
       if agregacion()
+        crear_cita_generica()
         if @medico
           redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
         else
@@ -134,16 +135,16 @@ class PacienteController < ApplicationController
       
     else
       @especifico=false
-      @pacientesN=Paciente.joins("LEFT JOIN cita_medicas ON cita_medicas.pacientes_id=pacientes.id WHERE cita_medicas.pacientes_id IS NULL")
-      @pacientes=Paciente.all.joins(:prescripcions).order("estado", "prescripcions.fechaFin desc")
+      @pacientesN=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").where(["cita_medicas.estado= ? and pacientes.estado = ?",3,1]).group("cita_medicas.pacientes_id")
+      @pacientes=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").group("cita_medicas.pacientes_id")
       if params[:busqueda].present?
         @pacientes=@pacientes.where(["CONCAT(pacientes.nombre,' ',pacientes.apellido) like ?", '%'+params[:busqueda]+'%'])
       end
     end
-  end 
+  end
 
   def agregar_inr
-    unless validacionAdmin() or validacionMedico()
+    unless @admin or validacionMedico()
       redirect_to controller: "principal", action: "contenido"
     else
       unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])

@@ -43,7 +43,7 @@
 			</ul>
 		<% end%>
 	</div>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post", onsubmit: "return validacionCitaParamedico()") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post") do %>
 		<%= render 'preguntas'%>
 		<div class="form-group" id="divObservacion">
 			<%= label_tag "Observacion de visita domiciliaria"%>

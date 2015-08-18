@@ -1,70 +1,87 @@
-<div class="panel panel-danger">
-	<div class="panel-heading">
-		<h3 class="panel-title">Pacientes sin consultas registradas</h3>
-	</div>
-	<table class="table table-condensed">
-		<tr>
-			<td><strong>Foto</strong></td>
-			<td><strong>Nombre</strong></td>
-			<td><strong>Estado</strong></td>
-			<td><strong>Opciones</strong></td>
-		</tr>
-		<% @pacientesN.each do |t|%>
+<% if @encargado%>
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Citas sin concluir</h3>
+		</div>
+		<table class="table table-condensed">
 			<tr>
-				<td>
-					<%=image_tag(t.avatar.url(:medium), size: "30x30", class: "img-rounded")%>
-				</td>
-				<td>
-					<%=  t.nombre+" "+t.apellido%>
-					<% if t.estado==1%>
-						<span class="label label-success">Activo</span>
-					<% else%>
-						<span class="label label-danger">Retirado</span>
-					<% end%>
-				</td>
-				<td>
-					<% if @medico or @admin%>
+				<td><strong>Foto</strong></td>
+				<td><strong>Nombre</strong></td>
+				<td><strong>Fecha de la visita</strong></td>
+				<td><strong>Estado</strong></td>
+				<td><strong>Opciones</strong></td>
+			</tr>
+			<% @pacientesN.each do |t|%>
+				<tr>
+					<td>
+						<%=link_to image_tag(t.avatar.url(:medium), size: "30x30", class: "img-rounded"), {controller: "paciente", action: "visualizar", correo: t.correo}%>
+					</td>
+					<td>
+						<%=  t.nombre+" "+t.apellido%>
 						<% if t.estado==1%>
-							<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, desactivar: true}, class: "btn btn-primary") do%>
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-							<% end%>
+							<span class="label label-success">Activo</span>
 						<% else%>
-							<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger") do%>
-								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-							<% end%>
+							<span class="label label-danger">Retirado</span>
 						<% end%>
-					<% else%>
-						<% if t.estado==1%>
-							<a class="btn btn-primary">
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-							</a>
+					</td>
+					<td>
+						<%if t.ultimaVisita%>
+							 <%= t.ultimaVisita.fecha%>
+							 <% if t.ultimaVisita.estado==3%>
+							 	<% if @encargado%>
+							 		<span class="label" ><%= link_to "Concluir",controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id%></span>
+							 	<% else%>
+							 		<span class="label label-default">Inconclusa</span>
+							 	<% end%>
+							 <% end%>
 						<% else%>
-							<a class="btn btn-danger">
-								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-							</a>
+							Sin realizar
 						<% end%>
-					<% end%>
-				</td>
-				<td>
-					<div class="btn-group" role="group">
-						<% if (@medico or @paramedico) and t.estado==1%>
-							<%= link_to({controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-default") do%>
-								<span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
-							<% end%>
-						<% end%>
+					</td>
+					<td>
 						<% if @medico or @admin%>
 							<% if t.estado==1%>
-								<%= link_to({controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success") do%>
-									<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+								<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, desactivar: true}, class: "btn btn-primary") do%>
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+								<% end%>
+							<% else%>
+								<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger") do%>
+									<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
 								<% end%>
 							<% end%>
+						<% else%>
+							<% if t.estado==1%>
+								<a class="btn btn-primary">
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+								</a>
+							<% else%>
+								<a class="btn btn-danger">
+									<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+								</a>
+							<% end%>
 						<% end%>
-					</div>
-				</td>
-			</tr>
-		<%end%>
-	</table>
-</div>
+					</td>
+					<td>
+						<div class="btn-group" role="group">
+							<% if (@medico or @paramedico) and t.estado==1%>
+								<%= link_to({controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-default") do%>
+									<span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+								<% end%>
+							<% end%>
+							<% if @medico or @admin%>
+								<% if t.estado==1%>
+									<%= link_to({controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success") do%>
+										<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+									<% end%>
+								<% end%>
+							<% end%>
+						</div>
+					</td>
+				</tr>
+			<%end%>
+		</table>
+	</div>
+<% end%>
 <div class="panel panel-default">
 	<table class="table table-condensed">
 		<tr>
@@ -77,9 +94,10 @@
 			<td><strong>Opciones</strong></td>
 		</tr>
 		<% @pacientes.each do |t|%>
+			
 			<tr>
 				<td>
-					<%=image_tag(t.avatar.url(:medium), size: "30x30", class: "img-rounded")%>
+					<%=link_to image_tag(t.avatar.url(:medium), size: "30x30", class: "img-rounded"), {controller: "paciente", action: "visualizar", correo: t.correo}%>
 				</td>
 				<td>
 					<%=  t.nombre+" "+t.apellido%>
@@ -98,14 +116,23 @@
 				</td>
 				<td>
 					<%if t.ultimaVisita%>
-						 <%= t.citaVisita.fecha%>
+						 <%= t.ultimaVisita.fecha%>
+						 <% if t.ultimaVisita.estado==3%>
+						 	<% if @encargado%>
+						 		<span class="label" ><%= link_to "Concluir",controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id%></span>
+						 	<% else%>
+						 		<span class="label label-default">Inconclusa</span>
+						 	<% end%>
+						 <% end%>
 					<% else%>
 						Sin realizar
 					<% end%>
 				</td>
 				<td>
-					<%if t.ultimaVisita%>
-						 <%= t.citaVisita.prescripcions.fechaFin%>
+					<%if t.ultimaVisita and t.ultimaVisita.prescripcions%>
+						 <%= t.ultimaVisita.prescripcions.fechaFin%>
+					<% elsif t.ultimaCita and t.ultimaCita.prescripcions%>
+						<%= t.ultimaCita.prescripcions.fechaFin%>
 					<% else%>
 						Sin realizar
 					<% end%>

@@ -173,14 +173,18 @@
 							<% if t.estado==1%>
 								<% if t.fecha.to_date>Date.current%>
 									<span class="label label-info">Proximamente</span>
-								<% elsif t.fecha.to_date<Date.current%>
-									<span class="label label-danger">Vencida</span>
-								<% else%>
-									<span class="label label-warning">Hoy</span>
+								<% elsif t.fecha.to_date==Date.current%>
+									<span class="label label-info">Proximamente</span>
 								<% end%>
 							<% elsif t.estado==2%>
-								<span class="label label-success">Realizada</span>
-							<% else%>
+								<% if t.fecha.to_date==t.fecha_realizacion.to_date%>
+									<span class="label label-success">Puntual</span>
+								<% elsif t.fecha.to_date<t.fecha_realizacion.to_date%>
+									<span class="label label-danger">Tardia</span>
+								<% else%>
+									<span class="label label-warning">Previa</span>
+								<% end%>
+							<% elsif t.estado==3%>
 								<span class="label label-default">Inconclusa</span>
 							<% end%>
 							<br />

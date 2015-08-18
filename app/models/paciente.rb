@@ -19,7 +19,7 @@ class Paciente < ActiveRecord::Base
   end
   
   def ultimaVisita
-    cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, "Domiciliaria"]).last
+    cita_medicas.where(["generico = ? and estado > ? and tipo = ?", false, 1, "Domiciliaria"]).last
   end
   
 end
