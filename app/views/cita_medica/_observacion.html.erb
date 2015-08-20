@@ -3,34 +3,41 @@
 		<h3 class="panel-title">Observacion</h3>
 	</div>
 	<div class="panel-body">
-		<div class="form-group" id="divObjetiva">
-			<%= label_tag "Observacion Subjetiva"%>
-			<%= text_area_tag "subjetiva", @valorSubjetiva, placeholder: "Observacion subjetiva", rows: 3, class: "form-control"%>
-		</div>
-		<div class="form-group" id="divSubjetiva">
-			<%= label_tag "Observacion Objetiva"%>
-			<%= text_area_tag "objetiva", @valorObjetiva, placeholder: "Observacion Objetiva", rows: 3, class: "form-control"%>
-		</div>
-		<div class="form-group" id="divTratamiento">
-			<%= label_tag "Tratamiento temporal"%>
-			<div class="input-group">
-				<span class="input-group-addon">
-	        		<%= check_box_tag "temporal", "temporal", onclick: "tratamientoDefinido()"%>
-	      		</span>
-				<%= text_field_tag "semanas_t", "" , maxlenght: 30, placeholder: "Semanas de tratamiento", class: "form-control", onkeypress: "return isNumber(event)" , readonly: "readonly"%>
+		<% if @medico%>
+			<div class="form-group" id="divObjetiva">
+				<%= label_tag "Observacion Subjetiva"%>
+				<%= text_area_tag "subjetiva", @valorSubjetiva, placeholder: "Observacion subjetiva", rows: 3, class: "form-control"%>
 			</div>
-		</div>
+			<div class="form-group" id="divSubjetiva">
+				<%= label_tag "Observacion Objetiva"%>
+				<%= text_area_tag "objetiva", @valorObjetiva, placeholder: "Observacion Objetiva", rows: 3, class: "form-control"%>
+			</div>
+			<div class="form-group" id="divTratamiento">
+				<%= label_tag "Tratamiento temporal"%>
+				<div class="input-group">
+					<span class="input-group-addon">
+		        		<%= check_box_tag "temporal", "temporal"%>
+		      		</span>
+					<%= text_field_tag "semanas_t", "" , maxlenght: 30, placeholder: "Semanas de tratamiento", class: "form-control", onkeypress: "return isNumber(event)" , readonly: "readonly"%>
+				</div>
+			</div>
+		<% elsif @paramedico%>
+			<div class="form-group" id="divObservacion">
+				<%= label_tag "Observacion general"%>
+				<%= text_area_tag "observacion", @valoroObservacion, placeholder: "Observacion general", rows: 3, class: "form-control"%>
+			</div>
+		<% end%>
 		<div class="form-group" id="divFrecuencia">
 			<%= label_tag "Frecuencia Cardiaca"%>
-			<%= text_field_tag "frecuencia_car", "", size: 20, maxlenght: 15, placeholder: "Frecuencia cardiaca", class: "form-control", onkeypress: "return isNumber(event)" %>
+			<%= text_field_tag "frecuencia_car", @valorFrecuencia, size: 20, maxlenght: 15, placeholder: "Frecuencia cardiaca", class: "form-control", onkeypress: "return isNumber(event)" %>
 		</div>
 		<div class="form-group" id="divSistolica">
 			<%= label_tag "Hipertension sistolica"%>
-			<%= text_field_tag "hsis", "", size: 20, maxlenght: 15 , placeholder: "Hipertension sistolica", class: "form-control", onkeypress: "return isNumber(event)"%>
+			<%= text_field_tag "hsis", @valorHiperSis, size: 20, maxlenght: 15 , placeholder: "Hipertension sistolica", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 		<div class="form-group" id="divDiastolica">
 			<%= label_tag "Hipertension diastolica"%>
-			<%= text_field_tag "hdia", "", size: 20, maxlenght: 15, placeholder: "Hipertension diastolica", class: "form-control", onkeypress: "return isNumber(event)"%>
+			<%= text_field_tag "hdia", @valorHiperDia, size: 20, maxlenght: 15, placeholder: "Hipertension diastolica", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 	</div>
 </div>

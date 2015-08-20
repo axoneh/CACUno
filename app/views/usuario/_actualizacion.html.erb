@@ -1,5 +1,5 @@
 <div class="col-md-6">
-	<%= form_tag({controller: "usuario", action: params[:action]}, method: "post") do %>
+	<%= form_tag({controller: "usuario", action: params[:action]}, id: "actualizacion_usuario", method: "post") do %>
 	 	<div class="form-group">
 			<%= label_tag 'nombre' %>
 			<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required", class:"form-control" %>

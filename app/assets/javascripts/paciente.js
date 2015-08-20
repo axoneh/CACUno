@@ -112,7 +112,6 @@ function habilitarDescripcionAntecedente(antec){
 function buscarPaciente(){
 	if(document.getElementById('buscar_paciente')){
 		var texto=document.getElementById('busqueda').value;
-		console.log(texto);
 		if(texto.length>2){
 			return true;
 		}

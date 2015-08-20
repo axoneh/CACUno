@@ -1,15 +1,14 @@
 <% if @encargado%>
-	<div class="panel panel-warning">
+	<div class="panel panel-danger">
 		<div class="panel-heading">
-			<h3 class="panel-title">Citas sin concluir</h3>
+			<h3 class="panel-title">Visitas domiciliarias sin concluir</h3>
 		</div>
 		<table class="table table-condensed">
 			<tr>
-				<td><strong>Foto</strong></td>
+				<td><strong>...</strong></td>
 				<td><strong>Nombre</strong></td>
 				<td><strong>Fecha de la visita</strong></td>
-				<td><strong>Estado</strong></td>
-				<td><strong>Opciones</strong></td>
+				<td><strong></strong></td>
 			</tr>
 			<% @pacientesN.each do |t|%>
 				<tr>
@@ -27,54 +26,13 @@
 					<td>
 						<%if t.ultimaVisita%>
 							 <%= t.ultimaVisita.fecha%>
-							 <% if t.ultimaVisita.estado==3%>
-							 	<% if @encargado%>
-							 		<span class="label" ><%= link_to "Concluir",controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id%></span>
-							 	<% else%>
-							 		<span class="label label-default">Inconclusa</span>
-							 	<% end%>
-							 <% end%>
 						<% else%>
 							Sin realizar
 						<% end%>
 					</td>
 					<td>
-						<% if @medico or @admin%>
-							<% if t.estado==1%>
-								<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, desactivar: true}, class: "btn btn-primary") do%>
-									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-								<% end%>
-							<% else%>
-								<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, activar: true}, class: "btn btn-danger") do%>
-									<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-								<% end%>
-							<% end%>
-						<% else%>
-							<% if t.estado==1%>
-								<a class="btn btn-primary">
-									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-								</a>
-							<% else%>
-								<a class="btn btn-danger">
-									<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-								</a>
-							<% end%>
-						<% end%>
-					</td>
-					<td>
 						<div class="btn-group" role="group">
-							<% if (@medico or @paramedico) and t.estado==1%>
-								<%= link_to({controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-default") do%>
-									<span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
-								<% end%>
-							<% end%>
-							<% if @medico or @admin%>
-								<% if t.estado==1%>
-									<%= link_to({controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success") do%>
-										<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-									<% end%>
-								<% end%>
-							<% end%>
+							<%= link_to "Concluir",{controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id}, class: "btn btn-danger"%>
 						</div>
 					</td>
 				</tr>
@@ -85,13 +43,17 @@
 <div class="panel panel-default">
 	<table class="table table-condensed">
 		<tr>
-			<td><strong>Foto</strong></td>
+			<td><strong>...</strong></td>
 			<td><strong>Nombre</strong></td>
 			<td><strong>Ultima consulta</strong></td>
 			<td><strong>Ultima visita</strong></td>
 			<td><strong>Proxima visita</strong></td>
-			<td><strong>Estado</strong></td>
-			<td><strong>Opciones</strong></td>
+			<% if @admin%>
+				<td><strong>Estado</strong></td>
+			<% end%>
+			<% if @medico or @paramedico%>
+				<td><strong>Consulta</strong></td>
+			<% end%>
 		</tr>
 		<% @pacientes.each do |t|%>
 			
@@ -118,27 +80,25 @@
 					<%if t.ultimaVisita%>
 						 <%= t.ultimaVisita.fecha%>
 						 <% if t.ultimaVisita.estado==3%>
-						 	<% if @encargado%>
-						 		<span class="label" ><%= link_to "Concluir",controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id%></span>
-						 	<% else%>
-						 		<span class="label label-default">Inconclusa</span>
-						 	<% end%>
+						 	<span class="label label-danger">Inconclusa</span>
 						 <% end%>
 					<% else%>
 						Sin realizar
 					<% end%>
 				</td>
-				<td>
 					<%if t.ultimaVisita and t.ultimaVisita.prescripcions%>
+						<td>
 						 <%= t.ultimaVisita.prescripcions.fechaFin%>
 					<% elsif t.ultimaCita and t.ultimaCita.prescripcions%>
+						<td>
 						<%= t.ultimaCita.prescripcions.fechaFin%>
 					<% else%>
+						<td class="danger">
 						Sin realizar
 					<% end%>
 				</td>
-				<td>
-					<% if @medico or @admin%>
+				<% if @admin%>
+					<td>
 						<% if t.estado==1%>
 							<%= link_to({controller: "paciente", action: "actualizar", paciente:t.correo, desactivar: true}, class: "btn btn-primary") do%>
 								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -148,34 +108,17 @@
 								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
 							<% end%>
 						<% end%>
-					<% else%>
-						<% if t.estado==1%>
-							<a class="btn btn-primary">
-								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-							</a>
-						<% else%>
-							<a class="btn btn-danger">
-								<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-							</a>
-						<% end%>
-					<% end%>
-				</td>
-				<td>
-					<div class="btn-group" role="group">
-						<% if (@medico or @paramedico) and t.estado==1%>
+					</td>
+				<% end%>
+				<% if (@medico or @paramedico) and t.estado==1%>
+					<td>
+						<div class="btn-group" role="group">
 							<%= link_to({controller: "cita_medica", action: "efectuar", paciente: t.correo}, class: "btn btn-default") do%>
-								<span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 							<% end%>
-						<% end%>
-						<% if @medico or @admin%>
-							<% if t.estado==1%>
-								<%= link_to({controller: "paciente", action: "actualizar", paciente: t.correo}, class: "btn btn-success") do%>
-									<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-								<% end%>
-							<% end%>
-						<% end%>
-					</div>
-				</td>
+						</div>
+					</td>
+				<% end%>
 			</tr>
 		<%end%>
 	</table>

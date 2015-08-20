@@ -3,13 +3,14 @@
 		<h3 class="panel-title">Encuesta Medica</h3>
 	</div>
 	<div class="panel-body">
-		<strong>Valor INR:</strong><%= (@inr.valorInr) if @inr%>
+		<strong>INR: </strong>
+		<%= @cita.inr_pacientes.first.valorInr%>
 	</div>
 	<% if @cita.pregunta_cita%>
 		<ul class="list-group">
 			<% @cita.pregunta_cita.each do |t|%>
 				<li class="list-group-item">
-					<strong><%= t.pregunta.pregunta%></strong>
+					<strong><%= t.pregunta.pregunta.upcase%></strong>
 					<% if t.pregunta.tipo%>
 						<br />
 						<%= t.pregunta.descripcion%> <%= t.comentario%>

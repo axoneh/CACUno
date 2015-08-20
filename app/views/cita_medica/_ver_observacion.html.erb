@@ -1,0 +1,71 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Observacion</h3>
+	</div>
+	<div class="panel-body">
+		<% if @cita.tipo=='Presencial'%>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Observacion objetiva</strong>
+				</div>
+				<div class="col-md-8">
+					<%=@cita.observacion_medicas.obUno%>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Observacion subjetiva</strong>
+				</div>
+				<div class="col-md-8">
+					<%=@cita.observacion_medicas.obDos%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Duracion del tratamiento</strong>
+				</div>
+				<div class="col-md-8">
+					<% if @cita.observacion_cita.tiempoIndefinido%>
+						Tratamiento de tiempo indefinido
+					<% else%>
+						Duracion de tratamiento: <%= @cita.observacion_cita.diasTratamiento%> dias
+					<% end%>
+				</div>
+			</div>
+		<% else%>
+			<div class="row">
+				<div class="col-md-4">
+					<strong>Observacion general</strong>
+				</div>
+				<div class="col-md-8">
+					<%= @cita.observacion_medicas.obUno%>
+				</div>
+			</div>
+		<% end%>
+		<div class="row">
+			<div class="col-md-4">
+				<strong>Frecuencia cardiaca</strong>
+			</div>
+			<div class="col-md-8">
+				<%= @cita.observacion_medicas.frecuencia_cardiaca%>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<strong>Hipertension sistolica</strong>
+			</div>
+			<div class="col-md-8">
+				<%= @cita.observacion_medicas.hiper_sistolica%>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<strong>Hipertension diastolica</strong>
+			</div>
+			<div class="col-md-8">
+				<%= @cita.observacion_medica.hiper_diastolica%>
+			</div>
+		</div>
+	</div>
+</div>

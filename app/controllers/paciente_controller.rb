@@ -7,11 +7,7 @@ class PacienteController < ApplicationController
       @paciente=Paciente.new
       if agregacion()
         crear_cita_generica()
-        if @medico
-          redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
-        else
-          redirect_to controller: "paciente", action: "visualizar", correo: @paciente.correo
-        end
+        redirect_to controller: "paciente", action: "agregar_inr", paciente: @paciente.correo
       end
     end
   end
@@ -22,11 +18,11 @@ class PacienteController < ApplicationController
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ? ",params[:paciente]])
         @paciente=Paciente.find_by(correo: params[:paciente])
-        if params[:activar].present?
+        if params[:activar].present? and @admin
           @paciente.estado=1
           @paciente.save
           redirect_to controller: "paciente", action: "visualizar"
-        elsif params[:desactivar].present?
+        elsif params[:desactivar].present? and @admin
           @paciente.estado=2
           @paciente.save
           redirect_to controller: "paciente", action: "visualizar"
@@ -135,8 +131,13 @@ class PacienteController < ApplicationController
       
     else
       @especifico=false
-      @pacientesN=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").where(["cita_medicas.estado= ? and pacientes.estado = ?",3,1]).group("cita_medicas.pacientes_id")
+      if @encargado
+        @pacientesN=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").where(["cita_medicas.estado= ? and pacientes.estado = ?",3,1]).group("cita_medicas.pacientes_id")
+      end
       @pacientes=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").group("cita_medicas.pacientes_id")
+      if @medico or @paramedico
+        @pacientes=@pacientes.where(["pacientes.estado=?",1])
+      end
       if params[:busqueda].present?
         @pacientes=@pacientes.where(["CONCAT(pacientes.nombre,' ',pacientes.apellido) like ?", '%'+params[:busqueda]+'%'])
       end
@@ -144,40 +145,33 @@ class PacienteController < ApplicationController
   end
 
   def agregar_inr
-    unless @admin or validacionMedico()
+    unless @admin or @medico
       redirect_to controller: "principal", action: "contenido"
     else
       unless params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
         redirect_to controller: "principal", action: "contenido"
       else
         @paciente=Paciente.find_by(correo: params[:paciente])
-        @anticoagulantes=Anticoagulante.where(["estado = ?", 1])
         cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
         unless cita
           crear_cita_generica()
           cita=@paciente.cita_medicas.where(["estado = ? and generico = ?", 2, true]).first
         end
-        if params[:inr].present? and params[:fecha_inr].present?
-          if cita
+        if cita
+          if params[:inr].present? and params[:fecha_inr].present? and cita
             InrPaciente.create(cita_medicas_id: cita.id, valorInr: params[:inr].to_f, fecha: params[:fecha_inr] )
           end
-        end
-        if cita
           if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
             InrPaciente.delete_all(["id = ?",params[:inr_e]])
           end
         end
-        
         @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha desc")
-        
         if params[:lab].present? and params[:rep].present? and params[:fecha_lab].present?
           Laboratorio.create(pacientes_id: @paciente.id, fecha: params[:fecha_lab], estudio: params[:lab], resultado: params[:rep], observacion: params[:observacion])
         end
-        
         if params[:lab_d].present?
-          Laboratorio.find(params[:lab_d]).delete
+          Laboratorio.delete(params[:lab_d])
         end
-        
       end
     end
   end

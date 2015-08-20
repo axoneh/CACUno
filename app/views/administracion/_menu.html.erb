@@ -1,6 +1,7 @@
 <%= link_to "Usuarios", {controller: "usuario", action: "visualizar"}, class: "list-group-item"%>
 <%= link_to "Pacientes",{controller: "paciente", action: "visualizar"}, class: "list-group-item"%>
-<%= link_to "Citas", {controller: "cita_medica", action: "visualizar"}, class: "list-group-item"%>
+<%= link_to "Cosultas con especialista", {controller: "cita_medica", action: "visualizar", presencial: true}, class: "list-group-item"%>
+<%= link_to "Visitas domiciliarias", {controller: "cita_medica", action: "visualizar", domiciliaria: true}, class: "list-group-item"%>
 <%= link_to "Datos de la empresa", {controller: "principal", action: "contenido"} , class: "list-group-item"%>
 <%= link_to "Modificar datos personales", {controller: "usuario", action: "actualizar"}, class: "list-group-item"%>
 <%= link_to "Cerrar Sesion", destroy_cuenta_usuario_session_path, method: :delete, id: "sign_out" ,class: "list-group-item list-group-item-danger"%>

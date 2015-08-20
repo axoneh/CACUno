@@ -7,12 +7,13 @@
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
-						<%= check_box_tag t.id.to_s, t.id.to_s, onclick: "preguntaDescripcion('"+t.id.to_s+"')"%>
+						<%= check_box_tag t.id.to_s, t.id.to_s%>
 					</span>
-					<%= text_field_tag "texto", '¿'+t.pregunta.upcase+'?', readonly: "readonly", class: "form-control"%>
+					<%= text_field_tag "texto", '¿'+t.pregunta+'?', readonly: "readonly", class: "form-control"%>
 				</div>
-				<div id=<%= "c_"+t.id.to_s%>>
-				</div>
+				<% if t.tipo%>
+					<%= area_text_tag t.id.to_s+"_comentario", nil, rows: 3, class: "form-control", readonly: "readonly", placeholder: t.descripcion.upcase%>
+				<% end%>
 			</div>
 		<% end%>
 		<div class="form-group" id="divInrCita">

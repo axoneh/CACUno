@@ -71,7 +71,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<strong><p class="text-right">Patologia</p></strong>
+					<strong><p class="text-right">Causa de la anticoagulacion</p></strong>
 				</div>
 				<div class="col-md-8">
 					<%= @paciente.patologia.nombre%>
@@ -79,7 +79,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<strong><p class="text-right">Descripcion patologica</p></strong>
+					<strong><p class="text-right">Descripcion de la causa</p></strong>
 				</div>
 				<div class="col-md-8">
 					<%=@paciente.patologia.descripcion%>
@@ -229,9 +229,9 @@
 		<div class="form-group">
 			<%= label_tag "buscar paciente por nombre"%>
 			<div class="input-group">
-				<%= text_field_tag "busqueda",params[:busqueda], placeholder: "Nombre de paciente", class: "form-control"%>
+				<%= text_field_tag "busqueda","", placeholder: "Nombre de paciente", class: "form-control"%>
 				<span class="input-group-btn">
-					<%= content_tag :button, :type => :submit, :class => "btn btn-primary" do%>
+					<%= button_tag(type: 'submit', class: "btn btn-primary") do%>
 						<span class="glyphicon glyphicon-search"></span>
 					<% end%>
 					<% if @medico or @admin%>

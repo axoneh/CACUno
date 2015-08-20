@@ -34,29 +34,35 @@
 			<%= label_tag "Dias de tratamiento"%>
 			<%= text_field_tag "fecha_fin", @valorFechaFin, placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
-		<% @diasAsociados.each do |t|%>
-			<div id=<%= t.nombre%>, class="form-group">
-				<%= label_tag t.nombre%>
-				<div class="radio">
-					<label>
-						<%= radio_button_tag t.id.to_s, "0"%> Ninguna medida
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<%= radio_button_tag t.id.to_s, "5.0"%> Media pastilla
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<%= radio_button_tag t.id.to_s, "1"%> Pastilla completa
-					</label>
-				</div>
-			</div>
-		<% end%>
 		<div class="form-group" id="divRecomendacion">
 			<%= label_tag "Recomendaciones para la prescripcion"%>
 			<%= text_area_tag "recomendacion", @valorRecomendacion, placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control"%>
 		</div>
+		<table class="table table-bordered">
+			<tr>
+			<% @diasAsociados.each do |t|%>
+				<td>
+					<div class="form-group">
+						<strong><%= label_tag t.nombre%></strong>
+						<div class="radio">
+							<label>
+								<%= radio_button_tag t.id.to_s, "0"%> Ninguna medida
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<%= radio_button_tag t.id.to_s, "0.5"%> Media pastilla
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<%= radio_button_tag t.id.to_s, "1"%> Pastilla completa
+							</label>
+						</div>
+					</div>
+				</td>
+			<% end%>
+			</tr>
+		</table>
 	</div>
 </div>

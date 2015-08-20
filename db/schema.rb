@@ -68,7 +68,6 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
     t.boolean  "generico",                      default: false
-    t.text     "observacion",        limit: 6554
     t.date     "fecha_realizacion"
   end
 
@@ -161,8 +160,8 @@ ActiveRecord::Schema.define(version: 20150729220229) do
   create_table "laboratorios", force: :cascade do |t|
     t.integer  "pacientes_id", limit: 4
     t.date     "fecha"
-    t.string   "estudio",      limit: 50
-    t.string   "resultado",    limit: 20
+    t.string   "estudio",      limit: 250
+    t.string   "resultado",    limit: 250
     t.text     "observacion",  limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
@@ -171,9 +170,9 @@ ActiveRecord::Schema.define(version: 20150729220229) do
   add_index "laboratorios", ["pacientes_id"], name: "index_laboratorios_on_pacientes_id", using: :btree
 
   create_table "observacion_medicas", force: :cascade do |t|
-    t.integer  "respuesta_cita_id",   limit: 4
-    t.text     "subjetivo",           limit: 65535
-    t.text     "objetivo",            limit: 65535
+    t.integer  "cita_medicas_id",   limit: 4
+    t.text     "obDos",           limit: 65535
+    t.text     "obUno",            limit: 65535
     t.boolean  "tiempoIndefinido"
     t.integer  "diasTratamiento",     limit: 4
     t.datetime "created_at",                        null: false
@@ -183,7 +182,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.integer  "hiper_diastolica",    limit: 4
   end
 
-  add_index "observacion_medicas", ["respuesta_cita_id"], name: "index_observacion_medicas_on_respuesta_cita_id", unique: true, using: :btree
+  add_index "observacion_medicas", ["cita_medicas_id"], name: "index_observacion_medicas_on_cita_medicas_id", unique: true, using: :btree
 
   create_table "pacientes", force: :cascade do |t|
     t.string   "identificacion",      limit: 30
