@@ -110,7 +110,6 @@ class CitaMedicaController < ApplicationController
         ultimaCita=paciente.ultimaCita()
         if (@paramedico and ultimaCita) or @medico
           fechaActual=Date.current
-          else
             citaActual = CitaMedica.new
             citaActual.pacientes_id = paciente.id
             citaActual.cuenta_usuarios_id = current_cuenta_usuario.id
@@ -124,7 +123,6 @@ class CitaMedicaController < ApplicationController
             end
             citaActual.save
             redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
-          end
         else
           flash.alert="No tiene registro de alguna cita presencial como remanente de la cita domiciliaria"
           redirect_to controller: "paciente", action: "visualizar"
