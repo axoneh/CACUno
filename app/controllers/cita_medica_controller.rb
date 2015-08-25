@@ -175,7 +175,7 @@ class CitaMedicaController < ApplicationController
           elsif @paramedico and @cita.tipo=="Domiciliaria"
             @preguntas=Pregunta.where(["estado = ? and tag <> 'inr dificil'", 1])
             @nivel=false
-            @ultimaCita=@paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
+            @ultimaCita=@paciente.ultimaCita()
             if request.post?
               if params[:inr].present? and params[:hsis].present? and params[:hdia].present? and params[:frecuencia_car].present? and params[:observacion].present?
                 guardar_inr()

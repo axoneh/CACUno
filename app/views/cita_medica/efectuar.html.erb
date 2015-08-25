@@ -34,10 +34,10 @@
 				</li>
 				<li class="list-group-item">
 					<strong>Tiempo de tratamiento: </strong>
-					<% if @ultimaCita.respuesta_cita.observacion_medicas.tiempoIndefinido%>
+					<% if @ultimaCita.observacion_medicas.tiempoIndefinido%>
 						Indefinido
 					<% else%>
-						<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCita.respuesta_cita.observacion_medicas.diasTratamiento%> dias
+						<%= (@ultimaCita.fecha.to_date - Date.current).to_i%> de <%= @ultimaCita.observacion_medicas.diasTratamiento%> dias
 					<% end%>
 				</li>
 			</ul>
@@ -45,7 +45,7 @@
 			<strong>No se ha encontrado alguna cita previa</strong>
 		<% end%>
 	</div>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post", onsubmit: "return validacionVisita()") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_paramedico" , method: "post", onsubmit: "return validacionVisita()") do %>
 		<%= render 'preguntas'%>
 		<%= render 'observacion'%>
 		<%= submit_tag "Enviar para respuesta", class: "btn btn-primary"%>

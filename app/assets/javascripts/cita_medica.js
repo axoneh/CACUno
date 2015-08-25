@@ -83,10 +83,15 @@ function validacionVisita(){
 	if(document.getElementById('efectuar_paramedico')){
 		var val=0;
 		val+=validacion('hsis','divSistolica');
+		console.log('sis');
 		val+=validacion('hdia','divDiastolica');
+		console.log('sis');
 		val+=validacion('frecuencia_car','divFrecuencia');
+		console.log('sis');
 		val+=validacion('observacion','divObservacion');
+		console.log('sis');
 		val+=validacion('inr','divInrCita');
+		console.log('sis');
 		if(val==0){
 			return true;
 		}
