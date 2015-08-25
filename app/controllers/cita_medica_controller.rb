@@ -110,9 +110,6 @@ class CitaMedicaController < ApplicationController
         ultimaCita=paciente.ultimaCita()
         if (@paramedico and ultimaCita) or @medico
           fechaActual=Date.current
-          if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and estado= ?",paciente.id, fechaActual, 1])
-            flash.alert="El paciente tiene una cita para esa fecha ya establecida, verifique los datos"
-            redirect_to controller: "principal", action: "contenido"
           else
             citaActual = CitaMedica.new
             citaActual.pacientes_id = paciente.id
