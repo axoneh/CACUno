@@ -192,7 +192,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.string   "correo",              limit: 45
     t.boolean  "genero"
     t.date     "fecha_nacimiento"
-    t.string   "direccion",           limit: 50
+    t.string   "direccion",           limit: 100
     t.integer  "estado_civils_id",    limit: 4
     t.integer  "patologia_id",        limit: 4
     t.integer  "estado",              limit: 4
