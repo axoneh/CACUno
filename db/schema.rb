@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.string   "email",                  limit: 50,  default: "",    null: false
     t.string   "encrypted_password",     limit: 255, default: "",    null: false
     t.boolean  "genero"
-    t.string   "direccion",              limit: 50
+    t.string   "direccion",              limit: 100
     t.string   "especialidad",           limit: 50
     t.date     "fecha_nacimiento"
     t.integer  "estado",                 limit: 4
