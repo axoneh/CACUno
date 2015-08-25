@@ -1,14 +1,14 @@
-<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]},id: "buscar_icd", remote: true , method: "get", onsubmit: "return validacionBusquedaICD()") do %>
+<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita]}, id: "buscar_icd", remote: true , method: "get") do -%>
 	<div class="form-group" id="divBusquedaIdc">
 		<%= label_tag "Buscar diagnostico",nil, class: "control-label"%>
 		<div class="input-group">
-			<%= text_field_tag "icd_b", params[:icd_b] ,placeholder: "Codigo o nombre del diagnostico", class: "form-control", onkeypress: "buscar_icd.submit();"%>
+			<%= text_field_tag "icd_b", params[:icd_b] ,placeholder: "Codigo o nombre del diagnostico", class: "form-control"%>
 			<span class="input-group-btn">
-				<%= button_tag "Buscar", class: "btn btn-primary", form: "buscar_icd"%>
+				<%= submit_tag "Buscar", class: "btn btn-primary"%>
 			</span>
 		</div>
 	</div>
-<% end%>
+<% end -%>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title">Diagnosticos</h3>
@@ -26,7 +26,7 @@
 						<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_v: t.id, icd_b: params[:icd_b]}, id: "icd_en_"+t.id10, remote: true , method: "get") do %>
 							<div class="btn-group btn-group-justified" role="group">
 								<div class="btn-group" role="group">
-									<%= button_tag "Agregar", class: "btn btn-success", form: "icd_en_"+t.id10%>
+									<%= submit_tag "Agregar", class: "btn btn-success"%>
 								</div>
 							</div>
 						<% end%>

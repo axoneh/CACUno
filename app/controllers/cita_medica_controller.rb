@@ -31,16 +31,20 @@ class CitaMedicaController < ApplicationController
         redirect_to controller: "cita_medica", action: "visualizar"
       end
     elsif params[:usuario].present? and CuentaUsuario.exists?(["email = ?", params[:usuario]]) and (@medico or @paramedico)
+      @titulo="Citas medicas del paciente"
       @nivel=false
       usuario=CuentaUsuario.find_by(email: params[:usuario])
       @citasRegistradas=CitaMedica.where(["cuenta_usuarios_id = ? and generico = ?", usuario.id, false]).order(:estado, fecha: :desc).group("pacientes_id")
     else
+      @titulo="Citas medicas registradas"
       @nivel=false
       @citasRegistradas=CitaMedica.where(["generico = ?", false]).order(:estado).order(fecha: :desc)
       if params[:domiciliaria].present?
         @citasRegistradas=@citasRegistradas.where(["tipo = ?", 'Domiciliaria'])
+        @titulo="Visitas domiciliarias registradas"
       elsif params[:presencial].present?
         @citasRegistradas=@citasRegistradas.where(["tipo = ?", 'Presencial'])
+        @titulo="Consultas con especialista"
       end
     end
   end
@@ -106,7 +110,7 @@ class CitaMedicaController < ApplicationController
         ultimaCita=paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
         if (@paramedico and ultimaCita) or @medico
           fechaActual=Date.current
-          if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and estado= ?",pacientes_id, fechaActual, 1])
+          if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and estado= ?",paciente.id, fechaActual, 1])
             flash.alert="El paciente tiene una cita para esa fecha ya establecida, verifique los datos"
             redirect_to controller: "principal", action: "index"
           else

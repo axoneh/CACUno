@@ -9,14 +9,14 @@
 				</div>
 				<%= render 'observacion'%>
 				<%= render 'respuesta'%>
-				<div id="ver_icd">
-					<%= render 'ver_icd'%>
-				</div>
-				<div id="buscar_icd">
-					<%= render 'buscar_icd'%>
-				</div>
-				<%= submit_tag "Guardar datos", class: "btn btn-primary"%>
 			<% end%>
+			<div id="ver_icd">
+				<%= render 'ver_icd'%>
+			</div>
+			<div id="buscar_icd">
+				<%= render 'buscar_icd'%>
+			</div>
+			<%= button_tag "Guardar datos", class: "btn btn-primary", form: "efectuar_medico"%>
 		</div>
 	</div>
 <% else%>
