@@ -1,26 +1,26 @@
 <%= render 'datos_paciente'%>
 <%= render 'ver_preguntas'%>
-<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, id: "agregar_respuesta" , method: "post") do %>
 	<div class="panel-default">
 		<div class="panel-body">
+		<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, id: "agregar_respuesta" , method: "post", onsubmit: "return validacionRespuesta()") do %>
 			<% if @preguntaInr%>
 				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-addon">
-							<%= check_box_tag @preguntaInr.id.to_s+"_p", @preguntaInr.id.to_s+"_p"%>
+							<%= check_box_tag @preguntaInr.id.to_s+"_p", nil, params[@preguntaInr.id.to_s+"_p"].present?%>
 						</span>
 						<%= text_field_tag "texto", '¿Tiene el paciente inr dificil en este punto?', readonly: "readonly", class: "form-control"%>
 					</div>
 				</div>
 			<% end%>
 			<%= render 'respuesta'%>
-			<div id="ver_icd">
-				<%= render 'ver_icd'%>
-			</div>
-			<div id="buscar_icd">
-				<%= render 'buscar_icd'%>
-			</div>
-			<%= submit_tag "Enviar respuesta", class: "btn btn-primary"%>
+		<% end%>
+		<div id="ver_icd">
+			<%= render 'ver_icd'%>
 		</div>
+		<div id="buscar_icd">
+			<%= render 'buscar_icd'%>
+		</div>
+		<%= button_tag "Enviar respuesta", class: "btn btn-primary", form: "agregar_respuesta"%>
 	</div>
-<% end%>
+</div>

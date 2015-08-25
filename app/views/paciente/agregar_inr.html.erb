@@ -9,7 +9,7 @@
 				<%= form_tag({controller: "paciente", action: "agregar_inr", paciente: params[:paciente]}, id: "agregar_inr",  remote: true , method: "get", onsubmit: "return validacionAgregacionInr()") do %>
 					<div class="form-group" id="divAgregarValorInr">
 						<%= label_tag "Valor del INR", nil , class: "control-label"%>
-						<%= text_field_tag "inr", "", maxlenght: 5, placeholder: "Valor inr del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
+						<%= text_field_tag "inr", "", maxlength: 5, placeholder: "Valor inr del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
 					</div>
 					<div class="form-group" id="divAgregarFechaInr">
 						<%= label_tag "Fecha en la que fue tomado el valor", nil, class: "control-label"%>
@@ -45,11 +45,11 @@
 					</div>
 					<div class="form-group" id="divRep">
 						<%= label_tag "Resultado del estudio", nil, class: "control-label"%>
-						<%= text_field_tag "rep", "", maxlenght: 20, placeholder: "Resultado", class: "form-control"%>
+						<%= text_field_tag "rep", "", placeholder: "Resultado", class: "form-control"%>
 					</div>
 					<div class="form-group" id="divFechaLab">
 						<%= label_tag "Fecha de realizacion del laboratorio", nil, class: "control-label"%>
-						<div class='input-group date' id='datetimepicker1'>
+						<div class='input-group date' id='datetimepicker2'>
 							<%= date_field_tag "fecha_lab", nil, class: "form-control"%>
 							<span class="input-group-addon">
 					        	<span class="glyphicon glyphicon-calendar"></span>
@@ -58,7 +58,7 @@
 					</div>
 					<script type="text/javascript">
 						$(function () {
-						    $('#datetimepicker1').datetimepicker({ 
+						    $('#datetimepicker2').datetimepicker({ 
 						    	format: "YYYY-MM-DD"
 						    });
 						});
@@ -78,4 +78,6 @@
 		</div>
 	</div>
 </div>
-<%= link_to "Nueva consulta", {controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>
+<%if @medico%>
+	<%= link_to "Nueva consulta", {controller: "cita_medica", action: "efectuar", paciente: @paciente.correo}, class: "btn btn-primary"%>
+<% end%>

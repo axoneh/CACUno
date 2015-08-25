@@ -15,7 +15,7 @@
 						<%= form_tag({controller: "cita_medica", action: params[:action], cita: params[:cita], icd_e: t.id, icd_b: params[:icd_b]}, id: "icd_en_"+t.icds.id10, remote: true, method: "get") do%>
 							<div class="btn-group btn-group-justified" role="group">
 								<div class="btn-group" role="group">
-									<%= button_tag "Quitar", class: "btn btn-danger", fomr: "icd_en_"+t.icds.id10%>
+									<%= submit_tag "Quitar", class: "btn btn-danger"%>
 								</div>
 							</div>
 						<% end%>

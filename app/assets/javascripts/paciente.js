@@ -100,7 +100,7 @@ function habilitarDescripcionAntecedente(antec){
 	var input=document.getElementById(antec);
 	var ayuda=antec+'_comentario';
 	var desc=document.getElementById(ayuda);
-	if(input.checked==true){
+	if(input.checked==true && desc!=null){
 		desc.readOnly=false;
 		desc.focus();
 	}
@@ -108,15 +108,3 @@ function habilitarDescripcionAntecedente(antec){
 		desc.readOnly=true;
 	}
 }
-
-function buscarPaciente(){
-	if(document.getElementById('buscar_paciente')){
-		var texto=document.getElementById('busqueda').value;
-		if(texto.length>2){
-			return true;
-		}
-	}
-	return false;
-}
-
-

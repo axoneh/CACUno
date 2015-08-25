@@ -26,10 +26,10 @@
 					<strong>Duracion del tratamiento</strong>
 				</div>
 				<div class="col-md-8">
-					<% if @cita.observacion_cita.tiempoIndefinido%>
+					<% if @cita.observacion_medicas.tiempoIndefinido%>
 						Tratamiento de tiempo indefinido
 					<% else%>
-						Duracion de tratamiento: <%= @cita.observacion_cita.diasTratamiento%> dias
+						Duracion de tratamiento: <%= @cita.observacion_medicas.diasTratamiento%> dias
 					<% end%>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 				<strong>Hipertension diastolica</strong>
 			</div>
 			<div class="col-md-8">
-				<%= @cita.observacion_medica.hiper_diastolica%>
+				<%= @cita.observacion_medicas.hiper_diastolica%>
 			</div>
 		</div>
 	</div>

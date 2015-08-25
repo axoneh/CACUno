@@ -22,7 +22,7 @@ class CitaMedicaController < ApplicationController
           @medicoC=true        
         end
         @paciente=@cita.pacientes
-        @preguntas=@cita.preguntas_cita
+        @preguntas=@cita.pregunta_cita
         @respuesta=RespuestaCita.find_by(cita_medicas_id: @cita.id)
         if @respuesta
           @prescripcion=Prescripcion.find_by(respuesta_cita_id: @respuesta.id)
@@ -107,7 +107,7 @@ class CitaMedicaController < ApplicationController
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
         paciente=Paciente.find_by(correo: params[:paciente])
-        ultimaCita=paciente.cita_medicas.where(["generico = ? and estado = ? and tipo = ?", false, 2, 'Presencial']).last
+        ultimaCita=paciente.ultimaCita()
         if (@paramedico and ultimaCita) or @medico
           fechaActual=Date.current
           if CitaMedica.exists?(["pacientes_id = ? and fecha = ? and estado= ?",paciente.id, fechaActual, 1])
@@ -174,42 +174,6 @@ class CitaMedicaController < ApplicationController
                 flash.notice="Cita concluida exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
-                if params[:valor_max].present?
-                  @valorMax=params[:valor_max]
-                end
-                if params[:valor_min].present?
-                  @valorMin=params[:valor_min]
-                end
-                if params[:analisis].present?
-                  @valorAnalisis=params[:analisis]
-                end  
-                if params[:plan].present? 
-                  @valorPlan=params[:plan]
-                end
-                if params[:subjetiva].present?
-                  @valorSubjetiva=params[:subjetiva]
-                end
-                if params[:objetiva].present?
-                  @valorObjetiva=params[:objetiva]
-                end
-                if params[:fecha_fin].present?
-                  @valorFechaFin=params[:fecha_fin]
-                end
-                if params[:inr].present?
-                  @valorInr=params[:inr]
-                end
-                if params[:recomendacion].present?
-                  @valorRecomendacion=params[:recomendacion]
-                end
-                if params[:hsis].present?
-                  @valorHiperSis=params[:hsis]
-                end
-                if params[:hdia].present?
-                  @valorHiperDia=params[:hdia]
-                end
-                if params[:frecuencia_car].present?
-                  @valorFrecuencia=params[:frecuencia_car]
-                end
                 flash.alert="Debe diligenciar todos los campos de la respuesta"
               end
             end
@@ -228,18 +192,6 @@ class CitaMedicaController < ApplicationController
                 flash.notice="Cita realizada exitosamente, en espera de respuesta"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
-                if params[:inr].present?
-                  @valorInr=params[:inr]
-                end
-                if params[:hsis].present?
-                  @valorHiperSis=params[:hsis]
-                end
-                if params[:hdia].present?
-                  @valorHiperDia=params[:hdia]
-                end
-                if params[:frecuencia_car].present?
-                  @valorFrecuencia=params[:frecuencia_car]
-                end
                 flash.alert="Debe diligenciar todos los campos"
               end
             end  
@@ -279,7 +231,7 @@ private
 
   def guardar_observacion
     observacion=ObservacionMedica.new
-    observacion.respuesta_cita_id=@respuesta.id
+    observacion.cita_medicas_id=@cita.id
     observacion.frecuencia_cardiaca=params[:frecuencia_car]
     observacion.hiper_sistolica=params[:hsis]
     observacion.hiper_diastolica=params[:hdia]

@@ -2,10 +2,10 @@
 <% if @nivel%>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_medico", method: "post", onsubmit: "return validacionCitaMedica()") do %>
+			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_medico", method: "post", onsubmit: "return validacionConsulta()") do %>
 				<div class="form-group" id="divInrCita">
-					<%= label_tag "INR actual del paciente"%>
-					<%= text_field_tag "inr", @valorInr , maxlenght: 4, placeholder: "INR del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
+					<%= label_tag "INR actual del paciente",nil, class: "control-label"%>
+					<%= text_field_tag "inr", params[:inr] , maxlenght: 4, placeholder: "INR del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>
 				</div>
 				<%= render 'observacion'%>
 				<%= render 'respuesta'%>
@@ -16,7 +16,7 @@
 			<div id="buscar_icd">
 				<%= render 'buscar_icd'%>
 			</div>
-			<%= button_tag "Guardar datos", class: "btn btn-primary", form: "efectuar_medico"%>
+			<%= submit_tag "Guardar datos", class: "btn btn-primary", form: "efectuar_medico"%>
 		</div>
 	</div>
 <% else%>
@@ -45,7 +45,7 @@
 			<strong>No se ha encontrado alguna cita previa</strong>
 		<% end%>
 	</div>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efecutar_paramedico" , method: "post", onsubmit: "return validacionVisita()") do %>
 		<%= render 'preguntas'%>
 		<%= render 'observacion'%>
 		<%= submit_tag "Enviar para respuesta", class: "btn btn-primary"%>

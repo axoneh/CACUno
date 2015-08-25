@@ -4,19 +4,19 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group" id="divAnalisis">
-			<%= label_tag "Analisis"%>
-			<%= text_area_tag "analisis", @valorAnalisis, placeholder: "Analisis", rows: 3, class: "form-control"%>
+			<%= label_tag "Analisis",nil, class: "control-label"%>
+			<%= text_area_tag "analisis", params[:analisis], placeholder: "Analisis", rows: 3, class: "form-control"%>
 		</div>
 		<div class="form-group" id="divPlan">
-			<%= label_tag "Plan"%>
-			<%= text_area_tag "plan", @valorPlan, placeholder: "Plan", rows: 3, class: "form-control"%>
+			<%= label_tag "Plan",nil, class: "control-label"%>
+			<%= text_area_tag "plan", params[:plan], placeholder: "Plan", rows: 3, class: "form-control"%>
 		</div>
 		<div class="form-group" id="divRangoMin">
-			<%= label_tag "Valor minimo de inr saludable"%>
+			<%= label_tag "Valor minimo de inr saludable",nil, class: "control-label"%>
 			<%= text_field_tag "valor_min", @valorMin, maxlenght: 4, class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 		<div class="form-group" id="divRangoMax">
-			<%= label_tag "Valor maximo de inr saludable"%>
+			<%= label_tag "Valor maximo de inr saludable",nil, class: "control-label"%>
 			<%= text_field_tag "valor_max", @valorMax, maxlenght: 4, class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 	</div>
@@ -27,16 +27,16 @@
 	</div>
 	<div class="panel-body">
 		<div class="form-group" id="divAnticoagulante">
-			<%= label_tag "Anticoagulante"%>
-			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre), class: "form-control"%>
+			<%= label_tag "Anticoagulante",nil, class: "control-label"%>
+			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre, params[:antic]), class: "form-control"%>
 		</div>
 		<div class="form-group" id="divDiasTratamiento">
-			<%= label_tag "Dias de tratamiento"%>
-			<%= text_field_tag "fecha_fin", @valorFechaFin, placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
+			<%= label_tag "Dias de tratamiento",nil, class: "control-label"%>
+			<%= text_field_tag "fecha_fin", params[:fecha_fin], placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 		<div class="form-group" id="divRecomendacion">
-			<%= label_tag "Recomendaciones para la prescripcion"%>
-			<%= text_area_tag "recomendacion", @valorRecomendacion, placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control"%>
+			<%= label_tag "Recomendaciones para la prescripcion",nil, class: "control-label"%>
+			<%= text_area_tag "recomendacion", params[:recomendacion], placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control"%>
 		</div>
 		<table class="table table-bordered">
 			<tr>
@@ -44,9 +44,11 @@
 				<td>
 					<div class="form-group">
 						<strong><%= label_tag t.nombre%></strong>
+						<% hidden_field_tag t.id.to_s, 0, onchange: "cambiar texto del label t.nombre"%>
+						<% image_tag("media pastilla", class: "img-rounded", onclick: "cambiar imagen de la pastilla")%>
 						<div class="radio">
 							<label>
-								<%= radio_button_tag t.id.to_s, "0"%> Ninguna medida
+								<%= radio_button_tag t.id.to_s, "0", true%> Ninguna medida
 							</label>
 						</div>
 						<div class="radio">

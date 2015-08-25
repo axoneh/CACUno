@@ -19,7 +19,7 @@
 				<% if @encargado%>
 					<%= link_to "Responder" ,{controller: "cita_medica", action: "agregar_respuesta", cita: @cita.id}, class: "btn btn-danger"%>
 				<% else%>
-					<h3><label class="label label-danger">Sin concluir</label></h3>
+					<h3><label class="label label-danger">Sin responder</label></h3>
 				<% end%>
 			</div>
 		</div>
