@@ -13,11 +13,13 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require bootstrap
 //= require bootstrap-sprockets
 //= require moment
 //= require bootstrap-datetimepicker
-//= require moment/es.js
-//= require_tree .
+//= require metisMenu
+//= require sb-admin-2
+
 
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
@@ -27,4 +29,3 @@ function isNumber(evt) {
     }
     return true;
 }
-

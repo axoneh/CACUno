@@ -5,39 +5,103 @@
 		<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 		<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 		<%= csrf_meta_tags %>
+		<script type="text/javascript"> $(document).ready(function () { $('.dropdown-toggle').dropdown(); }); </script>
+
+
 	</head>
 	<body<%= " id=#{controllername}" if controllername %>>
-		<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-			<div class="container">
-				<div class"navbar-header">
-					<%= link_to image_tag("CACBrand.png", height: '30'), {controller: "/principal", action: "contenido"}, class: "navbar-brand" %>
+			<% unless controllername=="inicio" %>
+			<div id="wrapper">
+				<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+					<div class="navbar-header">
+                		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		                    <span class="sr-only">Toggle navigation</span>
+		                    <span class="icon-bar"></span>
+		                    <span class="icon-bar"></span>
+		                    <span class="icon-bar"></span>
+                		</button>
+                		<%= link_to image_tag("CACBrand.png"), {controller: "/principal", action: "contenido"}, class: "navbar-brand" %>
+            		</div> <!-- /.navbar-header -->
+            		
+					<ul class="nav navbar-nav navbar-top-links navbar-right">				
+				        <li class="dropdown">
+	                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+	                       	<i class="fa fa-bell fa-fw"></i>   Alertas  <i class="fa fa-caret-down"></i>
+	                        </a>
+	                        <ul class="dropdown-menu dropdown-alerts">
+		                        <li>
+		                              <a href="#">
+		                                  <div>
+		                                      <i class="fa fa-bell fa-fw"></i> Paciente uno
+		                                      <span class="pull-right text-muted small">Hace 5 minutos</span>
+		                                  </div>
+		                              </a>
+		                          </li>
+	                       		  <li class="divider"></li>
+		                          <li>
+		                              <a href="#">
+		                                  <div>
+		                                      <i class="fa fa-bell fa-fw"></i> Paciente dos
+		                                      <span class="pull-right text-muted small">Hace 10 minutos</span>
+		                                  </div>
+		                              </a>
+		                          </li>
+		                      </ul><!--dropdown-menu-items-->
+                      	</li><!-- Dropdownalerts-->
+                      	
+					</ul><!--nav Toplinks-->
+					<div class="navbar-default sidebar" role="navigation">
+                		<div class="sidebar-nav navbar-collapse">
+                    		<ul class="nav" id="side-menu">
+                    			<li class="sidebar-user"> 
+                           					<div style="float:left; padding-right: 8px"><img src="http://placehold.it/50x50" class="img-circle"></div>
+                            				<div><h6>Nombre Apellido Apellido <br/><small>Cargo</small></h6>
+                            			</div>
+                  
+                       			 </li>		
+								<%= render 'layouts/menu'%>
+                    		</ul><!--nav-->
+                    	</div><!--sidebarnav collapse-->
+                   	</div><!--Navbardefault-->
+					 	
+				</nav>
+
+					
+
+					<div class="container">
+						<div class="vspacer2"></div>
+						<% if notice%>
+							<div id="notice" class="alert alert-info">
+								<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><%= notice %>
+							</div>
+						<% end %>	
+						<% if alert%>
+							<div id="alert" class="alert alert-danger">
+								<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span><%= alert %>
+							</div>
+						<% end %>
+				
+							<div class="row">
+								<div class="col-md-3">
+
+								</div>
+								<div class="col-md-9">
+									<%= yield %>
+								</div>
+							</div>
+				</div><!--wrapper --> 
+				<% else %>
+					<div class="container">
+						<div class="vspacer2"></div>
+								<% if alert%>
+								<div id="alert" class="alert alert-danger">
+									<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span><%= alert %>
+									<% end %>
+								</div>
 				</div>
-			</div>
-		</div>
-		<div class="container">
-			<div class="vspacer2"></div>
-			<% if notice%>
-				<div id="notice" class="alert alert-info">
-					<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><%= notice %>
-				</div>
-			<% end %>
-			<% if alert%>
-				<div id="alert" class="alert alert-danger">
-					<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span><%= alert %>
-				</div>
-			<% end %>
-			<% unless controllername=="inicio"%>
-				<div class="row">
-					<div class="col-md-3">
-						<%= render 'layouts/menu'%>
-					</div>
-					<div class="col-md-9">
-						<%= yield %>
-					</div>
-				</div>
-			<% else%>
 				<%= yield %>
-			<% end%>
+			
+			<% end %>
 		</div>
 	</body>
 </html>

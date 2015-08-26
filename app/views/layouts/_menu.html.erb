@@ -1,4 +1,4 @@
-<ul class="list-group">
+
 	<%if @autorizado%>
 		<%= render 'medico_internista/menu_at'%>
 	<% elsif @admin%>
@@ -10,4 +10,3 @@
 	<% else%>
 		<%= render 'principal/menu'%>
 	<% end%>
-</ul>
