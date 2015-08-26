@@ -39,10 +39,11 @@ ActiveRecord::Schema.define(version: 20150729220229) do
   add_index "antecedente_pacientes", ["pacientes_id"], name: "index_antecedente_pacientes_on_pacientes_id", using: :btree
 
   create_table "anticoagulantes", force: :cascade do |t|
-    t.string   "nombre",     limit: 100
-    t.integer  "estado",     limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "nombre",        limit: 100
+    t.integer  "estado",        limit: 4
+    t.integer  "concentracion", limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "anticoagulantes", ["nombre"], name: "index_nombre_anticoagulantes", unique: true, using: :btree
@@ -203,6 +204,10 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.integer  "avatar_file_size",    limit: 4
     t.datetime "avatar_updated_at"
     t.text     "antecedente_general", limit: 65535
+    t.string   "ttrCacTotal",         limit: 4
+    t.string   "ttrCacDoceM",         limit: 4
+    t.string   "ttrCacSeisM",         limit: 4
+    t.string   "ttrCacPrevio",        limit: 4
   end
 
   add_index "pacientes", ["estado_civils_id"], name: "index_pacientes_on_estado_civils_id", using: :btree
@@ -248,7 +253,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
   create_table "prescripcion_diaria", force: :cascade do |t|
     t.integer  "prescripcions_id", limit: 4
     t.integer  "dia_asociados_id", limit: 4
-    t.decimal  "cantidadGramos",             precision: 4, scale: 2
+    t.decimal  "dosis",                     precision: 4, scale: 2
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
   end
@@ -264,6 +269,7 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.string   "recomendacion",      limit: 255
+    t.string   "dosisSemanal",       limit: 4
   end
 
   add_index "prescripcions", ["anticoagulantes_id"], name: "index_prescripcions_on_anticoagulantes_id", using: :btree

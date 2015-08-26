@@ -82,18 +82,6 @@ class CitaMedicaController < ApplicationController
             if params[:valor_min].present?
               @valorMin=params[:valor_min]
             end
-            if params[:analisis].present? 
-              @valorAnalisis=params[:analisis]
-            end
-            if params[:plan].present? 
-              @valorPlan=params[:plan]
-            end
-            if params[:fecha_fin].present?
-              @valorFechaFin=params[:fecha_fin]
-            end
-            if params[:recomendacion].present?
-              @valorRecomendacion=params[:recomendacion]
-            end
             flash.alert="Debe diligenciar todos los campos"
           end
         end
@@ -110,19 +98,23 @@ class CitaMedicaController < ApplicationController
         ultimaCita=paciente.ultimaCita()
         if (@paramedico and ultimaCita) or @medico
           fechaActual=Date.current
+          if CitaMedica.exists?(["pacientes.id = ? and cuenta_usuarios.id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1])
+            citaActual=CitaMedica.where(["pacientes.id = ? and cuenta_usuarios.id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1]).first
+          else 
             citaActual = CitaMedica.new
             citaActual.pacientes_id = paciente.id
             citaActual.cuenta_usuarios_id = current_cuenta_usuario.id
-            citaActual.fecha = fechaActual
             citaActual.estado = 1
-            citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
-            if @medico
-              citaActual.tipo="Presencial"
-            else
-              citaActual.tipo="Domiciliaria"
-            end
-            citaActual.save
-            redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
+          end
+          citaActual.fecha = fechaActual
+          citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
+          if @medico
+            citaActual.tipo="Presencial"
+          else
+            citaActual.tipo="Domiciliaria"
+          end
+          citaActual.save
+          redirect_to controller:"cita_medica", action: "efectuar", cita: citaActual.id
         else
           flash.alert="No tiene registro de alguna cita presencial como remanente de la cita domiciliaria"
           redirect_to controller: "paciente", action: "visualizar"
@@ -265,9 +257,11 @@ private
     
     @diasAsociados.each do |t|
       if params[t.id.to_s].present?
-        PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, cantidadGramos: params[t.id.to_s+"_cantidad"].to_f)
+        PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, dosis: params[t.id.to_s+"_cantidad"].to_f)
       end
     end
+    
+    prescripcion.dosisSemanal=(prescripcion.prescripcion_diaria.sum("dosis"))*prescripcion.anticoagulantes.concentracion
     
   end
   
@@ -288,5 +282,7 @@ private
       @valorMin=@ultimaCita.respuesta_cita.valor_min
     end
   end
+
+  
 
 end

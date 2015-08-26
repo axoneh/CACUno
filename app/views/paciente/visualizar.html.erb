@@ -95,18 +95,34 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<strong><p class="text-right">Promedio INR</p></strong>
+					<strong><p class="text-right">TTR en seis meses</p></strong>
 				</div>
 				<div class="col-md-8">
-					<%= @promedioINR%>
+					<%= @paciente.ttrCacSeisM%>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<strong><p class="text-right">Porcentaje INR</p></strong>
+					<strong><p class="text-right">TTR en doce meses</p></strong>
 				</div>
 				<div class="col-md-8">
-					<%= @porcentajeINR%> %
+					<%= @paciente.ttrCacDoceM%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">TTR total en el tratamiento</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.ttrCacTotal%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<strong><p class="text-right">TTR total fuera del tratamiento</p></strong>
+				</div>
+				<div class="col-md-8">
+					<%= @paciente.ttrCacPrevio%>
 				</div>
 			</div>
 			<div class="row">
@@ -141,19 +157,23 @@
 				<strong>Fecha de vencimiento: </strong> <%= @prescripcion.fechaFin.to_date%>
 				<br />
 				<strong>Anticoagulante: </strong> <%= @prescripcion.anticoagulantes.nombre%>
+				<br />
+				<strong>Dosis semanal: </strong> <%= @prescripcion.dosisSemanal%>
+				<br />
+				<strong>Promedio de dosis semanal: </strong> <%= @prescripcion.dosisSemanal/7%>
 			</div>
-			<table class="table table-bordered">
+			<table class="table">
 				<tr>
 					<% @prescripcion.prescripcion_diaria.each do |t|%>
-						<td>
+						<td><strong>
 							<%= t.dia_asociados.nombre%>
-						</td>
+						</td></strong>
 					<% end%>
 				</tr>	
 				<tr>
 					<% @prescripcion.prescripcion_diaria.each do |t|%>
 						<td>
-							<%= t.cantidadGramos/10%> Pastilla(s)
+							<%= t.cantidadGramos%> Pastilla(s)
 						</td>
 					<% end%>
 				</tr>
@@ -174,7 +194,7 @@
 								<% if t.fecha.to_date>Date.current%>
 									<span class="label label-info">Proximamente</span>
 								<% elsif t.fecha.to_date==Date.current%>
-									<span class="label label-info">Proximamente</span>
+									<span class="label label-info">Hoy</span>
 								<% end%>
 							<% elsif t.estado==2%>
 								<% if t.fecha.to_date==t.fecha_realizacion.to_date%>

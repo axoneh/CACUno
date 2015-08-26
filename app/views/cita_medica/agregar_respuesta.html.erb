@@ -2,7 +2,7 @@
 <%= render 'ver_preguntas'%>
 	<div class="panel-default">
 		<div class="panel-body">
-		<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, id: "agregar_respuesta" , method: "post", onsubmit: "return validacionRespuesta()") do %>
+		<%= form_tag({controller: "cita_medica", action: "agregar_respuesta", cita: params[:cita]}, id: "agregar_respuesta" , method: "get", onsubmit: "return validacionRespuesta()") do %>
 			<% if @preguntaInr%>
 				<div class="form-group">
 					<div class="input-group">
