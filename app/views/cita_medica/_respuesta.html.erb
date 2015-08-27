@@ -40,35 +40,48 @@
 		</div>
 		<table class="table table-bordered">
 			<tr>
-			<% @diasAsociados.each do |t|%>
 				<td>
-					<div class="form-group">
-						<strong><%= label_tag t.nombre%></strong>
+					<strong>Numero de tabletas</strong>
+				</td>
+				<% @diasAsociados.each do |t|%>
+					<td>
+						<div class="form-group">
+							<%= label_tag t.nombre, nil, class: "control-label"%>
+							<%
+							dosis=0;
+							if @ultimaPrescripcion
+								dosis=@ultimaPrescripcion.prescripcion_diaria.find_by(dia_asociados_id: t.id).dosis.to_f
+							end
+							%>
+							<%= numbre_field_tag t.id.to_s, dosis.to_f, min: 0, max: 3, step: 0.5, class: "form-control"%>
+						</div>
+					</td>
+				<% end%>
+			</tr>
+			<tr>
+				<td>
+					<strong>Dosis diaria</strong>
+				</td>
+				<% @diasAsociados.each do |t|%>
+					<td>
 						<%
-						dosis=0;
 						if @ultimaPrescripcion
 							dosis=@ultimaPrescripcion.prescripcion_diaria.find_by(dia_asociados_id: t.id).dosis.to_f
+							valor=dosis*(@ultimaPrescripcion.anticoagulantes.concentracion)
 						end
 						%>
-						<div class="radio">
-							<label>
-								<%= radio_button_tag t.id.to_s, "0",(if dosis==0 then true end)%> Ninguna medida
-							</label>
+						<div class="form-group">
+							<%= label_tag t.id.to_s+"_dosis_dia", valor%>
 						</div>
-						<div class="radio">
-							<label>
-								<%= radio_button_tag t.id.to_s, "0.5", (if dosis==0.5 then true end)%> Media pastilla
-							</label>
-						</div>
-						<div class="radio">
-							<label>
-								<%= radio_button_tag t.id.to_s, "1", (if dosis==1 then true end)%> Pastilla completa
-							</label>
-						</div>
-					</div>
-				</td>
-			<% end%>
+					</td>
+				<% end%>
 			</tr>
 		</table>
+		<ul class="list-group">
+			<li class="list-group-item">
+				Dosis semanal: <%= if @ultimaPrescripcion then @ultimaPrescripcion.dosisSemanal else "-- --" end%>
+			</li>
+		</ul>
+		<%= label_tag "dosis_semanal"%>
 	</div>
 </div>

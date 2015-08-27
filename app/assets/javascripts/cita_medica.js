@@ -116,3 +116,16 @@ function validacion(control,divContenedor){
 		return 0;
 	}
 }
+
+function dosisAnticoagulante(control){
+	if(document.getElementById(control)){
+		var valor=document.getElementById(control).value;
+		var ayuda=control+"_dosis_dia";
+		var antic=document.getElementById('antic').value;
+		antic+="_cont";
+		var concent=document.getElementById(antic).value;
+		var label=control+"_dosis_dia";
+		document.getElementById(label).innerHTML=(valor*concent);
+	}
+}
+
