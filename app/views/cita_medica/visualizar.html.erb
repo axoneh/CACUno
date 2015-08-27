@@ -46,48 +46,56 @@
 					</div>
 				</div>
 			</div>
-			<% if @prescripcion%>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Prescripcion</h3>
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-md-4">
-								<strong>Fecha de vencimiento</strong>
-							</div>
-							<div class="col-md-8">
-								<%= @prescripcion.fechaFin%>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4">
-								<strong>Anticoagulante</strong>
-							</div>
-							<div class="col-md-8">
-								<%= @prescripcion.anticoagulantes.nombre%>
-							</div>
-						</div>
-					</div>
-					<table class="table table-bordered">
-						<tr>
-							<% @prescripcion.prescripcion_diaria.each do |t|%>
-								<td>
-									<%= t.dia_asociados.nombre%>
-								</td>
-							<% end%>
-						</tr>	
-						<tr>
-							<% @prescripcion.prescripcion_diaria.each do |t|%>
-								<td>
-									<%= t.cantidadGramos%> Pastilla(s)
-								</td>
-							<% end%>
-						</tr>
-					</table>
-				</div>
-			<% end%>
 		</div>
+		<% if @prescripcion%>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Prescripcion</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Fecha de vencimiento</strong>
+						</div>
+						<div class="col-md-8">
+							<%= @prescripcion.fechaFin%>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<strong>Anticoagulante</strong>
+						</div>
+						<div class="col-md-8">
+							<%= @prescripcion.anticoagulantes.nombre%>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<strong>promedio de dosis semanal</strong>
+						</div>
+						<div class="col-md-8">
+							<%= eval(sprintf("%8.2f",(@prescripcion.dosisSemanal.to_f / 7)))%> miligramos
+						</div>
+					</div>
+				</div>
+				<table class="table table-bordered">
+					<tr>
+						<% @prescripcion.prescripcion_diaria.each do |t|%>
+							<td>
+								<%= t.dia_asociados.nombre%>
+							</td>
+						<% end%>
+					</tr>	
+					<tr>
+						<% @prescripcion.prescripcion_diaria.each do |t|%>
+							<td>
+								<%= t.dosis%> Pastilla(s)
+							</td>
+						<% end%>
+					</tr>
+				</table>
+			</div>
+		<% end%>
 		<div id="ver_icd">
 			<%= render 'ver_icd'%>
 		</div>
@@ -104,8 +112,9 @@
 				<td><strong>Paciente</strong></td>
 				<% if @admin%>
 					<td><strong>Encargado</strong></td>
-				<% end%>
+				<% else%>
 				<td><strong>...</strong></td>
+				<% end%>
 			</tr>
 			<% @citasRegistradas.each do |t|%>
 				<tr>
@@ -115,14 +124,18 @@
 							<% if t.fecha.to_date>Date.current%>
 								<span class="label label-info">Proximamente</span>
 							<% elsif t.fecha.to_date<Date.current%>
-								<span class="label label-danger">Vencida</span>
+								<span class="label label-default">Vencida</span>
 							<% else%>
 								<span class="label label-warning">Hoy</span>
 							<% end%>
 						<% elsif t.estado==2%>
-							<span class="label label-success">Realizada</span>
+							<%if t.tipo=="Domiciliaria"%>
+								<span class="label label-success">Visita con respuesta</span>
+							<% else%>
+								<span class="label label-success">Realizada</span>
+							<% end%>
 						<% else%>
-							<span class="label label-default">Inconclusa</span>
+							<span class="label label-danger">Visita sin respuesta</span>
 						<% end%>
 					</td>
 					<td>
@@ -136,13 +149,15 @@
 							<%= t.cuenta_usuarios.nombre+' '+t.cuenta_usuarios.apellido%>
 						</td>
 					<% end%>
-					<td>
-						<% if t.estado ==3 and @encargado%>
+					<% if t.estado ==3 and @encargado%>
+						<td>
 							<%= link_to "Responder", {controller: "cita_medica", action: "agregar_respuesta", cita: t.id}, class: "btn btn-success"%>
-						<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
+						</td>
+					<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
+						<td>
 							<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-danger"%>
-						<% end%>
-					</td>
+						</td>
+					<% end%>
 				</tr>
 			<% end%>
 		</table>

@@ -1,8 +1,10 @@
-<div class="container">
-	<div class="page-header">
-	  <h2>Cambio de datos principales</h2>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Autorizar usuario</h3>
 	</div>
-	<%= form_tag({controller: "usuario", action: "cambiar", usuario: params[:usuario]} , method: "post") do %>
-		<%= render 'cambio_datos'%>
-	<% end%>
+	<div class="panel-body">
+		<%= form_tag({controller: "usuario", action: "cambiar", usuario: params[:usuario]} , method: "post") do %>
+			<%= render 'cambio_datos'%>
+		<% end%>
+	</div>
 </div>

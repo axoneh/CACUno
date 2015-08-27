@@ -2,7 +2,7 @@
 <% if @nivel%>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_medico", method: "get", onsubmit: "return validacionConsulta()") do %>
+			<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_medico", method: "post", onsubmit: "return validacionConsulta()") do %>
 				<div class="form-group" id="divInrCita">
 					<%= label_tag "INR actual del paciente",nil, class: "control-label"%>
 					<%= text_field_tag "inr", params[:inr] , maxlenght: 4, placeholder: "INR del paciente", class: "form-control", onkeypress: "return isNumber(event)"%>

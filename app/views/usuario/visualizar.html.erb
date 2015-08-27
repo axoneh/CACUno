@@ -7,8 +7,6 @@
 			<% if @usuario.link_foto%>
 				<center><%= image_tag(@usuario.link_foto,size: "400x400", class: "img-rounded")%></center>
 				<br />
-			<% else%>
-				Sin foto definida
 			<% end%>
 			<div class="row">
 				<div class="col-md-4">
@@ -86,9 +84,8 @@
 	</div>
 	<center>
 		<div class="btn-group btn-group-lg" role="group">
-			<%= link_to "Usuarios",{controller: "usuario", action: "visualizar"}, class: "btn btn-default"%>
 			<% if (current_cuenta_usuario.id==@usuario.id)%>
-				<%= link_to "Modificar",{controller: "usuario", action: "actualizar"}, class: "btn btn-primary"%>
+				<%= link_to "Modificar",{controller: "usuario", action: "actualizar"}, class: "btn btn-default"%>
 			<% end%>
 			<% if @admin%>
 				<% if @usuario.estado==3%>
@@ -96,17 +93,28 @@
 				<% elsif (current_cuenta_usuario.id==@usuario.id) or (@usuario.estado==2) or (@usuario.rols.nombre!="Administrador")%>
 					<%= link_to "Reautorizar",{controller: "usuario", action: "cambiar", usuario: @usuario.id}, class: "btn btn-success"%>
 					<%= link_to "Desautorizar",{controller: "usuario", action: "desactivar", usuario: @usuario.email}, class: "btn btn-danger"%>
-				<%end %>
+				<% end%>
 			<% end%>
 		</div>
 	</center>
 <% else%>
-	<%= form_tag({controller: "usuario", action: "visualizar"},  remote: true , method: "get") do%>
-		<%= text_field_tag "busqueda", "", size: 20, placeholder: "Nombre del usuario"%>
-		<%= submit_tag "buscar", disabled: false, disable_with: "Por favor espere..."%>
-	<% end%>
-	<% if @admin%>
-		<%= link_to "Autorizar nuevo usuario", controller: "usuario", action: "autorizar"%>
+	<%= form_tag({controller: "usuario", action: "visualizar"}, id: "busqueda_usuario", remote: true , method: "get") do%>
+		<div class="form-group">
+			<%= label_tag "buscar usuario por nombre"%>
+			<div class="input-group">
+				<%= text_field_tag "busqueda","", placeholder: "Nombre del usuario", class: "form-control"%>
+				<span class="input-group-btn">
+					<%= button_tag(type: 'submit', class: "btn btn-primary") do%>
+						<span class="glyphicon glyphicon-search"></span>
+					<% end%>
+					<% if @admin%>
+						<%= link_to({controller: "usuario", action: "autorizar"}, class: "btn btn-success") do%>
+							<span class="glyphicon glyphicon-plus"></span>
+						<% end%>
+					<% end%>
+				</span>
+			</div>
+		</div>
 	<% end%>
 	<div id="usuarios">
 		<%= render 'vista_usuarios'%>

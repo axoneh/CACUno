@@ -1,51 +1,43 @@
-<div class="col-md-6">
-	<%= form_tag({controller: "usuario", action: params[:action]}, id: "actualizacion_usuario", method: "post") do %>
-	 	<div class="form-group">
-			<%= label_tag 'nombre' %>
-			<%= text_field_tag "nombre", @valorNombre, size: 30, maxlenght: 30, placeholder: "Nombre", required:"required", class:"form-control" %>
+<%= form_tag({controller: "usuario", action: params[:action]}, id: "actualizacion_usuario", method: "post") do %>
+ 	<div class="form-group">
+		<%= label_tag 'nombre' %>
+		<%= text_field_tag "nombre", @valorNombre, maxlength: 30, placeholder: "Nombre", class:"form-control" %>
+	</div>
+	<div class="form-group">
+		<%= label_tag 'apellido' %>
+		<%= text_field_tag "apellido", @valorApellido, maxlength: 30, placeholder: "Apellido", class:"form-control"%>
+	</div>
+	<div class="form-group">
+		<%= label_tag 'genero' %>
+		<select id="genero" name="genero" class="form-control">
+			<option value=0>Femenino</option>
+			<option value=1>Masculino</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<%= label_tag 'Fecha de Nacimiento' %>
+		<div class='input-group date' id='datetimepicker1'>
+			<%= date_field_tag "fecha", @valorFecha, class:"form-control" %>
+			<span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span></span>
 		</div>
-		
+	</div>
+	<% if @medico%>
 		<div class="form-group">
-			<%= label_tag 'apellido' %>
-			<%= text_field_tag "apellido", @valorApellido, size: 30, maxlenght: 30, placeholder: "Apellido", required:"required", class:"form-control"%>
+			<%= label_tag 'Especialidad' %>
+			<%= text_field_tag "especialidad", @valorEspecialidad , maxlength: 30, placeholder: "Especialidad", class:"form-control"%>
 		</div>
-		
-		<div class="form-group">
-			<%= label_tag 'genero' %>
-			<select id="genero" name="genero" class="form-control">
-				<option value=0>Femenino</option>
-				<option value=1>Masculino</option>
-			</select>
-		</div>
-		
-		<div class="form-group">
-			<%= label_tag 'Fecha de Nacimiento' %>
-			<div class='input-group date' id='datetimepicker1'>
-				<%= date_field_tag "fecha", @valorFecha, class:"form-control" %>
-				<span class="input-group-addon">
-	            <span class="glyphicon glyphicon-calendar"></span></span>
-			</div>
-		</div>
-		
-		
-		<% if @medico%>
-			<div class="form-group">
-				<%= label_tag 'Especialidad' %>
-				<%= text_field_tag "especialidad", @valorEspecialidad , size: 30, maxlenght: 30, placeholder: "Especialidad", class:"form-control", required:"required"%>
-			</div>
-		<% end%>
-	
-		<div class="form-group">
-			<%= label_tag 'dirección' %>
-			<%= text_field_tag "direccion", @valorDireccion, size: 30, maxlenght: 45, placeholder: "Direccion", class:"form-control", required:"required"%>
-		</div>
-		<%= submit_tag "Enviar Datos", disabled: false, disable_with: "Por favor espere...", class:"btn btn-primary" %>
-	<%end%>
-	<script type="text/javascript">
-		$(function () {
-		    $('#datetimepicker1').datetimepicker({ 
-		    	format: "YYYY-MM-DD"
-		    });
-		});
-	</script>
-</div>
+	<% end%>
+	<div class="form-group">
+		<%= label_tag 'dirección' %>
+		<%= text_field_tag "direccion", @valorDireccion, maxlength: 45, placeholder: "Direccion", class:"form-control"%>
+	</div>
+	<%= submit_tag "Enviar Datos", disabled: false, disable_with: "Por favor espere...", class:"btn btn-primary" %>
+<%end%>
+<script type="text/javascript">
+	$(function () {
+	    $('#datetimepicker1').datetimepicker({ 
+	    	format: "YYYY-MM-DD"
+	    });
+	});
+</script>

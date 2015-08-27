@@ -88,22 +88,21 @@ class CitaMedicaController < ApplicationController
 #-----------------------------------------------------------------------------------------------------------------
   def efectuar
     unless @medico or @paramedico
-      redirect_to controller: "principal", action: "index"
+      redirect_to controller: "principal", action: "contenido"
     else
       if params[:paciente].present? and Paciente.exists?(["correo = ?", params[:paciente]])
         paciente=Paciente.find_by(correo: params[:paciente])
         ultimaCita=paciente.ultimaCita()
         if (@paramedico and ultimaCita) or @medico
-          fechaActual=Date.current
-          if CitaMedica.exists?(["pacientes.id = ? and cuenta_usuarios.id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1])
-            citaActual=CitaMedica.where(["pacientes.id = ? and cuenta_usuarios.id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1]).first
+          if CitaMedica.exists?(["pacientes_id = ? and cuenta_usuarios_id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1])
+            citaActual=CitaMedica.where(["pacientes_id = ? and cuenta_usuarios_id = ? and estado = ?", paciente.id, current_cuenta_usuario.id, 1]).first
           else 
             citaActual = CitaMedica.new
             citaActual.pacientes_id = paciente.id
             citaActual.cuenta_usuarios_id = current_cuenta_usuario.id
             citaActual.estado = 1
           end
-          citaActual.fecha = fechaActual
+          citaActual.fecha = Date.current
           citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
           if @medico
             citaActual.tipo="Presencial"
@@ -254,12 +253,12 @@ private
     
     @diasAsociados.each do |t|
       if params[t.id.to_s].present?
-        PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, dosis: params[t.id.to_s+"_cantidad"].to_f)
+        PrescripcionDiaria.create(dia_asociados_id: t.id, prescripcions_id: prescripcion.id, dosis: params[t.id.to_s].to_f)
       end
     end
     
-    prescripcion.dosisSemanal=(prescripcion.prescripcion_diaria.sum("dosis"))*prescripcion.anticoagulantes.concentracion
-    
+    prescripcion.dosisSemanal=(prescripcion.prescripcion_diaria.sum("dosis"))*(prescripcion.anticoagulantes.concentracion.to_i)
+    prescripcion.save
   end
   
   def guardar_inr

@@ -11,6 +11,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         @user.apellido=x.info.last_name
       end
       @user.link_foto=x.info.image
+      @user.ultimoLogin=Date.current
       @user.save
       sign_in_and_redirect @user
     else

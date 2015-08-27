@@ -32,7 +32,7 @@
 		</div>
 		<div class="form-group" id="divDiasTratamiento">
 			<%= label_tag "Dias de tratamiento",nil, class: "control-label"%>
-			<%= text_field_tag "fecha_fin", if @ultimaPrescripcion then (@ultimaPrescripcion.fechaFin.to_date - @ultimaPrescripcion.created_at.to_date) else params[:fecha_fin] end, placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
+			<%= text_field_tag "fecha_fin", if @ultimaPrescripcion then (@ultimaPrescripcion.fechaFin.to_date - @ultimaPrescripcion.created_at.to_date).to_i else params[:fecha_fin] end, placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 		<div class="form-group" id="divRecomendacion">
 			<%= label_tag "Recomendaciones para la prescripcion",nil, class: "control-label"%>
@@ -44,21 +44,25 @@
 				<td>
 					<div class="form-group">
 						<strong><%= label_tag t.nombre%></strong>
-						<%= hidden_field_tag t.id.to_s, if @ultimaPrescripcion then @ultimaPrescripcion.prescripcion_diaria.find(t.id).dosis else params[t.id.to_s] end%>
-						<% image_tag("media pastilla", class: "img-rounded", onclick: "cambiar imagen de la pastilla")%>
+						<%
+						dosis=0;
+						if @ultimaPrescripcion
+							dosis=@ultimaPrescripcion.prescripcion_diaria.find_by(dia_asociados_id: t.id).dosis.to_f
+						end
+						%>
 						<div class="radio">
 							<label>
-								<%= radio_button_tag t.id.to_s, "0", true%> Ninguna medida
+								<%= radio_button_tag t.id.to_s, "0",(if dosis==0 then true end)%> Ninguna medida
 							</label>
 						</div>
 						<div class="radio">
 							<label>
-								<%= radio_button_tag t.id.to_s, "0.5"%> Media pastilla
+								<%= radio_button_tag t.id.to_s, "0.5", (if dosis==0.5 then true end)%> Media pastilla
 							</label>
 						</div>
 						<div class="radio">
 							<label>
-								<%= radio_button_tag t.id.to_s, "1"%> Pastilla completa
+								<%= radio_button_tag t.id.to_s, "1", (if dosis==1 then true end)%> Pastilla completa
 							</label>
 						</div>
 					</div>

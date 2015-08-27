@@ -51,44 +51,52 @@ class UsuarioController < ApplicationController
     unless @admin
       redirect_to controller: "principal", action: "contenido"
     else
-      @documentos=TipoDocumento.where(["estado = ?", 1])
-      @roles=Rol.all
-      
-      if request.post?
-        if params[:correo].present? and params[:identificacion].present?
-          encargado=params[:encr].present?
-          correo=params[:correo]
-          ident=params[:identificacion]
-          tipoDoc=params[:documento]
-          rol=params[:rol]
-          if CuentaUsuario.exists?(["(identificacion = ? and tipo_documentos_id = ?) or email = ? ", ident, tipoDoc, correo])
-            autorizado=CuentaUsuario.where(["(identificacion = ? and tipo_documentos_id = ?) or email= ?", ident, tipoDoc, correo]).first;
-            if autorizado.rols.nombre=="Administrador" and autorizado.estado==1
-              flash.alert="Existe ya una cuenta asociada a esa identificacion pero no se puede actualizar por motivos de permisos";
+      unless params[:usuario].present?
+        @documentos=TipoDocumento.where(["estado = ?", 1])
+        @roles=Rol.all
+        
+        if request.post?
+          if params[:correo].present? and params[:identificacion].present?
+            encargado=params[:encr].present?
+            correo=params[:correo]
+            ident=params[:identificacion]
+            tipoDoc=params[:documento]
+            rol=params[:rol]
+            if CuentaUsuario.exists?(["(identificacion = ? and tipo_documentos_id = ?) or email = ? ", ident, tipoDoc, correo])
+              autorizado=CuentaUsuario.where(["(identificacion = ? and tipo_documentos_id = ?) or email= ?", ident, tipoDoc, correo]).first;
+              if autorizado.rols.nombre=="Administrador" and autorizado.estado==1
+                flash.alert="Existe ya una cuenta asociada a esa identificacion pero no se puede actualizar por motivos de permisos";
+              else
+                autorizado.password=Devise.friendly_token[0,20]
+                autorizado.rols_id=rol
+                autorizado.estado=2
+                autorizado.email=correo
+                autorizado.encargado_respuesta=encargado
+                autorizado.save
+                flash.notice="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar"
+              end
             else
-              autorizado.password=Devise.friendly_token[0,20]
-              autorizado.rols_id=rol
-              autorizado.estado=2
-              autorizado.email=correo
-              autorizado.encargado_respuesta=encargado
-              autorizado.save
-              flash.notice="Existe ya una cuenta asociada a esa identificacion, se procedio a autorizar"
+              CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, email: correo, password: Devise.friendly_token[0,20], estado: 2, rols_id: rol, encargado_respuesta: encargado);
+              flash.notice="Se genero la autorizacion exitosamente";
             end
           else
-            CuentaUsuario.create(identificacion: ident, tipo_documentos_id: tipoDoc, email: correo, password: Devise.friendly_token[0,20], estado: 2, rols_id: rol, encargado_respuesta: encargado);
-            flash.notice="Se genero la autorizacion exitosamente";
+            if params[:correo].present?
+              @valorCorreo=params[:correo]
+            end
+            if params[:identificacion].present?
+              @valorIdentificacion=params[:identificacion]
+            end
+            flash.alert="Debe diligenciar todos los campos"
           end
-        else
-          if params[:correo].present?
-            @valorCorreo=params[:correo]
-          end
-          if params[:identificacion].present?
-            @valorIdentificacion=params[:identificacion]
-          end
-          flash.alert="Debe diligenciar todos los campos"
         end
+      else
+        usuario=CuentaUsuario.find_by(email: params[:usuario])
+        if usuario and usuario.estado==3
+          usuario.estado=2;
+          usuario.save
+        end
+        redirect_to controller: "usuario", action: "visualizar"
       end
-      
     end
   end
 

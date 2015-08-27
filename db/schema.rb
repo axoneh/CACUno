@@ -97,7 +97,8 @@ ActiveRecord::Schema.define(version: 20150729220229) do
     t.datetime "updated_at",                                         null: false
     t.string   "link_foto",              limit: 100
     t.string   "provider",               limit: 50
-    t.string   "uid",                    limit: 50           
+    t.string   "uid",                    limit: 50       
+    t.date     "ultimoLogin"
   end
 
   add_index "cuenta_usuarios", ["email"], name: "index_correo_usuarios", unique: true, using: :btree

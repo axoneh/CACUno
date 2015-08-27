@@ -1,24 +1,24 @@
 <div class="form-group">
-	<%= label_tag "Numero de identificacion"%>
-	<%= text_field_tag "identificacion", @valorIdentificacion , size: 30, maxlenght: 15, placeholder: "Identificacion", required:"required", class: "form-control"%>
+	<%= label_tag "Numero de identificacion", nil, class: "control-label"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion , maxlength: 15, placeholder: "Identificacion", class: "form-control"%>
 </div>
 <div class="form-group">
-	<%= label_tag "Tipo de documento"%>
-	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre)%>
+	<%= label_tag "Tipo de documento", nil, class: "control-label"%>
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, params[:documento])%>
 </div>
 <div class="form-group">
-	<%= label_tag "Correo electronico"%>
-	<%= email_field_tag "correo", @valorCorreo,id: "correo", name: "correo", size: 30, maxlenght: 45, placeholder: "Correo", required:"required" %>
+	<%= label_tag "Correo electronico", nil, class: "control-label"%>
+	<%= email_field_tag "correo", @valorCorreo, maxlenght: 45, placeholder: "Correo"%>
 </div>
 <div class="form-group">
-	<%= label_tag "Rol del usuario"%>
-	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre)%>
+	<%= label_tag "Rol del usuario", nil, class: "control-label"%>
+	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre, params[:rol])%>
 </div>
 <div class="form-group" id="encargado">
 	<div class="form-group">
 		<div class="input-group">
 			<span class="input-group-addon">
-				<%= check_box_tag "encr", "encr"%>
+				<%= check_box_tag "encr", "encr", false%>
 			</span>
 			<%= text_field_tag "texto", 'Encargado de responder las citas presenciales', readonly: "readonly", class: "form-control"%>
 		</div>
