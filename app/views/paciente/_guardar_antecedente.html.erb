@@ -9,7 +9,7 @@
 				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-addon">
-							<%= check_box_tag a.id.to_s, a.id.to_s, seleccion, onclick: "habilitarDescripcionAntecedente('"+a.id.to_s+"')"%>
+							<%= check_box_tag a.id.to_s, a.id.to_s, seleccion, onclick: "habilitarDesA('"+a.id.to_s+"');"%>
 						</span>
 						<%= text_field_tag "texto", a.nombre, readonly: "readonly", class: "form-control"%>
 					</div>

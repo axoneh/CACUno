@@ -96,15 +96,17 @@ function validacionAgregacionLab(){
 	}
 }
 
-function habilitarDescripcionAntecedente(antec){
+function habilitarDesA(antec){
 	var input=document.getElementById(antec);
 	var ayuda=antec+'_comentario';
 	var desc=document.getElementById(ayuda);
-	if(input.checked==true && desc!=null){
-		desc.readOnly=false;
-		desc.focus();
-	}
-	else{
-		desc.readOnly=true;
+	if(desc!=null){
+		if(input.checked==true){
+			desc.readOnly=false;
+			desc.focus();
+		}
+		else{
+			desc.readOnly=true;
+		}
 	}
 }

@@ -124,7 +124,7 @@ class PacienteController < ApplicationController
       
     else
       @especifico=false
-      if @encargado
+      if @encargado or @admin
         @pacientesN=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").where(["cita_medicas.estado= ? and pacientes.estado = ?",3,1]).group("cita_medicas.pacientes_id")
       end
       @pacientes=Paciente.joins(:cita_medicas).select("pacientes.*, cita_medicas.estado as estadoCita").group("cita_medicas.pacientes_id")

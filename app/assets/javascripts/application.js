@@ -19,6 +19,7 @@
 //= require bootstrap-datetimepicker
 //= require metisMenu
 //= require sb-admin-2
+//= require_tree .
 
 
 function isNumber(evt) {

@@ -18,9 +18,6 @@ class CitaMedicaController < ApplicationController
       @cita=CitaMedica.find(params[:cita])
       if @cita.estado>1 and @cita.generico==false
         @nivel=true
-        if @cita.cuenta_usuarios_id==current_cuenta_usuario.id
-          @medicoC=true        
-        end
         @paciente=@cita.pacientes
         @preguntas=@cita.pregunta_cita
         @respuesta=RespuestaCita.find_by(cita_medicas_id: @cita.id)
@@ -281,8 +278,7 @@ private
       @valorMax=@ultimaCita.respuesta_cita.valor_max
       @valorMin=@ultimaCita.respuesta_cita.valor_min
     end
+    @ultimaPrescripcion=@paciente.prescripcions.last
   end
-
-  
 
 end

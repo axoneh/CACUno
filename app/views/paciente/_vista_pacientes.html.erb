@@ -1,4 +1,4 @@
-<% if @encargado%>
+<% if @pacientesN %>
 	<div class="panel panel-danger">
 		<div class="panel-heading">
 			<h3 class="panel-title">Visitas domiciliarias sin concluir</h3>
@@ -8,7 +8,9 @@
 				<td><strong>...</strong></td>
 				<td><strong>Nombre</strong></td>
 				<td><strong>Fecha de la visita</strong></td>
-				<td><strong></strong></td>
+				<% if @encargado%>
+					<td><strong></strong></td>
+				<% end%>
 			</tr>
 			<% @pacientesN.each do |t|%>
 				<tr>
@@ -30,11 +32,13 @@
 							Sin realizar
 						<% end%>
 					</td>
-					<td>
-						<div class="btn-group" role="group">
-							<%= link_to "Concluir",{controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id}, class: "btn btn-danger"%>
-						</div>
-					</td>
+					<% if @encargado%>
+						<td>
+							<div class="btn-group" role="group">
+								<%= link_to "Concluir",{controller: "cita_medica", action: "agregar_respuesta", cita: t.ultimaVisita.id}, class: "btn btn-danger"%>
+							</div>
+						</td>
+					<% end%>
 				</tr>
 			<%end%>
 		</table>

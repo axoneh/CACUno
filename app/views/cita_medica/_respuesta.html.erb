@@ -28,15 +28,15 @@
 	<div class="panel-body">
 		<div class="form-group" id="divAnticoagulante">
 			<%= label_tag "Anticoagulante",nil, class: "control-label"%>
-			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre, params[:antic]), class: "form-control"%>
+			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre, if @ultimaPrescripcion then @ultimaPrescripcion.anticoagulantes_id else params[:antic] end), class: "form-control"%>
 		</div>
 		<div class="form-group" id="divDiasTratamiento">
 			<%= label_tag "Dias de tratamiento",nil, class: "control-label"%>
-			<%= text_field_tag "fecha_fin", params[:fecha_fin], placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
+			<%= text_field_tag "fecha_fin", if @ultimaPrescripcion then (@ultimaPrescripcion.fechaFin.to_date - @ultimaPrescripcion.created_at.to_date) else params[:fecha_fin] end, placeholder: "Dias de tratamiento", class: "form-control", onkeypress: "return isNumber(event)"%>
 		</div>
 		<div class="form-group" id="divRecomendacion">
 			<%= label_tag "Recomendaciones para la prescripcion",nil, class: "control-label"%>
-			<%= text_area_tag "recomendacion", params[:recomendacion], placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control"%>
+			<%= text_area_tag "recomendacion", if @ultimaPrescripcion then @ultimaPrescripcion.recomendacion else params[:recomendacion] end, placeholder: "Recomendaciones para la prescripcion", rows: 3, class: "form-control"%>
 		</div>
 		<table class="table table-bordered">
 			<tr>
@@ -44,7 +44,7 @@
 				<td>
 					<div class="form-group">
 						<strong><%= label_tag t.nombre%></strong>
-						<% hidden_field_tag t.id.to_s, 0, onchange: "cambiar texto del label t.nombre"%>
+						<%= hidden_field_tag t.id.to_s, if @ultimaPrescripcion then @ultimaPrescripcion.prescripcion_diaria.find(t.id).dosis else params[t.id.to_s] end%>
 						<% image_tag("media pastilla", class: "img-rounded", onclick: "cambiar imagen de la pastilla")%>
 						<div class="radio">
 							<label>
