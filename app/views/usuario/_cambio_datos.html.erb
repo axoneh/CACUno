@@ -1,18 +1,18 @@
 <div class="form-group">
 	<%= label_tag "Numero de identificacion", nil, class: "control-label"%>
-	<%= text_field_tag "identificacion", @valorIdentificacion , maxlength: 15, placeholder: "Identificacion", class: "form-control"%>
+	<%= text_field_tag "identificacion", @valorIdentificacion , maxlength: 15, placeholder: "Identificacion", class: "form-control", onkeypress: "return isNumber(event)"%>
 </div>
 <div class="form-group">
 	<%= label_tag "Tipo de documento", nil, class: "control-label"%>
-	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, params[:documento])%>
+	<%= select_tag "documento", options_from_collection_for_select(@documentos, :id,:nombre, params[:documento]), class: "form-control"%>
 </div>
 <div class="form-group">
 	<%= label_tag "Correo electronico", nil, class: "control-label"%>
-	<%= email_field_tag "correo", @valorCorreo, maxlenght: 45, placeholder: "Correo"%>
+	<%= email_field_tag "correo", @valorCorreo, maxlenght: 45, placeholder: "Correo", class: "form-control"%>
 </div>
 <div class="form-group">
 	<%= label_tag "Rol del usuario", nil, class: "control-label"%>
-	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre, params[:rol])%>
+	<%= select_tag "rol", options_from_collection_for_select(@roles ,:id, :nombre, params[:rol]), class: "form-control"%>
 </div>
 <div class="form-group" id="encargado">
 	<div class="form-group">

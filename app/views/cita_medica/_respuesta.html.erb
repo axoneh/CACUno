@@ -29,6 +29,9 @@
 		<div class="form-group" id="divAnticoagulante">
 			<%= label_tag "Anticoagulante",nil, class: "control-label"%>
 			<%= select_tag "antic", options_from_collection_for_select(@anticoagulantes, :id,:nombre, if @ultimaPrescripcion then @ultimaPrescripcion.anticoagulantes_id else params[:antic] end), class: "form-control"%>
+			<% @anticoagulantes.each do |a|%>
+				<%= hidden_field_tag a.id.to_s+"_cont", a.concentracion%>
+			<% end%>
 		</div>
 		<div class="form-group" id="divDiasTratamiento">
 			<%= label_tag "Dias de tratamiento",nil, class: "control-label"%>
@@ -53,7 +56,7 @@
 								dosis=@ultimaPrescripcion.prescripcion_diaria.find_by(dia_asociados_id: t.id).dosis.to_f
 							end
 							%>
-							<%= numbre_field_tag t.id.to_s, dosis.to_f, min: 0, max: 3, step: 0.5, class: "form-control"%>
+							<%= number_field_tag t.id.to_s, dosis.to_f, min: 0, max: 3, step: 0.5, class: "form-control", onchange: "dosisAnticoagulante('"+t.id.to_s+"')"%>
 						</div>
 					</td>
 				<% end%>
@@ -65,23 +68,23 @@
 				<% @diasAsociados.each do |t|%>
 					<td>
 						<%
+						valor=0;
 						if @ultimaPrescripcion
 							dosis=@ultimaPrescripcion.prescripcion_diaria.find_by(dia_asociados_id: t.id).dosis.to_f
 							valor=dosis*(@ultimaPrescripcion.anticoagulantes.concentracion)
 						end
 						%>
 						<div class="form-group">
-							<%= label_tag t.id.to_s+"_dosis_dia", valor%>
+							<%= label_tag t.id.to_s+"_dosis_dia", valor, id: t.id.to_s+"_dosis_dia"%> mg
 						</div>
 					</td>
 				<% end%>
 			</tr>
 		</table>
 		<ul class="list-group">
-			<li class="list-group-item">
-				Dosis semanal: <%= if @ultimaPrescripcion then @ultimaPrescripcion.dosisSemanal else "-- --" end%>
+			<li class="list-group-item" id="dosisSemanal">
+				Dosis semanal: <%= if @ultimaPrescripcion then @ultimaPrescripcion.dosisSemanal else "-- --" end%> mg
 			</li>
 		</ul>
-		<%= label_tag "dosis_semanal"%>
 	</div>
 </div>

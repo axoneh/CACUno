@@ -279,5 +279,36 @@ private
     end
     @ultimaPrescripcion=@paciente.prescripcions.last
   end
-
+=begin
+  def calcularTTR
+    rango_antic()
+    valorTTR=0
+    @inrP=@paciente.inr_paciente.where(["cita_medicas.generica = ?",false]).order("inr_pacientes.fecha DESC").plunk("inr_paciente.valorInr", "inr_paciente.fecha")
+    for i in 0..((@inrP.count)-2)
+      fmin=nil
+      fmax=nil
+      dDias=(@inrP[i+1][1].to_date - @inrP[i][1].to_date).to_i
+      pendiente=((@inrP[i+1][0].to_f - @inrP[i][0].to_f)/dDias).to_f
+      constante=@inrP[i+1][0]
+      if @inrP[i][0].to_f<@valorMin
+        if @inrP[i+1][0].to_f>@valorMin
+          if @inrP[i+1][0].to_f>@valorMax
+            fmin=(@valorMin-constante)
+            fmax=(@valorMax-constante)
+            unless pendiente==0
+              fmin=fmin/pendiente
+              fmax=fmax/pendiente
+            end
+          elsif @inrP[i+1][0].to_f<@valorMax
+            fmin=(@valorMin-constante)
+            fmax=dDias
+            unless pendiente==0
+              fmin=fmin/pendiente
+            end
+          end
+        end
+      end
+    end
+  end
+=end
 end

@@ -7,6 +7,7 @@ class Paciente < ActiveRecord::Base
   has_many :laboratorios,class_name: Laboratorio, foreign_key: :pacientes_id
   has_many :antecedente_paciente, class_name: AntecedentePaciente, foreign_key: :pacientes_id
   has_many :prescripcions,class_name: Prescripcion , through: :cita_medicas
+  has_many :inr_paciente, class_name: InrPaciente, through: :cita_medicas
   
   has_attached_file :avatar, :styles => { :medium => "#300x300>" }, :default_url => "/images/:style/missing.png"
   

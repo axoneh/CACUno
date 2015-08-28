@@ -120,12 +120,19 @@ function validacion(control,divContenedor){
 function dosisAnticoagulante(control){
 	if(document.getElementById(control)){
 		var valor=document.getElementById(control).value;
-		var ayuda=control+"_dosis_dia";
 		var antic=document.getElementById('antic').value;
 		antic+="_cont";
 		var concent=document.getElementById(antic).value;
 		var label=control+"_dosis_dia";
 		document.getElementById(label).innerHTML=(valor*concent);
+		var lista=document.getElementsByTagName('input');
+		var suma=0;
+		for(var i=0;i<lista.length;i++){
+			if(lista[i].type=="number"){
+				suma+=(lista[i].value*concent);	
+			}
+		}
+		document.getElementById('dosisSemanal').innerHTML="Dosis Semanal: "+suma;
 	}
 }
 
