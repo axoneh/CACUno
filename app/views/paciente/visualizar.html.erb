@@ -94,7 +94,11 @@
 					<strong><p class="text-right">Ultimo INR de tratamiento</p></strong>
 				</div>
 				<div class="col-md-8">
-					<%= (@inr.valorInr) if @inr%> tomado el <%= (@inr.fecha) if @inr%>
+					<% if @inr%>
+						<%= @inr.valorInr%> tomado el <%= @inr.fecha%>
+					<%else%>
+						Sin registro
+					<% end%>
 				</div>
 			</div>
 			<div class="row">
@@ -163,8 +167,6 @@
 				<strong>Anticoagulante: </strong> <%= @prescripcion.anticoagulantes.nombre%>
 				<br />
 				<strong>Dosis semanal: </strong> <%= @prescripcion.dosisSemanal%>
-				<br />
-				<strong>Promedio de dosis semanal: </strong> <%= @prescripcion.dosisSemanal/7%>
 			</div>
 			<table class="table">
 				<tr>
@@ -177,7 +179,7 @@
 				<tr>
 					<% @prescripcion.prescripcion_diaria.each do |t|%>
 						<td>
-							<%= t.cantidadGramos%> Pastilla(s)
+							<%= t.dosis%> Pastilla(s)
 						</td>
 					<% end%>
 				</tr>

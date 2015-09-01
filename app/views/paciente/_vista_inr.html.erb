@@ -28,9 +28,10 @@
 			<ul class="list-group">
 				<% @InrPaciente.each do |t|%>
 					<li class="list-group-item">
-						<strong>INR:</strong><%= t.valorInr.to_f%>
-						<br />
-						<strong>Fecha:</strong><%= t.fecha%>
+						<strong>INR: <%= t.valorInr.to_f%></strong> Tomado el <%= t.fecha%>
+						<% if t.cita_medicas.generico%>
+							<span class="label label-danger">Previo</span>
+						<% end%>
 					</li>
 				<% end%>
 			</ul>

@@ -76,7 +76,7 @@ class PacienteController < ApplicationController
       @riesgoEmbolia+=buscar_antecedente('enfermedad vascular');
       
       if cita
-        sumaRiesgo=cita.respuesta_cita.observacion_medicas
+        sumaRiesgo=cita.observacion_medicas
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -104,7 +104,7 @@ class PacienteController < ApplicationController
       @riesgoHemorragia+=buscar_antecedente('alcohol')
       
       if cita
-        sumaRiesgo=cita.respuesta_cita.observacion_medicas
+        sumaRiesgo=cita.observacion_medicas
         if sumaRiesgo and (sumaRiesgo.hiper_sistolica>160 or sumaRiesgo.hiper_diastolica>100)
           @riesgoEmbolia+=1
         end
@@ -152,7 +152,10 @@ class PacienteController < ApplicationController
         end
         if cita
           if params[:inr].present? and params[:fecha_inr].present? and cita
-            InrPaciente.create(cita_medicas_id: cita.id, valorInr: params[:inr].to_f, fecha: params[:fecha_inr] )
+            InrPaciente.create(cita_medicas_id: cita.id, valorInr: params[:inr].to_f, fecha: params[:fecha_inr])
+            inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+            @paciente.ttrCacPrevio=calcularTTR(inrP)
+            @paciente.save()
           end
           if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
             InrPaciente.delete_all(["id = ?",params[:inr_e]])

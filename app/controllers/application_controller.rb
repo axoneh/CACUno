@@ -63,4 +63,108 @@ protected
     end
   end
 
+  def rango_antic
+    @valorMax=3
+    @valorMin=2
+    @ultimaCita=@paciente.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last
+    if @ultimaCita
+      @valorMax=@ultimaCita.respuesta_cita.valor_max
+      @valorMin=@ultimaCita.respuesta_cita.valor_min
+    end
+    @ultimaPrescripcion=@paciente.prescripcions.last
+  end
+
+  def calcularTTR(arreglo)
+    rango_antic()
+    valorTTR=0
+    for i in 0..(arreglo.size()-2)
+      
+      fmin=nil
+      fmax=nil
+      
+      dDias=(arreglo[i+1].last.to_date - arreglo[i].last.to_date).to_i
+      if dDias ==0
+        next
+      end
+      pendiente=((arreglo[i+1].first.to_f - arreglo[i].first.to_f)/dDias).to_f
+      constante=arreglo[i].first
+      
+      if arreglo[i].first.to_f<@valorMin
+        
+        if arreglo[i+1].first.to_f>=@valorMin
+          
+          fmin=@valorMin-constante
+          if pendiente!=0
+            fmin=fmin/pendiente
+          end
+          
+          if arreglo[i+1].first.to_f<=@valorMax
+            
+            fmax=dDias
+          
+          else
+          
+            fmax=@valorMax-constante
+            if pendiente!=0
+              fmax=fmax/pendiente
+            end
+          
+          end
+          
+        end
+        
+      elsif arreglo[i].first.to_f>@valorMax
+        
+        if arreglo[i+1].first.to_f<=@valorMax
+          
+          fmin=@valorMax-constante
+          if pendiente!=0
+            fmin=fmin/pendiente
+          end
+          
+          if arreglo[i+1].first.to_f<@valorMin
+          
+            fmax=@valorMax-constante
+            if pendiente!=0
+              fmax=fmax/pendiente
+            end
+          
+          else
+          
+            fmax=dDias
+          
+          end
+        
+        end
+        
+      else
+        
+        fmin=0
+        
+        if arreglo[i+1].first.to_f<=@valorMax and arreglo[i+1].first.to_f>=@valorMin
+        
+          fmax=dDias
+        
+        else
+        
+          fmax=@valorMax-constante
+          if pendiente!=0
+            fmax=fmax/pendiente
+          end
+        
+        end
+        
+      end
+      
+      if fmin and fmax
+        valorTTR+=(fmax-fmin)
+      end
+    end
+    dDias=(arreglo.last.last.to_date - arreglo.first.last.to_date).to_i
+    valorTTR=valorTTR*100/dDias
+    valorTTR=eval(sprintf("%3.1f",valorTTR))
+    return valorTTR
+    
+  end
+
 end

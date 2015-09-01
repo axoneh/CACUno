@@ -103,7 +103,7 @@ class CitaMedicaController < ApplicationController
             citaActual.estado = 1
           end
           citaActual.fecha = Date.current
-          citaActual.hora_ini = Time.now.strftime("%I:%M:%S")
+          citaActual.hora_ini = Time.now.strftime("%H:%M")
           if @medico
             citaActual.tipo="Presencial"
           else
@@ -154,6 +154,20 @@ class CitaMedicaController < ApplicationController
                 @cita.estado=2#actualizacion de la cita, para notificar que ya tiene respuesta
                 @cita.fecha_realizacion=Date.current
                 @cita.save()
+                
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, false]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacTotal=calcularTTR(inrP)
+                
+                fecha_ayuda=(Date.current-180).to_date;
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacSeisM=calcularTTR(inrP)
+                
+                fecha_ayuda=(Date.current-360).to_date;
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacDOceM=calcularTTR(inrP)
+                
+                @paciente.save()
+                
                 flash.notice="Cita concluida exitosamente"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
@@ -172,6 +186,11 @@ class CitaMedicaController < ApplicationController
                 @cita.estado=3;
                 @cita.fecha_realizacion=Date.current
                 @cita.save
+
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, false]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacTotal=calcularTTR(inrP)
+                @paciente.save()
+
                 flash.notice="Cita realizada exitosamente, en espera de respuesta"
                 redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
               else
@@ -269,46 +288,4 @@ private
     inrPac.save
   end
 
-  def rango_antic
-    @valorMax=3
-    @valorMin=2
-    @ultimaCita=@paciente.cita_medicas.where(["generico = ? and estado = ?", false, 2]).last
-    if @ultimaCita
-      @valorMax=@ultimaCita.respuesta_cita.valor_max
-      @valorMin=@ultimaCita.respuesta_cita.valor_min
-    end
-    @ultimaPrescripcion=@paciente.prescripcions.last
-  end
-=begin
-  def calcularTTR
-    rango_antic()
-    valorTTR=0
-    @inrP=@paciente.inr_paciente.where(["cita_medicas.generica = ?",false]).order("inr_pacientes.fecha DESC").plunk("inr_paciente.valorInr", "inr_paciente.fecha")
-    for i in 0..((@inrP.count)-2)
-      fmin=nil
-      fmax=nil
-      dDias=(@inrP[i+1][1].to_date - @inrP[i][1].to_date).to_i
-      pendiente=((@inrP[i+1][0].to_f - @inrP[i][0].to_f)/dDias).to_f
-      constante=@inrP[i+1][0]
-      if @inrP[i][0].to_f<@valorMin
-        if @inrP[i+1][0].to_f>@valorMin
-          if @inrP[i+1][0].to_f>@valorMax
-            fmin=(@valorMin-constante)
-            fmax=(@valorMax-constante)
-            unless pendiente==0
-              fmin=fmin/pendiente
-              fmax=fmax/pendiente
-            end
-          elsif @inrP[i+1][0].to_f<@valorMax
-            fmin=(@valorMin-constante)
-            fmax=dDias
-            unless pendiente==0
-              fmin=fmin/pendiente
-            end
-          end
-        end
-      end
-    end
-  end
-=end
 end
