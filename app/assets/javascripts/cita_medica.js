@@ -83,15 +83,10 @@ function validacionVisita(){
 	if(document.getElementById('efectuar_paramedico')){
 		var val=0;
 		val+=validacion('hsis','divSistolica');
-		console.log('sis');
 		val+=validacion('hdia','divDiastolica');
-		console.log('sis');
 		val+=validacion('frecuencia_car','divFrecuencia');
-		console.log('sis');
 		val+=validacion('observacion','divObservacion');
-		console.log('sis');
 		val+=validacion('inr','divInrCita');
-		console.log('sis');
 		if(val==0){
 			return true;
 		}
@@ -117,22 +112,23 @@ function validacion(control,divContenedor){
 	}
 }
 
-function dosisAnticoagulante(control){
-	if(document.getElementById(control)){
-		var valor=document.getElementById(control).value;
+function cambioAnticoagulante(){
+	if(document.getElementById('antic')){
 		var antic=document.getElementById('antic').value;
 		antic+="_cont";
 		var concent=document.getElementById(antic).value;
-		var label=control+"_dosis_dia";
-		document.getElementById(label).innerHTML=(valor*concent);
 		var lista=document.getElementsByTagName('input');
 		var suma=0;
+		var id_number="";
 		for(var i=0;i<lista.length;i++){
 			if(lista[i].type=="number"){
+				id_number=lista[i].id;
+				id_number+="_dosis_dia";
+				document.getElementById(id_number).innerHTML=(lista[i].value*concent)+" mg.";
 				suma+=(lista[i].value*concent);	
 			}
 		}
-		document.getElementById('dosisSemanal').innerHTML="Dosis Semanal: "+suma;
+		document.getElementById('dosisSemanal').innerHTML="Dosis Semanal: "+suma+" mg.<br />Promedio de dosis semanal: "+(suma/7)+" mg.";
 	}
 }
 

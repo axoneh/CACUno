@@ -153,14 +153,16 @@ class PacienteController < ApplicationController
         if cita
           if params[:inr].present? and params[:fecha_inr].present? and cita
             InrPaciente.create(cita_medicas_id: cita.id, valorInr: params[:inr].to_f, fecha: params[:fecha_inr])
-            inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
-            @paciente.ttrCacPrevio=calcularTTR(inrP)
-            @paciente.save()
           end
           if params[:inr_e].present? and InrPaciente.exists?(["id = ? and cita_medicas_id = ?", params[:inr_e], cita.id])
             InrPaciente.delete_all(["id = ?",params[:inr_e]])
           end
         end
+        
+        inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+        @paciente.ttrCacPrevio=calcularTTR(inrP)
+        @paciente.save()
+        
         @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, true]).order("inr_pacientes.fecha desc")
         if params[:lab].present? and params[:rep].present? and params[:fecha_lab].present?
           Laboratorio.create(pacientes_id: @paciente.id, fecha: params[:fecha_lab], estudio: params[:lab], resultado: params[:rep], observacion: params[:observacion])
@@ -200,14 +202,16 @@ private
     @valorFechaN=@paciente.fecha_nacimiento
     @valorIdentificacion=@paciente.identificacion
     @valorNombre=@paciente.nombre
+    @valorTelefono=@paciente.telefono
     
+    @ciudades=Ciudad.where(["estado = ?", 1])
     @antecedentes=AntecedenteMedico.where(["estado = ? ", 1])    
     @documentos=TipoDocumento.where(["estado = ?", 1])
     @estadosC=EstadoCivil.where(["estado = ?", 1])
     @patologias=Patologia.where(["estado = ?", 1])
     
     if request.post?
-      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:direccion].present?
+      if params[:correo].present? and params[:nombre].present? and params[:apellido].present? and params[:identificacion].present? and params[:fecha_n].present? and params[:direccion].present? and params[:telefono].present?
         correo=params[:correo]
         ident=params[:identificacion]
         documento=params[:documento]
@@ -230,6 +234,8 @@ private
           @paciente.patologia_id=params[:patologia]
           @paciente.estado=1
           @paciente.antecedente_general=params[:antecedentes]
+          @paciente.telefono=params[:telefono]
+          @paciente.ciudads_id=params[:ciudad]
           if params[:avatar].present?
             @paciente.avatar=params[:avatar]
           end
@@ -271,21 +277,27 @@ private
         if params[:antecedentes].present?
           @valorAntecedentes=params[:antecedentes]
         end
+        if params[:telefono].present?
+          @valorTelefono=params[:telefono]
+        end
         flash.alert="Debe diligenciar todos los campos"
+        return false
       end
     end
   end
   
   def crear_cita_generica
-    cita = CitaMedica.new
-    cita.pacientes_id = @paciente.id
-    cita.cuenta_usuarios_id = current_cuenta_usuario.id
-    cita.fecha = Date.current
-    cita.estado = 2
-    cita.hora_ini = Time.now.strftime("%I:%M:%S")
-    cita.tipo="Presencial"
-    cita.generico=true
-    cita.save()
+    unless @paciente.cita_medicas.exists?(["generico = ?",true])
+      cita = CitaMedica.new
+      cita.pacientes_id = @paciente.id
+      cita.cuenta_usuarios_id = current_cuenta_usuario.id
+      cita.fecha = Date.current
+      cita.estado = 2
+      cita.hora_ini = Time.now.strftime("%I:%M:%S")
+      cita.tipo="Presencial"
+      cita.generico=true
+      cita.save()
+    end
   end
   
 end

@@ -79,8 +79,8 @@ protected
     valorTTR=0
     for i in 0..(arreglo.size()-2)
       
-      fmin=nil
-      fmax=nil
+      fmin=0
+      fmax=0
       
       dDias=(arreglo[i+1].last.to_date - arreglo[i].last.to_date).to_i
       if dDias ==0
@@ -91,7 +91,7 @@ protected
       
       if arreglo[i].first.to_f<@valorMin
         
-        if arreglo[i+1].first.to_f>=@valorMin
+        if arreglo[i+1].first.to_f>@valorMin
           
           fmin=@valorMin-constante
           if pendiente!=0
@@ -115,7 +115,7 @@ protected
         
       elsif arreglo[i].first.to_f>@valorMax
         
-        if arreglo[i+1].first.to_f<=@valorMax
+        if arreglo[i+1].first.to_f<@valorMax
           
           fmin=@valorMax-constante
           if pendiente!=0
@@ -139,6 +139,10 @@ protected
         
       else
         
+        if (arreglo[i].first.to_f==@valorMax and arreglo[i+1].first.to_f>@valorMax) or (arreglo[i].first.to_f==@valorMin and arreglo[i+1].first.to_f<@valorMin) 
+          next
+        end
+        
         fmin=0
         
         if arreglo[i+1].first.to_f<=@valorMax and arreglo[i+1].first.to_f>=@valorMin
@@ -155,14 +159,16 @@ protected
         end
         
       end
-      
-      if fmin and fmax
-        valorTTR+=(fmax-fmin)
-      end
+      puts "lo que se suma: "+(fmax-fmin).abs.to_s
+      valorTTR+=(fmax-fmin).abs
     end
     dDias=(arreglo.last.last.to_date - arreglo.first.last.to_date).to_i
+    puts "diferencia de dias: "+dDias.to_s
+    if dDias==0
+      return 0
+    end
     valorTTR=valorTTR*100/dDias
-    valorTTR=eval(sprintf("%3.1f",valorTTR))
+    valorTTR=eval(sprintf("%3.3f",valorTTR))
     return valorTTR
     
   end

@@ -1,21 +1,21 @@
-<%= form_tag({controller: "usuario", action: params[:action]}, id: "actualizacion_usuario", method: "post") do %>
- 	<div class="form-group">
-		<%= label_tag 'nombre' %>
+<%= form_tag({controller: "usuario", action: params[:action]}, id: "actualizacion_usuario", method: "post", onsubmit: "return validacionActualizacionUsuario()") do %>
+ 	<div class="form-group" id="divNombreUsuario">
+		<%= label_tag 'nombre' ,nil, class: "control-label"%>
 		<%= text_field_tag "nombre", @valorNombre, maxlength: 30, placeholder: "Nombre", class:"form-control" %>
 	</div>
-	<div class="form-group">
-		<%= label_tag 'apellido' %>
+	<div class="form-group" id="divApellidoUsuario">
+		<%= label_tag 'apellido',nil, class: "control-label" %>
 		<%= text_field_tag "apellido", @valorApellido, maxlength: 30, placeholder: "Apellido", class:"form-control"%>
 	</div>
-	<div class="form-group">
-		<%= label_tag 'genero' %>
+	<div class="form-group" id="divGeneroUsuario">
+		<%= label_tag 'genero' ,nil, class: "control-label"%>
 		<select id="genero" name="genero" class="form-control">
 			<option value=0>Femenino</option>
 			<option value=1>Masculino</option>
 		</select>
 	</div>
-	<div class="form-group">
-		<%= label_tag 'Fecha de Nacimiento' %>
+	<div class="form-group" id="divFechaUsuario">
+		<%= label_tag 'Fecha de Nacimiento',nil, class: "control-label" %>
 		<div class='input-group date' id='datetimepicker1'>
 			<%= date_field_tag "fecha", @valorFecha, class:"form-control" %>
 			<span class="input-group-addon">
@@ -23,14 +23,22 @@
 		</div>
 	</div>
 	<% if @medico%>
-		<div class="form-group">
-			<%= label_tag 'Especialidad' %>
+		<div class="form-group" id="divEspecialidad">
+			<%= label_tag 'Especialidad',nil, class: "control-label" %>
 			<%= text_field_tag "especialidad", @valorEspecialidad , maxlength: 30, placeholder: "Especialidad", class:"form-control"%>
 		</div>
 	<% end%>
-	<div class="form-group">
-		<%= label_tag 'dirección' %>
+	<div class="form-group" id="divDireccionUsuario">
+		<%= label_tag 'dirección',nil, class: "control-label" %>
 		<%= text_field_tag "direccion", @valorDireccion, maxlength: 45, placeholder: "Direccion", class:"form-control"%>
+	</div>
+	<div class="form-group" id="divTelefonoUsuario">
+		<%= label_tag 'Telefono',nil, class: "control-label" %>
+		<%= text_field_tag "telefono", @valorTelefono, maxlength: 45, placeholder: "Direccion", class:"form-control", onkeypress: "return isNumber(event)"%>
+	</div>
+	<div class="form-group" id="divCiudadUsuario">
+		<%= label_tag "Ciudad",nil, class: "control-label"%>
+		<%= select_tag "ciudad", options_from_collection_for_select(@ciudades, :id,:nombre, @usuario.ciudads_id), class: "form-control"%>
 	</div>
 	<%= submit_tag "Enviar Datos", disabled: false, disable_with: "Por favor espere...", class:"btn btn-primary" %>
 <%end%>

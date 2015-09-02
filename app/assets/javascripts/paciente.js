@@ -8,6 +8,7 @@ function validacionAgregacion(){
 		val+=validacion('antecedentes','divAnteGPaciente');
 		val+=validacion('fecha_n','divNacPaciente');
 		val+=validacion('direccion','divDireccionPaciente');
+		val+=validacion('telefono', 'divTelefonoPaciente');
 		val+=validacion('correo','divCorreoPaciente');
 		val+=validacion('apellido','divApellidoPaciente');
 		val+=validacion('identificacion','divIdPaciente');
@@ -43,6 +44,7 @@ function validacionActualizacion(){
 		var val=0;
 		val+=validacion('antecedentes','divAnteGPaciente');
 		val+=validacion('fecha_n','divNacPaciente');
+		val+=validacion('telefono', 'divTelefonoPaciente');
 		val+=validacion('direccion','divDireccionPaciente');
 		val+=validacion('correo','divCorreoPaciente');
 		val+=validacion('apellido','divApellidoPaciente');

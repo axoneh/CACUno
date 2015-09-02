@@ -173,14 +173,18 @@ class UsuarioController < ApplicationController
 private
 
   def actualizacion    
+    
+    @ciudades=Ciudad.where(["estado = ?", 1])
+    
     @valorNombre= @usuario.nombre
     @valorApellido= @usuario.apellido
     @valorDireccion= @usuario.direccion
     @valorFecha= @usuario.fecha_nacimiento
     @valorEspecialidad=@usuario.especialidad
-
+    @valorTelefono=@usuario.telefono
+    
     if request.post?
-      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present?                               
+      if params[:nombre].present? and params[:apellido].present? and params[:direccion].present? and params[:fecha].present? and params[:telefono].present?                           
         
         fechaN=params[:fecha]
         if params[:especialidad].present?
@@ -199,6 +203,8 @@ private
         @usuario.direccion=direccion
         @usuario.fecha_nacimiento=fechaN
         @usuario.especialidad=especial
+        @usuario.telefono=params[:telefono]
+        @usuario.ciudads_id=params[:ciudad]
         @usuario.password= Devise.friendly_token[0,20]
         
         @usuario.estado=1
@@ -227,6 +233,7 @@ private
           @valorEspecialidad=params[:especialidad]
         end
         flash.alert="Debe diligenciar todos los campos" 
+        return false
       end
     end
   end

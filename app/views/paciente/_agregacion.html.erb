@@ -30,6 +30,10 @@
 	<%= label_tag "Correo electronico",nil, class: "control-label"%>
 	<%= text_field_tag "correo", @valorCorreo , maxlenght: 30, placeholder: "Correo electronico", class: "form-control"%>
 </div>
+<div class="form-group" id="divTelefonoPaciente">
+	<%= label_tag "Telefono",nil, class: "control-label"%>
+	<%= text_field_tag "telefono", @valorTelefono , maxlenght: 20, placeholder: "Telefono", class: "form-control", onkeypress: "return isNumber(event)"%>
+</div>
 <div class="form-group" id="divGeneroPaciente">
 	<%= label_tag "Genero",nil, class: "control-label"%>
 	<select id="genero" name="genero" class="form-control">
@@ -41,6 +45,10 @@
 			<option value=1>Masculino</option>
 		<% end%>
 	</select>
+</div>
+<div class="form-group" id="divCiudadPaciente">
+	<%= label_tag "Ciudad",nil, class: "control-label"%>
+	<%= select_tag "ciudad", options_from_collection_for_select(@ciudades, :id,:nombre, @paciente.ciudads_id), class: "form-control"%>
 </div>
 <div class="form-group" id="divDireccionPaciente">
 	<%= label_tag "Direccion",nil, class: "control-label"%>

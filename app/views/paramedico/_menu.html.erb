@@ -1,4 +1,4 @@
 <li><%= link_to "Pacientes", {controller: "paciente", action: "visualizar"} %></li>
-<li><%= link_to "Citas domiciliarias", {controller: "cita_medica", action: "visualizar", usuario: current_cuenta_usuario.email},%></li>
+<li><%= link_to "Citas domiciliarias", {controller: "cita_medica", action: "visualizar", usuario: current_cuenta_usuario.email}%></li>
 <li><%= link_to "Modificar datos personales", {controller: "usuario", action: "actualizar"}%></li>
 <li><%= link_to "Cerrar Sesion", destroy_cuenta_usuario_session_path, method: :delete, id: "sign_out"%></li>

@@ -10,6 +10,11 @@ Anticoagulante.delete_all
 Anticoagulante.create(nombre: 'Warfarina x 5mg', concentracion: 5, estado: 1)
 Anticoagulante.create(nombre: 'Warfarina x 10mg', concentracion: 10, estado: 1)
 
+Ciudad.delete_all
+Ciudad.create(nombre: "Bogota DC", estado: 1)
+Ciudad.create(nombre: "Medellin", estado: 1)
+Ciudad.create(nombre: "Cali", estado: 1)
+
 Icd.create(id10: "lawe", dec10: "Enfermedad sin descripcion presisa", grp10: nil)
 Icd.create(id10: "xdpm", dec10: "Etra enfermedad sin descripcion presisa", grp10: nil)
 
