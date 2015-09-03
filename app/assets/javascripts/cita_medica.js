@@ -16,23 +16,25 @@ function habilitarDescripcionPregunta(preg){
 	var input=document.getElementById(preg);
 	var ayuda=preg+'_comentario';
 	var desc=document.getElementById(ayuda);
-	if(input.checked==true && desc!=null){
-		desc.readOnly=false;
-		desc.focus();
-	}
-	else{
-		desc.readOnly=true;
+	if(desc!=null){
+		if(input.checked==true && desc!=null){
+			desc.readOnly=false;
+			desc.focus();
+		}
+		else{
+			desc.readOnly=true;
+		}
 	}
 }
 
 function validacionRespuesta(){
 	if(document.getElementById("agregar_respuesta")){
 		var val=0;
-		val+=validacion('analisis', 'divAnalisis');
-		val+=validacion('plan', 'divPlan');
-		val+=validacion('valor_min', 'divRangoMin');
-		val+=validacion('valor_max', 'divRangoMax');
-		val+=validacion('fecha_fin', 'divDiasTratamiento');
+		val+=validacionC('analisis', 'divAnalisis');
+		val+=validacionC('plan', 'divPlan');
+		val+=validacionC('valor_min', 'divRangoMin');
+		val+=validacionC('valor_max', 'divRangoMax');
+		val+=validacionC('fecha_fin', 'divDiasTratamiento');
 		if (val==0){
 			return true;
 		}
@@ -48,15 +50,15 @@ function validacionRespuesta(){
 function validacionConsulta(){
 	if(document.getElementById('efectuar_medico')){
 		var val=0;
-		val+=validacion('fecha_fin', 'divDiasTratamiento');
-		val+=validacion('valor_max', 'divRangoMax');
-		val+=validacion('valor_min', 'divRangoMin');
-		val+=validacion('plan', 'divPlan');
-		val+=validacion('analisis', 'divAnalisis');
-		val+=validacion('hdia','divDiastolica');
-		val+=validacion('hsis','divSistolica');
-		val+=validacion('frecuencia_car','divFrecuencia');
-		val+=validacion('objetiva','divObjetiva');
+		val+=validacionC('fecha_fin', 'divDiasTratamiento');
+		val+=validacionC('valor_max', 'divRangoMax');
+		val+=validacionC('valor_min', 'divRangoMin');
+		val+=validacionC('plan', 'divPlan');
+		val+=validacionC('analisis', 'divAnalisis');
+		val+=validacionC('hdia','divDiastolica');
+		val+=validacionC('hsis','divSistolica');
+		val+=validacionC('frecuencia_car','divFrecuencia');
+		val+=validacionC('objetiva','divObjetiva');
 		if(document.getElementById('temporal').checked==true && !document.getElementById('semanas_t').value){
 			document.getElementById('divTratamiento').className="form-group has-error";
 			document.getElementById('semanas_t').focus();
@@ -65,8 +67,8 @@ function validacionConsulta(){
 		else{
 			document.getElementById('divTratamiento').className="form-group";
 		}
-		val+=validacion('subjetiva','divSubjetiva');
-		val+=validacion('inr','divInrCita');
+		val+=validacionC('subjetiva','divSubjetiva');
+		val+=validacionC('inr','divInrCita');
 		if(val==0){
 			return true;
 		}
@@ -82,11 +84,11 @@ function validacionConsulta(){
 function validacionVisita(){
 	if(document.getElementById('efectuar_paramedico')){
 		var val=0;
-		val+=validacion('hsis','divSistolica');
-		val+=validacion('hdia','divDiastolica');
-		val+=validacion('frecuencia_car','divFrecuencia');
-		val+=validacion('observacion','divObservacion');
-		val+=validacion('inr','divInrCita');
+		val+=validacionC('hsis','divSistolica');
+		val+=validacionC('hdia','divDiastolica');
+		val+=validacionC('frecuencia_car','divFrecuencia');
+		val+=validacionC('observacion_g','divObservacion');
+		val+=validacionC('inr','divInrCita');
 		if(val==0){
 			return true;
 		}
@@ -99,9 +101,14 @@ function validacionVisita(){
 	}
 }
 
-function validacion(control,divContenedor){
-	input=document.getElementById(control);
-	if(!input.value | input.value.legth==0){
+function validacionC(control,divContenedor){
+	var input=document.getElementById(control);
+	if(input.value==null){
+		document.getElementById(divContenedor).className="form-group has-error";
+		input.focus();
+		return 1;
+	}
+	else if(input.value.length==0){
 		document.getElementById(divContenedor).className="form-group has-error";
 		input.focus();
 		return 1;

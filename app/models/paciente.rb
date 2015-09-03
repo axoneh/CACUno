@@ -2,7 +2,7 @@ class Paciente < ActiveRecord::Base
   belongs_to :tipo_documentos, class_name: TipoDocumento
   belongs_to :estado_civils, class_name: EstadoCivil
   belongs_to :patologia, class_name: Patologia
-  belongs_to :ciudad, class_name: Ciudad
+  belongs_to :ciudads, class_name: Ciudad
   
   has_many :cita_medicas, class_name: CitaMedica, foreign_key: :pacientes_id
   has_many :laboratorios,class_name: Laboratorio, foreign_key: :pacientes_id

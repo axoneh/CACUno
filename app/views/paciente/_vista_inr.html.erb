@@ -35,6 +35,122 @@
 					</li>
 				<% end%>
 			</ul>
+	        <script type="text/javascript">
+	            var grafica;
+	            var datos = [];
+	            var minINR=<%= @valorMin%>;
+	            var maxINR=<%= @valorMax%>;
+	            var cursor;
+	            
+	            AmCharts.ready(function () {
+	                // Generar Datos Azarosos
+	                generarDatosAzar();
+	
+					//generar grafica
+	                grafica = new AmCharts.AmSerialChart();
+	                grafica.dataProvider = datos;
+	                grafica.categoryField = "fecha";
+	                grafica.balloon.bulletSize = 5;
+	
+	                // listen for "dataUpdated" event (fired when chart is rendered) and call zoomChart method when it happens
+	                grafica.addListener("dataUpdated", zoomChart);
+	
+	                // Ejex
+	                var categoria1 = grafica.categoryAxis;
+	                categoria1.parseDates = true;
+	                categoria1.minPeriod = "DD";
+	                categoria1.dashLength = 0.5;
+	                categoria1.minorGridEnabled = true;
+	                categoria1.equalSpacing = false;
+	                categoria1.twoLineMode = false;
+	                categoria1.centerLabelOnFullPeriod = false;
+	                categoria1.dateFormats = [{
+	                    period: 'DD',
+	                    format: 'DD'
+	                }, {
+	                    period: 'WW',
+	                    format: 'DD'
+	                }, {
+	                    period: 'MM',
+	                    format: 'MMM'
+	                }, {
+	                    period: 'YYYY',
+	                    format: 'YYYY'
+	                }];
+	
+	                categoria1.axisColor = "#DADADA";
+	
+	                // valoresy
+	                var valoresy = new AmCharts.ValueAxis();
+	                //var guia = new AmCharts.Guide();
+	                var guia = [{
+			            "fillAlpha": 1,
+			            "fillColor": "#99CCFF",
+			            "lineAlpha": 0,
+			            "toValue": 3,
+			            "value": 2,
+			            "lineColor":"#000000",
+			            "lineThickness": 3,
+			            "label":"Rango Terapéutico",
+			            "inside": true,
+			            "position":"left"
+	                }];
+	                valoresy.axisAlpha = 0.1;
+	                valoresy.dashLength = 1;
+	                valoresy.minimum = 0;
+	                valoresy.maximun=6;
+	                valoresy.guides=guia;
+	                grafica.addValueAxis(valoresy);
+	
+	                // visualizaciongrafica
+	                var graph = new AmCharts.AmGraph();
+	                graph.title = "Grafica INR";
+	                graph.valueField = "inr";
+	                graph.bullet = "round";
+	                graph.bulletBorderColor = "#FFFFFF";
+	                graph.bulletBorderThickness = 2;
+	                graph.bulletBorderAlpha = 1;
+	                graph.lineThickness = 3;
+	                graph.lineColor = "#5fb503";
+	                graph.hideBulletsCount = 50; // this makes the chart to hide bullets when there are more than 50 series in selection
+	                grafica.addGraph(graph);
+	
+	                // CURSOR
+	                cursor = new AmCharts.ChartCursor();
+	                cursor.cursorPosition = "mouse";
+	                cursor.pan = true; // set it to fals if you want the cursor to work in "select" mode
+	                grafica.addChartCursor(cursor);
+	
+	                // SCROLLBAR
+	                var scrollbar = new AmCharts.ChartScrollbar();
+	                //	scrollbar.graph=graph;
+	                
+	                grafica.addChartScrollbar(scrollbar);
+	
+	                grafica.creditsPosition = "bottom-right";
+	
+	                // WRITE
+	                grafica.write("chartdiv");
+	            });
+	
+	            // generar INRs al azar
+	            function generarDatosAzar() {
+	            	datos=[]
+	            	<% @InrPacienteG.each do |t|%>
+	                    datos.push({
+	                        fecha: '<%= t.fecha.to_s%>',
+	                        inr: <%= t.valorInr.to_f%>,
+	                    });
+	            	<% end%>
+	            }
+	            // this method is called when chart is first inited as we listen for "dataUpdated" event
+	            function zoomChart() {
+	                // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+	                grafica.zoomToIndexes(datos.length - 40, datos.length - 1);
+	            }
+	        </script>
+	        <div id="chartdiv" style="width: 100%; height: 400px;">
+	        </div>
 		<% end%>
 	<% end%>
 </div>

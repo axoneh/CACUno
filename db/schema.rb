@@ -92,13 +92,13 @@ ActiveRecord::Schema.define(version: 20150901202257) do
   create_table "cuenta_usuarios", force: :cascade do |t|
     t.string   "identificacion",         limit: 255
     t.integer  "tipo_documentos_id",     limit: 4
-    t.string   "nombre",                 limit: 30
-    t.string   "apellido",               limit: 30
-    t.string   "email",                  limit: 50,  default: "",    null: false
+    t.string   "nombre",                 limit: 50
+    t.string   "apellido",               limit: 50
+    t.string   "email",                  limit: 70,  default: "",    null: false
     t.string   "encrypted_password",     limit: 255, default: "",    null: false
     t.boolean  "genero"
     t.string   "direccion",              limit: 100
-    t.string   "especialidad",           limit: 50
+    t.string   "especialidad",           limit: 100
     t.date     "fecha_nacimiento"
     t.integer  "estado",                 limit: 4
     t.string   "telefono",               limit: 20
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20150901202257) do
     t.boolean  "encargado_respuesta",                default: false
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
-    t.string   "link_foto",              limit: 100
+    t.string   "link_foto",              limit: 200
     t.string   "provider",               limit: 50
     t.string   "uid",                    limit: 50
     t.date     "ultimoLogin"
@@ -204,9 +204,9 @@ ActiveRecord::Schema.define(version: 20150901202257) do
   create_table "pacientes", force: :cascade do |t|
     t.string   "identificacion",      limit: 30
     t.integer  "tipo_documentos_id",  limit: 4
-    t.string   "nombre",              limit: 30
-    t.string   "apellido",            limit: 30
-    t.string   "correo",              limit: 45
+    t.string   "nombre",              limit: 50
+    t.string   "apellido",            limit: 50
+    t.string   "correo",              limit: 70
     t.boolean  "genero"
     t.string   "telefono",            limit: 20
     t.date     "fecha_nacimiento"
@@ -245,7 +245,7 @@ ActiveRecord::Schema.define(version: 20150901202257) do
   add_index "patologia", ["nombre"], name: "index_nombre_patologias", unique: true, using: :btree
 
   create_table "pregunta", force: :cascade do |t|
-    t.string   "pregunta",    limit: 50
+    t.string   "pregunta",    limit: 70
     t.string   "descripcion", limit: 20
     t.integer  "estado",      limit: 4
     t.boolean  "tipo"
@@ -319,8 +319,8 @@ ActiveRecord::Schema.define(version: 20150901202257) do
   add_index "rols", ["nombre"], name: "index_nombre_roles", unique: true, using: :btree
 
   create_table "sucursals", force: :cascade do |t|
-    t.string   "nombre",     limit: 45
-    t.string   "direccion",  limit: 50
+    t.string   "nombre",     limit: 50
+    t.string   "direccion",  limit: 70
     t.integer  "estado",     limit: 4
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false

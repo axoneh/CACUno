@@ -71,6 +71,7 @@ class CitaMedicaController < ApplicationController
             end
             @cita.estado=2
             @cita.save
+            flash.notice="Visita respondida satisfactoriamente"
             redirect_to controller: "cita_medica", action: "visualizar", cita: @cita.id
           else
             if params[:valor_max].present?
@@ -103,7 +104,9 @@ class CitaMedicaController < ApplicationController
             citaActual.estado = 1
           end
           citaActual.fecha = Date.current
-          citaActual.hora_ini = Time.now.strftime("%H:%M")
+          t=Time.zone.now
+          
+          citaActual.hora_ini = t.hour.to_s+ ":"+t.min.to_s+": "+t.sec.to_s
           if @medico
             citaActual.tipo="Presencial"
           else
@@ -158,13 +161,13 @@ class CitaMedicaController < ApplicationController
                 inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, false]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
                 @paciente.ttrCacTotal=calcularTTR(inrP)
                 
-                fecha_ayuda=(Date.current-180).to_date;
+                fecha_ayuda=(Time.zone.now-(60*60*24*180)).to_date;
                 inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
                 @paciente.ttrCacSeisM=calcularTTR(inrP)
                 
-                fecha_ayuda=(Date.current-360).to_date;
+                fecha_ayuda=(Time.zone.now-(60*60*24*180*2)).to_date;
                 inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
-                @paciente.ttrCacDOceM=calcularTTR(inrP)
+                @paciente.ttrCacDoceM=calcularTTR(inrP)
                 
                 @paciente.save()
                 
@@ -179,16 +182,25 @@ class CitaMedicaController < ApplicationController
             @nivel=false
             @ultimaCita=@paciente.ultimaCita()
             if request.post?
-              if params[:inr].present? and params[:hsis].present? and params[:hdia].present? and params[:frecuencia_car].present? and params[:observacion].present?
+              if params[:inr].present? and params[:hsis].present? and params[:hdia].present? and params[:frecuencia_car].present? and params[:observacion_g].present?
                 guardar_inr()
                 guardar_preguntas()
                 guardar_observacion()
                 @cita.estado=3;
                 @cita.fecha_realizacion=Date.current
                 @cita.save
-
+                
                 inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ?",@paciente.id, false]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
                 @paciente.ttrCacTotal=calcularTTR(inrP)
+                
+                fecha_ayuda=(Time.zone.now-(60*60*24*180)).to_date;
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacSeisM=calcularTTR(inrP)
+                
+                fecha_ayuda=(Time.zone.now-(60*60*24*180*2)).to_date;
+                inrP=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ? and generico = ? and inr_pacientes.fecha > ?",@paciente.id, false, fecha_ayuda]).order("inr_pacientes.fecha asc").group("inr_pacientes.fecha").pluck("inr_pacientes.valorInr","inr_pacientes.fecha")
+                @paciente.ttrCacDoceM=calcularTTR(inrP)
+                
                 @paciente.save()
 
                 flash.notice="Cita realizada exitosamente, en espera de respuesta"
@@ -247,7 +259,7 @@ private
         observacion.tiempoIndefinido=true
       end
     elsif @paramedico
-      observacion.obUno=params[:observacion]
+      observacion.obUno=params[:observacion_g]
     end
     observacion.save
   end
@@ -266,7 +278,7 @@ private
     prescripcion=Prescripcion.new
     prescripcion.respuesta_cita_id=respuesta.id
     prescripcion.anticoagulantes_id=params[:antic]
-    prescripcion.fechaFin=(Time.now + params[:fecha_fin].to_i.day).to_date
+    prescripcion.fechaFin=(Time.zone.now + params[:fecha_fin].to_i.day).to_date
     prescripcion.recomendacion=params[:recomendacion]
     prescripcion.save
     

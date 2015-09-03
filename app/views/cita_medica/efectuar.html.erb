@@ -45,7 +45,7 @@
 			<strong>No se ha encontrado alguna cita previa</strong>
 		<% end%>
 	</div>
-	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_paramedico" , method: "post", onsubmit: "return validacionVisita()") do %>
+	<%= form_tag({controller: "cita_medica", action: "efectuar", cita: params[:cita]}, id: "efectuar_paramedico" , method: "post", onsubmit: "return validacionVisita();") do %>
 		<%= render 'preguntas'%>
 		<%= render 'observacion'%>
 		<%= submit_tag "Enviar para respuesta", class: "btn btn-primary"%>

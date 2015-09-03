@@ -27,8 +27,13 @@ function validacionAgregacion(){
 }
 
 function validacion(control,divContenedor){
-	input=document.getElementById(control);
-	if(!input.value | input.value.legth==0){
+	var input=document.getElementById(control);
+	if(input.value==null){
+		document.getElementById(divContenedor).className="form-group has-error";
+		input.focus();
+		return 1;
+	}
+	else if(input.value.length==0){
 		document.getElementById(divContenedor).className="form-group has-error";
 		input.focus();
 		return 1;

@@ -159,11 +159,12 @@ protected
         end
         
       end
-      puts "lo que se suma: "+(fmax-fmin).abs.to_s
       valorTTR+=(fmax-fmin).abs
     end
+    unless arreglo.last and arreglo.first
+      return 0
+    end
     dDias=(arreglo.last.last.to_date - arreglo.first.last.to_date).to_i
-    puts "diferencia de dias: "+dDias.to_s
     if dDias==0
       return 0
     end

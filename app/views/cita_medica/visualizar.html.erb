@@ -113,7 +113,7 @@
 				<% if @admin%>
 					<td><strong>Encargado</strong></td>
 				<% else%>
-				<td><strong>...</strong></td>
+					<td><strong>...</strong></td>
 				<% end%>
 			</tr>
 			<% @citasRegistradas.each do |t|%>
@@ -142,6 +142,7 @@
 						<%= t.hora_ini%>
 					</td>
 					<td>
+						<%=link_to image_tag(t.pacientes.avatar.url(:medium), size: "30x30", class: "img-rounded"), {controller: "paciente", action: "visualizar", correo: t.pacientes.correo}%>
 						<%= t.pacientes.nombre+' '+t.pacientes.apellido%>
 					</td>
 					<% if @admin %>
@@ -156,6 +157,12 @@
 					<% elsif t.estado ==1 and @medico and t.cuenta_usuarios_id==current_cuenta_usuario.id%>
 						<td>
 							<%= link_to "Efectuar", {controller: "cita_medica", action: "efectuar", cita: t.id}, class: "btn btn-danger"%>
+						</td>
+					<% else%>
+						<td>
+							<% if t.estado>1%>
+								<%= link_to "Ver", {controller: "cita_medica", action: "visualizar", cita: t.id}, class: "btn btn-default"%>
+							<% end%>
 						</td>
 					<% end%>
 				</tr>

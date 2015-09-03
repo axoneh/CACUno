@@ -75,7 +75,7 @@
 						end
 						%>
 						<div class="form-group">
-							<%= label_tag t.id.to_s+"_dosis_dia", valor, id: t.id.to_s+"_dosis_dia"%> mg.
+							<%= label_tag t.id.to_s+"_dosis_dia", valor.to_s+" mg.", id: t.id.to_s+"_dosis_dia"%>
 						</div>
 					</td>
 				<% end%>
@@ -85,7 +85,7 @@
 			<li class="list-group-item" id="dosisSemanal">
 				Dosis semanal: <%= if @ultimaPrescripcion then @ultimaPrescripcion.dosisSemanal else "0" end%> mg.
 				<br />
-				Promedio de dosis semanal: <%= if @ultimaPrescripcion then (@ultimaPrescripcion.dosisSemanal)/7 else "0" end%> mg.
+				Promedio de dosis semanal: <%= if @ultimaPrescripcion then (@ultimaPrescripcion.dosisSemanal.to_f)/7 else "0" end%> mg.
 			</li>
 		</ul>
 	</div>

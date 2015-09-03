@@ -6,7 +6,7 @@ class CuentaUsuario < ActiveRecord::Base
   belongs_to :rols, class_name: Rol
   belongs_to :estado_civils, class_name: EstadoCivil
   belongs_to :tipo_documentos, class_name: TipoDocumento
-  belongs_to :ciudad, class_name: Ciudad
+  belongs_to :ciudads, class_name: Ciudad
   
   def self.from_omniauth(auth)
     where(["email = ? and estado < ? ", auth.info.email ,3]).first

@@ -121,7 +121,8 @@ class PacienteController < ApplicationController
       
       @citasMedicas=@paciente.cita_medicas.where(["generico = ? and estado > ?", false, 1])
       @InrPaciente=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).order("inr_pacientes.fecha desc")
-      
+      @InrPacienteG=InrPaciente.joins(:cita_medicas).where(["cita_medicas.pacientes_id = ?",@paciente.id]).group("inr_pacientes.fecha").order("inr_pacientes.fecha asc")
+      rango_antic()
     else
       @especifico=false
       if @encargado or @admin
@@ -293,7 +294,8 @@ private
       cita.cuenta_usuarios_id = current_cuenta_usuario.id
       cita.fecha = Date.current
       cita.estado = 2
-      cita.hora_ini = Time.now.strftime("%I:%M:%S")
+      t=Time.zone.now
+      cita.hora_ini = t.hour.to_s+ ":"+t.min.to_s+": "+t.sec.to_s
       cita.tipo="Presencial"
       cita.generico=true
       cita.save()
