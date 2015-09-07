@@ -263,7 +263,7 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
   require "omniauth-google-oauth2"
-  config.omniauth :google_oauth2, '812466055655-7aqaltu4gbvaepv7cme1j8040oq4j00u.apps.googleusercontent.com', '5JsY3D4BMPNi24FZcTgaWBcd',
+  config.omniauth :google_oauth2, '1022218969775-mqdjnnnn1vcu8mocrgi6k8p3tdhk7b8g.apps.googleusercontent.com', '5JsY3D4BMPNi24FZcTgaWBcd',
   {
     provider_ignores_state: true,
     prompt: "select_account",
