@@ -11,13 +11,12 @@
 #
 default: &default
   adapter: postgresql
-  encoding: unicode
-  pool: 5
-
+  host: localhost
+  username: user
 
 development:
   <<: *default
-  database: CACUno_development
+  database: app-dev
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
